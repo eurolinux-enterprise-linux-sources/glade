@@ -259,7 +259,7 @@
                   <varlistentry> 
                          <term>Toppnivåplaceringsläge</term> 
                          <listitem> 
-                                <para>För att använda toppnivåplaceringsläge, markera en definierad toppnivåkomponent i fönstret <application>Palett</application>. När du markerar en toppnivåkomponent i fönstret <guilabel>Palett</guilabel> visas komponenten omedelbart på ditt skrivbord. Du kan sedan redigera komponenten. Efter att du markerat en toppnivåkomponent återgår läget till markeringsläge.</para>
+                                <para>För att använda toppnivåplaceringsläge, markera en definierad toppnivåkomponent i fönstret <guilabel>Palett</guilabel>. När du markerar en toppnivåkomponent i fönstret <guilabel>Palett</guilabel> visas komponenten omedelbart på ditt skrivbord. Du kan sedan redigera komponenten. Efter att du markerat en toppnivåkomponent återgår läget till markeringsläge.</para>
                          </listitem> 
                   </varlistentry> 
                 </variablelist> 

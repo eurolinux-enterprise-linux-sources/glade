@@ -90,7 +90,7 @@
     </othercredit>
     <copyright>
       
-        <year>2012 - 2016</year>
+        <year>2012 - 2017</year>
       
       <holder>Daniel Mustieles</holder>
     </copyright>
@@ -259,7 +259,7 @@
                   <varlistentry> 
                          <term>Modo de emplazamiento de nivel superior</term> 
                          <listitem> 
-                                <para>Para usar el modo de emplazamiento de nivel superior, seleccione un widget definido como de nivel superior en la ventana de <application>Paleta</application>. Cuando selecciona un widget de nivel superior en la ventana de <guilabel>Paleta</guilabel>, el widget aparece inmediatamente en su escritorio. Entonces puede editar el widget. Después de seleccionar un widget de nivel superior, el modo vuelve al modo de selección.</para>
+                                <para>Para usar el modo de emplazamiento de nivel superior, seleccione un widget definido como de nivel superior en la ventana de <guilabel>Paleta</guilabel>. Cuando selecciona un widget de nivel superior en la ventana de <guilabel>Paleta</guilabel>, el widget aparece inmediatamente en su escritorio. Entonces puede editar el widget. Después de seleccionar un widget de nivel superior, el modo vuelve al modo de selección.</para>
                          </listitem> 
                   </varlistentry> 
                 </variablelist> 

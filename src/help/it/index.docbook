@@ -296,7 +296,18 @@
                   <varlistentry> 
                          <term>Modalità di posizionamento livello principale</term> 
                          <listitem> 
-                                <para>Per utilizzare la modalità di posizionamento livello principale, selezionare un widget livello-superiore definito nella finestra <application>Tavolozza</application>. Quando si seleziona un widget livello principale nella finestra <guilabel>Tavolozza</guilabel>, il widget appare immediatamente sulla scrivania. Si può poi modificare il widget. Dopo aver selezionato il widget livello-superiore, la modalità ritorna alla modalità selezione.</para>
+                                <para lang="en">
+                                  To use top level placement mode, select a
+defined top-level
+                                  widget in the
+<guilabel>Palette</guilabel> window. When you select a top-level
+                                  widget in the 
+                                  <guilabel>Palette</guilabel> window, the
+widget appears
+                                  immediately on your desktop. You can then
+edit the widget. After you select a top-level widget,
+                                  the mode returns to selection mode.
+                                </para>
                          </listitem> 
                   </varlistentry> 
                 </variablelist> 

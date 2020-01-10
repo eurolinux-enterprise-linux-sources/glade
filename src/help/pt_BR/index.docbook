@@ -107,6 +107,21 @@
       
       <holder>Enrico Nicoletto</holder>
     </copyright>
+  
+    <othercredit class="translator">
+      <personname>
+        <firstname>Rafael Fontenelle</firstname>
+      </personname>
+      <email>rafaelff@gnome.org</email>
+    </othercredit>
+    <copyright>
+      
+        <year>2017</year>
+      
+        <year>2018</year>
+      
+      <holder>Rafael Fontenelle</holder>
+    </copyright>
   </articleinfo> 
 
     <indexterm><primary>glade</primary></indexterm>
@@ -122,7 +137,7 @@
 
     <para>O construtor de interfaces <application>Glade</application> lhe permite criar e a editar projetos de interfaces de usuário para aplicações <application>GTK+</application>.</para>
 
-    <para>A biblioteca GTK+ fornece uma coleção extensa de blocos de construção de interface de usuário tal como caixas de texto, rótulos de diálogos, entradas numéricas, caixas de verificação e menus. Estes blocos de construção são chamados <emphasis>widgets</emphasis> ("controles"). Você pode usar o Glade para trocar widgets em uma GUI. O Glade lhe permite modificar o layout e as propriedades destes widgets. Você também pode usar o Glade para adicionar conexões entre widgets e o código fonte da aplicação.</para>
+    <para>A biblioteca GTK+ fornece uma coleção extensa de blocos de construção de interface de usuário tal como caixas de texto, rótulos de diálogos, entradas numéricas, caixas de verificação e menus. Estes blocos de construção são chamados <emphasis>widgets</emphasis> (“controles”). Você pode usar o Glade para trocar widgets em uma GUI. O Glade lhe permite modificar o layout e as propriedades destes widgets. Você também pode usar o Glade para adicionar conexões entre widgets e o código fonte da aplicação.</para>
 
     <para>As interfaces de usuário projetadas no Glade são armazenadas em um formato XML, possibilitando fácil integração com ferramentas externas. Você pode usar a biblioteca <application>libglade</application> para criar GUIs dinamicamente a partir da descrição XML.</para>
 
@@ -138,14 +153,13 @@
     	<varlistentry>
     		<term>Menu <guimenu>Aplicações</guimenu></term>
     		<listitem>
-    		<para>Va até <menuchoice> <guisubmenu>Programação</guisubmenu> <guimenuitem>Construtor de interfaces Glade</guimenuitem> </menuchoice>.</para>
+    		<para>Vá até <menuchoice> <guisubmenu>Programação</guisubmenu> <guimenuitem>Construtor de interfaces Glade</guimenuitem> </menuchoice>.</para>
     		</listitem>
     	</varlistentry>
     	<varlistentry>
     		<term>Linha de comando</term>
     		<listitem>
-			<para lang="en">To start <application>Glade</application> from a command line, type <command>glade</command>
-			and then press <keycap>Return</keycap>.</para>
+			<para>Para iniciar o <application>Glade</application> a partir da linha de comando, digite <command>glade</command>, então pressione <keycap>Enter</keycap>.</para>
     		</listitem>
     	</varlistentry>
     </variablelist>
@@ -227,7 +241,7 @@
 		<itemizedlist> 
 		  <listitem><para>Para salvar mudanças em um arquivo de projeto que já existe, escolha <menuchoice><guimenu>Arquivo</guimenu><guimenuitem>Salvar</guimenuitem></menuchoice>.</para>
 		  </listitem>
-		  <listitem><para>Para salvar o arquivo de um novo projeto ou para salvar o arquivo de um projeto já existente com um novo nome, va até <menuchoice> <guimenu>Arquivo</guimenu> <guimenuitem>Salvar como</guimenuitem> </menuchoice>. Enter a name for the project file in the <guilabel>Save As</guilabel> dialog, then click <guibutton>Save</guibutton>. Digite um nome para o arquivo do projeto no diálogo <guilabel>Salvar como</guilabel>, então clique em <guibutton>Salvar</guibutton>.</para>
+		  <listitem><para>Para salvar o arquivo de um novo projeto ou para salvar o arquivo de um projeto já existente com um novo nome, vá até <menuchoice> <guimenu>Arquivo</guimenu> <guimenuitem>Salvar como</guimenuitem> </menuchoice>. Enter a name for the project file in the <guilabel>Save As</guilabel> dialog, then click <guibutton>Save</guibutton>.</para>
 		  </listitem>
 		</itemizedlist>
 	 </sect2>
@@ -252,7 +266,7 @@
                   <varlistentry> 
                          <term>Modo de posicionamento do widget</term> 
                          <listitem> 
-                                <para>Para usar o modo de colocação do widget, selecione um widget na janela <guilabel>Paleta</guilabel>. Quando você seleciona vários widgets, o ponteiro muda para um ponteiro com uma cruz. Você pode então colocar o widget dentro de containers, widgets de nível acima e outros. Depois que você coloca o widget, o modo retorna para o modo de seleção.</para>
+                                <para>Para usar o modo de colocação do widget, selecione um widget na janela <guilabel>Paleta</guilabel>. Quando você seleciona vários widgets, o ponteiro muda para um ponteiro com uma cruz. Você pode então colocar o widget dentro de contêineres, widgets de nível acima e outros. Depois que você coloca o widget, o modo retorna para o modo de seleção.</para>
                          </listitem> 
                   </varlistentry> 
                 </variablelist> 
@@ -260,14 +274,14 @@
                   <varlistentry> 
                          <term>Modo de posicionamento do nível superior</term> 
                          <listitem> 
-                                <para>Para usar o modo de colocação de nível superior, selecione um determinado widget de nível superior na janela <application>Paleta</application>. Quando você seleciona um widget de nível superior na janela <guilabel>Paleta</guilabel>, o widget aparece imediatamente na sua área de trabalho. Você pode então editar o widget. Depois que você seleciona um widget de nível superior, o modo retorna para o modo de seleção.</para>
+                                <para>Para usar o modo de colocação de nível superior, selecione um determinado widget de nível superior na janela <guilabel>Paleta</guilabel>. Quando você seleciona um widget de nível superior na janela <guilabel>Paleta</guilabel>, o widget aparece imediatamente na sua área de trabalho. Você pode então editar o widget. Depois que você seleciona um widget de nível superior, o modo retorna para o modo de seleção.</para>
                          </listitem> 
                   </varlistentry> 
                 </variablelist> 
          </sect2>
 <sect2 id="organize-widgets">
 <title>Organizando Widgets em seu projeto</title>
-<para>Você usa containers de widget, ou caixas, para widgets de layout e de organização em sua janela de projeto. Pode escolher os seguintes containers da janela <guilabel>Paleta</guilabel>:</para>
+<para>Você usa contêineres de widget, ou caixas, para widgets de layout e de organização em sua janela de projeto. Pode escolher os seguintes contêineres da janela <guilabel>Paleta</guilabel>:</para>
 <itemizedlist>
 <listitem><para>Caixa Horizontal</para>
 </listitem><listitem><para>Caixa Vertical</para></listitem>

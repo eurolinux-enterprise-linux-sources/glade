@@ -250,7 +250,7 @@
               <!-- AtkRole enumeration value -->
               <value id="ATK_ROLE_DIALOG" _name="Dialog"/>
               <!-- AtkRole enumeration value -->
-              <value id="ATK_ROLE_DIRECTORY_PANE" _name="Directory Name"/>
+              <value id="ATK_ROLE_DIRECTORY_PANE" _name="Directory Pane"/>
               <!-- AtkRole enumeration value -->
               <value id="ATK_ROLE_DRAWING_AREA" _name="Drawing Area"/>
               <!-- AtkRole enumeration value -->
@@ -747,11 +747,12 @@
         <add-child-function>glade_gtk_window_add_child</add-child-function>
         <remove-child-function>glade_gtk_window_remove_child</remove-child-function>
         <replace-child-function>glade_gtk_window_replace_child</replace-child-function>
+        <get-children-function>glade_gtk_window_get_children</get-children-function>
         <special-child-type>type</special-child-type>
         
         <properties> 
           <!-- Virtual accel-groups property to record accel groups -->
-          <property id="accel-groups" name="Accel Groups" ignore="True" since="2.16" save="False" weight="0.5" custom-layout="True">
+          <property id="accel-groups" _name="Accel Groups" ignore="True" since="2.16" save="False" weight="0.5" custom-layout="True">
             <parameter-spec>
               <type>GladeParamObjects</type>
               <value-type>GtkAccelGroup</value-type>
@@ -1451,9 +1452,11 @@
           </property>
           <property id="track-visited-links" since="2.18" custom-layout="True"/>
           
+	  <!-- These properties have been deprecated in GtkMisc in 3.14, and appeared in GtkLabel in 3.16 -->
+          <property id="xalign" custom-layout="True" optional="True" optional-default="False"/>
+          <property id="yalign" custom-layout="True" optional="True" optional-default="False"/>
+          
           <!-- GtkMisc properties -->
-          <property id="xalign" custom-layout="True" optional="True" optional-default="False" deprecated="True"/>
-          <property id="yalign" custom-layout="True" optional="True" optional-default="False" deprecated="True"/>
           <property id="xpad" custom-layout="True" optional="True" optional-default="False" deprecated="True"/>
           <property id="ypad" custom-layout="True" optional="True" optional-default="False" deprecated="True"/>
         </properties>
@@ -1686,13 +1689,47 @@
 
       <glade-widget-class name="GtkButton" generic-name="button" _title="Button">
         <post-create-function>glade_gtk_button_post_create</post-create-function>
+        <create-editor-property-function>glade_gtk_button_create_eprop</create-editor-property-function>
         <create-editable-function>glade_gtk_button_create_editable</create-editable-function>
         <set-property-function>glade_gtk_button_set_property</set-property-function>
         <read-widget-function>glade_gtk_button_read_widget</read-widget-function>
         <write-widget-function>glade_gtk_button_write_widget</write-widget-function>
         
         <properties>
-          <property id="always-show-image" since="3.6" custom-layout="True"/>
+
+          <!-- HACK: Add unused property to register GtkResponseType displayable values  -->
+          <property id="register-response-id-displayables" visible="False" save="False" ignore="True">
+            <parameter-spec>
+              <type>GParamEnum</type>
+	      <value-type>GtkResponseType</value-type>
+            </parameter-spec>
+            <displayable-values>
+              <!-- GtkResponseType enumeration value -->
+              <value id="GTK_RESPONSE_NONE" _name="None"/>
+              <!-- GtkResponseType enumeration value -->
+              <value id="GTK_RESPONSE_REJECT" _name="Reject"/>
+              <!-- GtkResponseType enumeration value -->
+              <value id="GTK_RESPONSE_ACCEPT" _name="Accept"/>
+              <!-- GtkResponseType enumeration value -->
+              <value id="GTK_RESPONSE_DELETE_EVENT" _name="Delete Event"/>
+              <!-- GtkResponseType enumeration value -->
+              <value id="GTK_RESPONSE_OK" _name="OK"/>
+              <!-- GtkResponseType enumeration value -->
+              <value id="GTK_RESPONSE_CANCEL" _name="Cancel"/>
+              <!-- GtkResponseType enumeration value -->
+              <value id="GTK_RESPONSE_CLOSE" _name="Close"/>
+              <!-- GtkResponseType enumeration value -->
+              <value id="GTK_RESPONSE_YES" _name="Yes"/>
+              <!-- GtkResponseType enumeration value -->
+              <value id="GTK_RESPONSE_NO" _name="No"/>
+              <!-- GtkResponseType enumeration value -->
+              <value id="GTK_RESPONSE_APPLY" _name="Apply"/>
+              <!-- GtkResponseType enumeration value -->
+              <value id="GTK_RESPONSE_HELP" _name="Help"/>
+            </displayable-values>
+	  </property>
+
+	  <property id="always-show-image" since="3.6" custom-layout="True"/>
           <property id="receives-default" save-always="True"/>
           <property id="image" parentless-widget="True" create-type="GtkImage" custom-layout="True"/>
           <property id="use-stock" visible="False" custom-layout="True"/>
@@ -2492,8 +2529,8 @@
       <create-editable-function>glade_gtk_header_bar_create_editable</create-editable-function>
       <special-child-type>type</special-child-type>
       <properties>
-	<property id="title" custom-layout="True"/>
-	<property id="subtitle" custom-layout="True"/>
+	<property id="title" custom-layout="True" translatable="True"/>
+	<property id="subtitle" custom-layout="True" translatable="True"/>
 	<property id="has-subtitle" _name="Reserve space for subtitle" custom-layout="True">
           <_tooltip>Keep the headerbar height the same as the subtitle changes dynamically.</_tooltip>
         </property>
@@ -3006,6 +3043,8 @@
           <property id="menu-model" disabled="True"/>
           <property id="popup" ignore="True"/>
           <property id="align-widget" ignore="True"/>
+          <property id="popover" ignore="True" since="3.12"/>
+          <property id="use-popover" ignore="True" since="3.12"/>
         </properties>
       </glade-widget-class>
 
@@ -3071,7 +3110,9 @@
       </glade-widget-class>
       
       <glade-widget-class name="GtkDrawingArea" generic-name="drawingarea" _title="Drawing Area"/>
-      
+
+      <glade-widget-class name="GtkGLArea" generic-name="glarea" _title="OpenGL Area"/>
+
       <glade-widget-class name="GtkInfoBar" generic-name="infobar" _title="Info Bar">
         <read-child-function>glade_gtk_info_bar_read_child</read-child-function>
         <write-child-function>glade_gtk_info_bar_write_child</write-child-function>
@@ -3476,6 +3517,7 @@
         <properties>
           <property id="visible" default="False"/>
           <property id="relative-to" ignore="True" custom-layout="True"/>
+          <property id="pointing-to" disabled="True"/>
           <property id="constrain-to" ignore="True" custom-layout="True" since="3.20">
             <displayable-values>
               <!-- GtkPopoverConstraint enumeration value -->
@@ -3491,7 +3533,6 @@
       </glade-widget-class>
 
       <glade-widget-class name="GtkPopoverMenu" generic-name="popovermenu" _title="Popover Menu" toplevel="True" since="3.16">
-        <constructor-function>glade_gtk_popover_menu_constructor</constructor-function>
         <create-editable-function>glade_gtk_popover_menu_create_editable</create-editable-function>
         <post-create-function>glade_gtk_popover_menu_post_create</post-create-function>
         <add-child-function>glade_gtk_popover_menu_add_child</add-child-function>
@@ -3506,6 +3547,7 @@
         <properties>
           <property id="visible" default="False"/>
           <property id="visible-submenu" disabled="True"/>
+          <property id="pointing-to" disabled="True"/>
           <property id="submenus" _name="Number of submenus" save="False" default="1" custom-layout="True">
             <parameter-spec>
               <type>GParamInt</type>
@@ -5546,9 +5588,12 @@
       <glade-widget-class-ref name="GtkActionBar" />
     </glade-widget-group>
     
-    <glade-widget-group name="gtk-control-display" _title="Control and Display">
+    <glade-widget-group name="gtk-control" _title="Control">
       
       <glade-widget-class-ref name="GtkButton"/>
+      <glade-widget-class-ref name="GtkEntry"/>
+      <glade-widget-class-ref name="GtkSearchEntry"/>
+      <glade-widget-class-ref name="GtkSpinButton"/>
       <glade-widget-class-ref name="GtkToggleButton"/>
       <glade-widget-class-ref name="GtkCheckButton"/>
       <glade-widget-class-ref name="GtkRadioButton"/>
@@ -5556,18 +5601,13 @@
       <glade-widget-class-ref name="GtkLockButton"/>
       <glade-widget-class-ref name="GtkSwitch"/>
       <glade-widget-class-ref name="GtkModelButton"/>
-      
-      <glade-widget-class-ref name="GtkEntry"/>
-      <glade-widget-class-ref name="GtkSearchEntry"/>
-      <glade-widget-class-ref name="GtkSpinButton"/>
-      
+
+      <glade-widget-class-ref name="GtkStackSwitcher" />
+      <glade-widget-class-ref name="GtkStackSidebar" />
+
       <glade-widget-class-ref name="GtkComboBox"/>
       <glade-widget-class-ref name="GtkComboBoxText"/>
-      
-      <glade-widget-class-ref name="GtkImage"/>
-      <glade-widget-class-ref name="GtkLabel"/>
-      <glade-widget-class-ref name="GtkAccelLabel"/>
-      
+
       <glade-widget-class-ref name="GtkFileChooserButton"/>
       <glade-widget-class-ref name="GtkColorButton"/>
       <glade-widget-class-ref name="GtkFontButton"/>
@@ -5576,31 +5616,33 @@
       <glade-widget-class-ref name="GtkVolumeButton"/>
 
       <glade-widget-class-ref name="GtkAppChooserButton"/>
-      
+
       <glade-widget-class-ref name="GtkScale"/>
       <glade-widget-class-ref name="GtkScrollbar"/>
-      
+
+    </glade-widget-group>
+
+    <glade-widget-group name="gtk-display" _title="Display">
+      <glade-widget-class-ref name="GtkLabel"/>
+      <glade-widget-class-ref name="GtkAccelLabel"/>
+      <glade-widget-class-ref name="GtkImage"/>
+      <glade-widget-class-ref name="GtkTextView"/>
+      <glade-widget-class-ref name="GtkTreeView"/>
+      <glade-widget-class-ref name="GtkIconView"/>
+
       <glade-widget-class-ref name="GtkProgressBar"/>
       <glade-widget-class-ref name="GtkLevelBar"/>
       <glade-widget-class-ref name="GtkSpinner"/>
-      
-      <glade-widget-class-ref name="GtkTextView"/>
-      
-      <glade-widget-class-ref name="GtkTreeView"/>
-      <glade-widget-class-ref name="GtkIconView"/>
-      
-      <glade-widget-class-ref name="GtkStatusbar"/>
-      
-      <glade-widget-class-ref name="GtkCalendar"/>
+
       <glade-widget-class-ref name="GtkMenu"/>
+      <glade-widget-class-ref name="GtkCalendar"/>
       <glade-widget-class-ref name="GtkSeparator"/>
-      <glade-widget-class-ref name="GtkArrow"/>
       <glade-widget-class-ref name="GtkDrawingArea"/>
-      
+      <glade-widget-class-ref name="GtkGLArea"/>
+
       <glade-widget-class-ref name="GtkInfoBar"/>
-      <glade-widget-class-ref name="GtkStackSwitcher" />
     </glade-widget-group>
-    
+
     <glade-widget-group name="gtk-composite" _title="Composite Widgets">
       
       <default-palette-state expanded="False"/>

@@ -303,7 +303,18 @@
                   <varlistentry> 
                          <term>トップレベルの配置モード</term> 
                          <listitem> 
-                                <para>トップレベルの配置モードを使用するには、<guilabel>パレット</guilabel> ウィンドウでトップレベルに定義されているウィジェットを選択します。<guilabel>パレット</guilabel> ウィンドウでトップレベルのウィジェットを選択すると、即座にウィジェットがデスクトップに表示されます。その後でウィジェットを編集することができます。トップレベルのウィジェットを選択した後、モードは選択モードに復帰します。</para>
+                                <para lang="en">
+                                  To use top level placement mode, select a
+defined top-level
+                                  widget in the
+<guilabel>Palette</guilabel> window. When you select a top-level
+                                  widget in the 
+                                  <guilabel>Palette</guilabel> window, the
+widget appears
+                                  immediately on your desktop. You can then
+edit the widget. After you select a top-level widget,
+                                  the mode returns to selection mode.
+                                </para>
                          </listitem> 
                   </varlistentry> 
                 </variablelist> 

@@ -100,6 +100,7 @@ struct _GladeWidgetAdaptorPrivate
 				       * are special children (like notebook tab 
 				       * widgets for example).
 				       */
+  gboolean     query;                 /* Do we have to query the user, see glade_widget_adaptor_query() */
 };
 
 struct _GladeChildPacking
@@ -133,7 +134,8 @@ enum
   PROP_CATALOG,
   PROP_BOOK,
   PROP_SPECIAL_TYPE,
-  PROP_CURSOR
+  PROP_CURSOR,
+  PROP_QUERY
 };
 
 typedef struct _GladeChildPacking GladeChildPacking;
@@ -210,20 +212,6 @@ gwa_create_cursor (GladeWidgetAdaptor *adaptor)
 
   g_object_unref (tmp_pixbuf);
   g_object_unref (widget_pixbuf);
-}
-
-
-
-static gboolean
-gwa_gtype_equal (gconstpointer v1, gconstpointer v2)
-{
-  return *((const GType *) v1) == *((const GType *) v2);
-}
-
-static guint
-gwa_gtype_hash (gconstpointer v)
-{
-  return *(const GType *) v;
 }
 
 static gboolean
@@ -850,6 +838,9 @@ glade_widget_adaptor_real_set_property (GObject      *object,
 	g_free (adaptor->priv->special_child_type);
 	adaptor->priv->special_child_type = g_value_dup_string (value);
         break;
+      case PROP_QUERY:
+        adaptor->priv->query = g_value_get_boolean (value);
+        break;
       default:
         G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
         break;
@@ -895,6 +886,9 @@ glade_widget_adaptor_real_get_property (GObject    *object,
         break;
       case PROP_CURSOR:
         g_value_set_pointer (value, adaptor->priv->cursor);
+        break;
+      case PROP_QUERY:
+        g_value_set_boolean (value, adaptor->priv->query);
         break;
       default:
         G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -1509,6 +1503,11 @@ glade_widget_adaptor_class_init (GladeWidgetAdaptorClass *adaptor_class)
        g_param_spec_pointer
        ("cursor", _("Cursor"),
         _("A cursor for inserting widgets in the UI"), G_PARAM_READABLE));
+  g_object_class_install_property
+      (object_class, PROP_QUERY,
+       g_param_spec_boolean
+       ("query", _("Query"),
+        _("Whether the adaptor should query the use or not"), FALSE, G_PARAM_READWRITE));
 }
 
 /*******************************************************************************
@@ -1851,7 +1850,7 @@ glade_widget_adaptor_get_signals (GladeWidgetAdaptor *adaptor)
 }
 
 static void
-accum_adaptor (GType *type, GladeWidgetAdaptor *adaptor, GList **list)
+accum_adaptor (gpointer key, GladeWidgetAdaptor *adaptor, GList **list)
 {
   *list = g_list_prepend (*list, adaptor);
 }
@@ -1893,11 +1892,10 @@ glade_widget_adaptor_register (GladeWidgetAdaptor *adaptor)
     }
 
   if (!adaptor_hash)
-    adaptor_hash = g_hash_table_new_full (gwa_gtype_hash, gwa_gtype_equal,
-                                          g_free, g_object_unref);
+    adaptor_hash = g_hash_table_new_full (g_direct_hash, g_direct_equal,
+                                          NULL, g_object_unref);
 
-  g_hash_table_insert (adaptor_hash,
-                       g_memdup (&adaptor->priv->type, sizeof (GType)), adaptor);
+  g_hash_table_insert (adaptor_hash, GSIZE_TO_POINTER (adaptor->priv->real_type), adaptor);
 
   g_signal_emit_by_name (glade_app_get (), "widget-adaptor-registered", adaptor, NULL);
 }
@@ -3028,22 +3026,6 @@ glade_widget_adaptor_create_widget_real (gboolean     query,
   return gwidget;
 }
 
-typedef struct
-{
-  const gchar *name;
-  GladeWidgetAdaptor *adaptor;
-} GladeAdaptorSearchPair;
-
-
-static void
-search_adaptor_by_name (GType                  *type,
-                        GladeWidgetAdaptor     *adaptor,
-                        GladeAdaptorSearchPair *pair)
-{
-  if (!strcmp (adaptor->priv->name, pair->name))
-    pair->adaptor = adaptor;
-}
-
 /**
  * glade_widget_adaptor_get_by_name:
  * @name: name of the widget class (for instance: GtkButton)
@@ -3054,16 +3036,12 @@ search_adaptor_by_name (GType                  *type,
 GladeWidgetAdaptor *
 glade_widget_adaptor_get_by_name (const gchar *name)
 {
+  GType type = g_type_from_name (name);
 
+  if (adaptor_hash && type)
+    return g_hash_table_lookup (adaptor_hash, GSIZE_TO_POINTER (type));
 
-  GladeAdaptorSearchPair pair = { name, NULL };
-
-  if (adaptor_hash != NULL)
-    {
-      g_hash_table_foreach (adaptor_hash,
-                            (GHFunc) search_adaptor_by_name, &pair);
-    }
-  return pair.adaptor;
+  return NULL;
 }
 
 
@@ -3078,7 +3056,7 @@ GladeWidgetAdaptor *
 glade_widget_adaptor_get_by_type (GType type)
 {
   if (adaptor_hash != NULL)
-    return g_hash_table_lookup (adaptor_hash, &type);
+    return g_hash_table_lookup (adaptor_hash, GSIZE_TO_POINTER (type));
   else
     return NULL;
 }
@@ -3763,6 +3741,9 @@ glade_widget_adaptor_query (GladeWidgetAdaptor *adaptor)
   GList *l;
 
   g_return_val_if_fail (GLADE_IS_WIDGET_ADAPTOR (adaptor), FALSE);
+
+  if (!adaptor->priv->query)
+    return FALSE;
 
   for (l = adaptor->priv->properties; l; l = l->next)
     {

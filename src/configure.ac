@@ -3,8 +3,8 @@ dnl Process this file with autoconf to produce a configure script.
 AC_PREREQ(2.52)
 
 m4_define(glade_major_version, 3)
-m4_define(glade_minor_version, 20)
-m4_define(glade_micro_version, 0)
+m4_define(glade_minor_version, 22)
+m4_define(glade_micro_version, 1)
 m4_define(glade_version, glade_major_version.glade_minor_version.glade_micro_version)
 
 AC_INIT([glade], [glade_version],
@@ -53,9 +53,9 @@ AC_PATH_PROG(DLLTOOL, dlltool)
 # If any interfaces have been removed since the last public release, then set GLADE_AGE to 0.
 # Reference: http://www.gnu.org/software/libtool/manual/libtool.html#Versioning
 
-GLADE_REVISION=0
-GLADE_CURRENT=9
-GLADE_AGE=3
+GLADE_REVISION=1
+GLADE_CURRENT=11
+GLADE_AGE=5
 GLADE_CURRENT_MINUS_AGE=`expr $GLADE_CURRENT - $GLADE_AGE`
 AC_SUBST(GLADE_REVISION)
 AC_SUBST(GLADE_CURRENT)
@@ -146,8 +146,10 @@ dnl ================================================================
 dnl Check for gtk+
 dnl ================================================================
 GTK_REQUIRED=3.20.0
+GLIB_REQUIRED=2.53.2
 PKG_CHECK_MODULES([GTK],[
   gtk+-3.0 >= $GTK_REQUIRED
+  glib-2.0 >= $GLIB_REQUIRED
   gmodule-2.0
   libxml-2.0 >= 2.4.0
 ])
@@ -206,6 +208,22 @@ else
 fi
 
 AM_CONDITIONAL(BUILD_PYTHON, test x"$have_python" = "xyes")
+
+dnl ================================================================
+dnl WebKit2GTK support
+dnl ================================================================
+WEBKIT2GTK_REQUIRED=2.12.0
+
+AC_ARG_ENABLE(webkit2gtk,
+    AS_HELP_STRING([--disable-webkit2gtk], [disable webkit2gtk catalog]),
+    check_webkit2gtk=$enableval, check_webkit2gtk=yes)
+
+if test x"$check_webkit2gtk" = x"yes"; then
+  PKG_CHECK_MODULES([WEBKIT2GTK],[webkit2gtk-4.0 >= $WEBKIT2GTK_REQUIRED],[have_webkit2gtk=yes],[have_webkit2gtk=no])
+else
+  have_webkit2gtk=no
+fi
+AM_CONDITIONAL(BUILD_WEBKIT2GTK, test x"$have_webkit2gtk" = "xyes")
 
 # ==================================================================
 # Glade User Manual (requires yelp-tools)
@@ -297,11 +315,7 @@ AM_CONDITIONAL(BUILD_GLADEUI, test x"$enable_gladeui" = "xyes")
 dnl ================================================================
 dnl Testing environment
 dnl ================================================================
-#
-# Do not redefine pixmap dir as it does not work if not inside a proper directory structure
-# GLADE_PIXMAP_DIR=$(top_srcdir)/data/icons
-#
-GLADE_TEST_ENVIRONMENT='GLADE_TESTING=1 GLADE_CATALOG_SEARCH_PATH=$(top_srcdir)/plugins/gtk+ GLADE_MODULE_SEARCH_PATH=$(top_builddir)/plugins/gtk+/.libs'
+GLADE_TEST_ENVIRONMENT='GLADE_TESTING=1 GLADE_CATALOG_SEARCH_PATH=$(top_srcdir)/plugins/gtk+ GLADE_MODULE_SEARCH_PATH=$(top_builddir)/plugins/gtk+/.libs GLADE_PIXMAP_DIR=$(top_srcdir)/data/icons GLADE_ICON_THEME_PATH=$(top_srcdir)/plugins/gtk+/icons/22x22'
 AC_SUBST(GLADE_TEST_ENVIRONMENT)
 
 AC_SUBST([AM_CPPFLAGS])
@@ -342,6 +356,7 @@ plugins/gtk+/icons/16x16/Makefile
 plugins/gtk+/icons/22x22/Makefile
 plugins/python/Makefile
 plugins/gladeui/Makefile
+plugins/webkit2gtk/Makefile
 po/Makefile.in
 doc/Makefile
 doc/version.xml
@@ -363,6 +378,7 @@ Configuration:
 	GTK+ UNIX Print Widgets: ${have_unix_print}
 	PYTHON Widgets support:	 ${have_python}
 	Gladeui Catalog:         ${enable_gladeui}
+	WebKit2GTK+ Catalog:     ${have_webkit2gtk}
 	Introspection Data:      ${found_introspection}
 
 	Build Reference Manual:  ${enable_gtk_doc}

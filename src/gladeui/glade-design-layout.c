@@ -703,9 +703,7 @@ glade_design_layout_button_press_event (GtkWidget *widget, GdkEventButton *ev)
       (!glade_project_is_toplevel_active (priv->project, child) ||
       ev->type == GDK_2BUTTON_PRESS))
     {
-      _glade_design_view_freeze (priv->view);
       glade_project_selection_set (priv->project, G_OBJECT (child), TRUE);
-      _glade_design_view_thaw (priv->view);
     }
 
   return (activity != ACTIVITY_NONE);
@@ -973,9 +971,12 @@ glade_design_layout_add (GtkContainer *container, GtkWidget *widget)
 {
   GladeDesignLayout *layout = GLADE_DESIGN_LAYOUT (container);
   GladeDesignLayoutPrivate *priv = layout->priv;
+  GtkStyleContext *context = gtk_widget_get_style_context (widget);
 
   priv->child_rect.width = 0;
   priv->child_rect.height = 0;
+
+  gtk_style_context_add_class (context, "background");
 
   gtk_widget_set_parent_window (widget, priv->offscreen_window);
 
@@ -1033,13 +1034,13 @@ draw_frame (GtkWidget *widget, cairo_t *cr, gboolean selected,
   if (priv->widget_name)
     {
       GdkRectangle *rect = &priv->south_east;
-
+      gtk_style_context_save (context);
       gtk_style_context_add_class (context, "handle");
       gtk_render_background (context, cr, rect->x, rect->y, rect->width, rect->height);
       gtk_render_frame (context, cr, rect->x, rect->y, rect->width, rect->height);
       gtk_render_layout (context, cr, rect->x + OUTLINE_WIDTH, rect->y + OUTLINE_WIDTH,
                          priv->widget_name);
-      gtk_style_context_remove_class (context, "handle");
+      gtk_style_context_restore (context);
     }
 }
 
@@ -1084,6 +1085,7 @@ draw_selection (cairo_t *cr,
   if (alloc.x < 0 || alloc.y < 0) return;
 
   context = gtk_widget_get_style_context (parent);
+  gtk_style_context_save (context);
   gtk_style_context_add_class (context, "selection");
   r = color->red; g = color->green; b = color->blue;
   gtk_widget_translate_coordinates (widget, parent, 0, 0, &x, &y);
@@ -1122,7 +1124,7 @@ draw_selection (cairo_t *cr,
 
   /* Draw Selection box */
   gtk_render_frame (context, cr, x - left, y - top, w + left + right, h + top + bottom);
-  gtk_style_context_remove_class (context, "selection");
+  gtk_style_context_restore (context);
 }
 
 #define DIMENSION_OFFSET 9
@@ -2508,8 +2510,6 @@ _glade_design_layout_do_event (GladeDesignLayout *layout, GdkEvent *event)
    */
   gdl_drag_source_check (layout, mode, event, gwidget, x, y);
 
-  _glade_design_view_freeze (priv->view);
-  
   /* Try the placeholder first */
   if (placeholder && gtk_widget_event (placeholder, event)) 
     retval = TRUE;
@@ -2517,8 +2517,6 @@ _glade_design_layout_do_event (GladeDesignLayout *layout, GdkEvent *event)
     retval = glade_widget_event (gwidget, event);
   else
     retval = FALSE;
-
-  _glade_design_view_thaw (priv->view);
 
   return retval;
 }

@@ -296,7 +296,18 @@
                   <varlistentry> 
                          <term>Goi-mailako kokapen modua</term> 
                          <listitem> 
-                                <para>Goi-mailako kokapen modua erabiltzeko, hautatu goi-mailako gisa definitutako trepeta bat <application>Paleta</application> leihoan. <guilabel>Paleta</guilabel> leihoan goi-mailako trepeta bat hautatzean, mahaigainean agertzen da trepeta hori. Trepeta hori edita dezakezu, orduan. Goi-mailako trepeta hautatu ondoren, hautapen modura itzultzen da.</para>
+                                <para lang="en">
+                                  To use top level placement mode, select a
+defined top-level
+                                  widget in the
+<guilabel>Palette</guilabel> window. When you select a top-level
+                                  widget in the 
+                                  <guilabel>Palette</guilabel> window, the
+widget appears
+                                  immediately on your desktop. You can then
+edit the widget. After you select a top-level widget,
+                                  the mode returns to selection mode.
+                                </para>
                          </listitem> 
                   </varlistentry> 
                 </variablelist> 

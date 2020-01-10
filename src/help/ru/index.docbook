@@ -260,7 +260,18 @@
                   <varlistentry> 
                          <term>Режим размещения в верхнем уровне</term> 
                          <listitem> 
-                                <para>Для использования выберите виджет верхнего уровня в окне <application>Палитра</application>. Когда вы выберите его, виджет немедленно появится на вашем рабочем столе. Вы можете редактировать виджет. После выбора виджета верхнего уровня, режим переключается в режим выделения.</para>
+                                <para lang="en">
+                                  To use top level placement mode, select a
+defined top-level
+                                  widget in the
+<guilabel>Palette</guilabel> window. When you select a top-level
+                                  widget in the 
+                                  <guilabel>Palette</guilabel> window, the
+widget appears
+                                  immediately on your desktop. You can then
+edit the widget. After you select a top-level widget,
+                                  the mode returns to selection mode.
+                                </para>
                          </listitem> 
                   </varlistentry> 
                 </variablelist> 

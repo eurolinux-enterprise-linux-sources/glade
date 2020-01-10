@@ -262,7 +262,6 @@
     <keyword type="macro" name="GWA_GET_CLASS()" link="gladeui-glade-widget-adaptor.html#GWA-GET-CLASS:CAPS"/>
     <keyword type="macro" name="GWA_GET_OCLASS()" link="gladeui-glade-widget-adaptor.html#GWA-GET-OCLASS:CAPS"/>
     <keyword type="macro" name="GLADE_VALID_CREATE_REASON()" link="gladeui-glade-widget-adaptor.html#GLADE-VALID-CREATE-REASON:CAPS"/>
-    <keyword type="macro" name="GLADE_TYPE_CREATE_REASON" link="gladeui-glade-widget-adaptor.html#GLADE-TYPE-CREATE-REASON:CAPS"/>
     <keyword type="function" name="GladeSetPropertyFunc ()" link="gladeui-glade-widget-adaptor.html#GladeSetPropertyFunc"/>
     <keyword type="function" name="GladeGetPropertyFunc ()" link="gladeui-glade-widget-adaptor.html#GladeGetPropertyFunc"/>
     <keyword type="function" name="GladeVerifyPropertyFunc ()" link="gladeui-glade-widget-adaptor.html#GladeVerifyPropertyFunc"/>
@@ -322,6 +321,7 @@
     <keyword type="function" name="glade_widget_adaptor_child_action_activate ()" link="gladeui-glade-widget-adaptor.html#glade-widget-adaptor-child-action-activate"/>
     <keyword type="function" name="glade_widget_adaptor_string_from_value ()" link="gladeui-glade-widget-adaptor.html#glade-widget-adaptor-string-from-value"/>
     <keyword type="enum" name="enum GladeCreateReason" link="gladeui-glade-widget-adaptor.html#GladeCreateReason"/>
+    <keyword type="macro" name="GLADE_TYPE_CREATE_REASON" link="gladeui-glade-widget-adaptor.html#GLADE-TYPE-CREATE-REASON:CAPS"/>
     <keyword type="struct" name="GladeWidgetAdaptor" link="gladeui-glade-widget-adaptor.html#GladeWidgetAdaptor-struct"/>
     <keyword type="property" name="The “book” property" link="gladeui-glade-widget-adaptor.html#GladeWidgetAdaptor--book"/>
     <keyword type="property" name="The “catalog” property" link="gladeui-glade-widget-adaptor.html#GladeWidgetAdaptor--catalog"/>
@@ -329,6 +329,7 @@
     <keyword type="property" name="The “generic-name” property" link="gladeui-glade-widget-adaptor.html#GladeWidgetAdaptor--generic-name"/>
     <keyword type="property" name="The “icon-name” property" link="gladeui-glade-widget-adaptor.html#GladeWidgetAdaptor--icon-name"/>
     <keyword type="property" name="The “name” property" link="gladeui-glade-widget-adaptor.html#GladeWidgetAdaptor--name"/>
+    <keyword type="property" name="The “query” property" link="gladeui-glade-widget-adaptor.html#GladeWidgetAdaptor--query"/>
     <keyword type="property" name="The “special-child-type” property" link="gladeui-glade-widget-adaptor.html#GladeWidgetAdaptor--special-child-type"/>
     <keyword type="property" name="The “title” property" link="gladeui-glade-widget-adaptor.html#GladeWidgetAdaptor--title"/>
     <keyword type="property" name="The “type” property" link="gladeui-glade-widget-adaptor.html#GladeWidgetAdaptor--type"/>
@@ -454,6 +455,7 @@
     <keyword type="struct" name="struct GladeEditorTable" link="gladeui-glade-editor.html#GladeEditorTable"/>
     <keyword type="struct" name="struct GladeEditor" link="gladeui-glade-editor.html#GladeEditor-struct"/>
     <keyword type="property" name="The “class-field” property" link="gladeui-glade-editor.html#GladeEditor--class-field"/>
+    <keyword type="property" name="The “show-boder” property" link="gladeui-glade-editor.html#GladeEditor--show-boder"/>
     <keyword type="property" name="The “show-class-field” property" link="gladeui-glade-editor.html#GladeEditor--show-class-field"/>
     <keyword type="property" name="The “show-info” property" link="gladeui-glade-editor.html#GladeEditor--show-info"/>
     <keyword type="property" name="The “widget” property" link="gladeui-glade-editor.html#GladeEditor--widget"/>
@@ -542,5 +544,8 @@
     <keyword type="constant" name="GLADE_UI_ERROR" link="gladeui-Glade-Utils.html#GLADE-UI-ERROR:CAPS"/>
     <keyword type="constant" name="GLADE_UI_ARE_YOU_SURE" link="gladeui-Glade-Utils.html#GLADE-UI-ARE-YOU-SURE:CAPS"/>
     <keyword type="constant" name="GLADE_UI_YES_OR_NO" link="gladeui-Glade-Utils.html#GLADE-UI-YES-OR-NO:CAPS"/>
+    <keyword type="member" name="GCSetPropData.property" link="gladeui-glade-command.html#GCSetPropData.property"/>
+    <keyword type="member" name="GCSetPropData.new-value" link="gladeui-glade-command.html#GCSetPropData.new-value"/>
+    <keyword type="member" name="GCSetPropData.old-value" link="gladeui-glade-command.html#GCSetPropData.old-value"/>
   </functions>
 </book>

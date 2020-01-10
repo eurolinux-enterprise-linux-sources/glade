@@ -296,7 +296,18 @@
                   <varlistentry> 
                          <term>Način umeščanja na najvišje ravni</term> 
                          <listitem> 
-                                <para>Za uporabo načina umeščanja najvišje ravni izberite določeno najvišjo raven gradnika v oknu <application>Paleta</application>. Ko je izberan v oknu <application>Paleta</application>, se gradnik pojavi na vašem namizju. Tedaj lahko urejate gradnik. Po izbiri se način delovanja povrne v način izbiranja.</para>
+                                <para lang="en">
+                                  To use top level placement mode, select a
+defined top-level
+                                  widget in the
+<guilabel>Palette</guilabel> window. When you select a top-level
+                                  widget in the 
+                                  <guilabel>Palette</guilabel> window, the
+widget appears
+                                  immediately on your desktop. You can then
+edit the widget. After you select a top-level widget,
+                                  the mode returns to selection mode.
+                                </para>
                          </listitem> 
                   </varlistentry> 
                 </variablelist> 

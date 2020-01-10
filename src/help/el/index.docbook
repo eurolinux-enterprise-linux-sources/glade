@@ -233,7 +233,18 @@
                   <varlistentry> 
                          <term>Κατάσταση τοποθέτησης ανώτατου επιπέδου</term> 
                          <listitem> 
-                                <para>Για να χρησιμοποιήσετε την κατάσταση τοποθέτησης στο ανώτατο επίπεδο, επιλέξτε ένα γραφικό συστατικό ανώτατου επιπέδου της <guilabel>Παλέτας</guilabel>. Όταν επιλέγετε ένα γραφικό συστατικό ανώτατου επιπέδου από την <guilabel>Παλέτας</guilabel>, το συστατικό αυτό εμφανίζεται αμέσως στην επιφάνεια εργασίας. Στη συνέχεια μπορείτε να το επεξεργαστείτε. Αφού επιλέξετε το γραφικό συστατικό ανώτατου επιπέδου, επανέρχεστε στην κατάσταση επιλογής.</para>
+                                <para lang="en">
+                                  To use top level placement mode, select a
+defined top-level
+                                  widget in the
+<guilabel>Palette</guilabel> window. When you select a top-level
+                                  widget in the 
+                                  <guilabel>Palette</guilabel> window, the
+widget appears
+                                  immediately on your desktop. You can then
+edit the widget. After you select a top-level widget,
+                                  the mode returns to selection mode.
+                                </para>
                          </listitem> 
                   </varlistentry> 
                 </variablelist> 

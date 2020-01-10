@@ -41,7 +41,7 @@
 #include "glade-design-layout.h"
 #include "glade-design-private.h"
 #include "glade-path.h"
-#include "glade-adaptor-chooser.h"
+#include "glade-adaptor-chooser-widget.h"
 
 #include <glib.h>
 #include <glib/gi18n.h>
@@ -106,38 +106,49 @@ on_layout_size_allocate (GtkWidget *widget, GtkAllocation *alloc, GladeDesignVie
 }
 
 static void
+glade_design_view_update_state (GList *objects, GtkStateFlags state)
+{
+  GList *l;
+
+  for (l = objects; l && l->data; l = g_list_next (l))
+    {
+      GtkWidget *view, *widget = l->data;
+
+      if (GTK_IS_WIDGET (widget) &&
+          gtk_widget_get_visible (widget) &&
+          (view = gtk_widget_get_ancestor (widget, GLADE_TYPE_DESIGN_LAYOUT)))
+        {
+          gtk_widget_set_state_flags (view, state, TRUE);
+        }
+    }
+}
+
+static void
 glade_design_view_selection_changed (GladeProject *project, GladeDesignView *view)
 {
+  GtkWidget *layout;
   GList *selection;
 
+  glade_design_view_update_state (glade_project_toplevels (project),
+                                  GTK_STATE_FLAG_NORMAL);
+
+  if (!(selection = glade_project_selection_get (project)))
+    return;
+
+  glade_design_view_update_state (selection, GTK_STATE_FLAG_SELECTED);
+
   /* Check if its only one widget selected and scroll viewport to show toplevel */
-  if ((selection = glade_project_selection_get (project)) &&
-      g_list_next (selection) == NULL &&
-      GTK_IS_WIDGET (selection->data))
+  if (g_list_next (selection) == NULL &&
+      GTK_IS_WIDGET (selection->data) &&
+      (layout = gtk_widget_get_ancestor (selection->data, GLADE_TYPE_DESIGN_LAYOUT)))
     {
-      GladeWidget *gwidget, *gtoplevel;
-      GObject *toplevel;
-      
-      if (!GLADE_IS_PLACEHOLDER (selection->data) &&
-          (gwidget = glade_widget_get_from_gobject (G_OBJECT (selection->data))) &&
-          (gtoplevel = glade_widget_get_toplevel (gwidget)) &&
-          (toplevel = glade_widget_get_object (gtoplevel)) &&
-          GTK_IS_WIDGET (toplevel))
-        {
-          GtkWidget *layout;
+      GtkAllocation alloc;
+      gtk_widget_get_allocation (layout, &alloc);
 
-          if ((layout = gtk_widget_get_parent (GTK_WIDGET (toplevel))) &&
-              GLADE_IS_DESIGN_LAYOUT (layout))
-            {
-              GtkAllocation alloc;
-              gtk_widget_get_allocation (layout, &alloc);
-
-              if (alloc.x < 0)
-                g_signal_connect (layout, "size-allocate", G_CALLBACK (on_layout_size_allocate), view);
-              else
-                glade_design_layout_scroll (view, alloc.x, alloc.y, alloc.width, alloc.height);
-            }
-        }
+      if (alloc.x < 0)
+        g_signal_connect (layout, "size-allocate", G_CALLBACK (on_layout_size_allocate), view);
+      else
+        glade_design_layout_scroll (view, alloc.x, alloc.y, alloc.width, alloc.height);
     }
 }
 
@@ -326,9 +337,9 @@ logo_draw (GtkWidget *widget, cairo_t *cr, GdkRGBA *c)
 }
 
 static void
-on_chooser_adaptor_selected (_GladeAdaptorChooser *chooser,
-                             GladeWidgetAdaptor   *adaptor,
-                             GladeProject         *project)
+on_chooser_adaptor_widget_selected (_GladeAdaptorChooserWidget *chooser,
+                                    GladeWidgetAdaptor         *adaptor,
+                                    GladeProject               *project)
 
 {
   glade_command_create (adaptor, NULL, NULL, project);
@@ -351,15 +362,18 @@ glade_design_view_viewport_button_press (GtkWidget       *widget,
   gtk_popover_set_pointing_to (GTK_POPOVER (pop), &rect);
   gtk_popover_set_position (GTK_POPOVER (pop), GTK_POS_BOTTOM);
   
-  chooser = _glade_adaptor_chooser_new (GLADE_ADAPTOR_CHOOSER_TOPLEVEL,
-                                        priv->project);
+  chooser = _glade_adaptor_chooser_widget_new (GLADE_ADAPTOR_CHOOSER_WIDGET_TOPLEVEL |
+                                               GLADE_ADAPTOR_CHOOSER_WIDGET_WIDGET |
+                                               GLADE_ADAPTOR_CHOOSER_WIDGET_SKIP_DEPRECATED,
+                                               priv->project);
+  _glade_adaptor_chooser_widget_populate (GLADE_ADAPTOR_CHOOSER_WIDGET (chooser));
   g_signal_connect (chooser, "adaptor-selected",
-                    G_CALLBACK (on_chooser_adaptor_selected),
+                    G_CALLBACK (on_chooser_adaptor_widget_selected),
                     priv->project);
 
   gtk_container_add (GTK_CONTAINER (pop), chooser);
   gtk_widget_show (chooser);
-  gtk_widget_show (pop);
+  gtk_popover_popup (GTK_POPOVER (pop));
 
   return TRUE;
 }
@@ -755,27 +769,6 @@ glade_design_view_class_init (GladeDesignViewClass *klass)
                                                         GLADE_TYPE_PROJECT,
                                                         G_PARAM_READWRITE |
                                                         G_PARAM_CONSTRUCT_ONLY));
-}
-
-/* Private API */
-void
-_glade_design_view_freeze (GladeDesignView *view)
-{
-  g_return_if_fail (GLADE_IS_DESIGN_VIEW (view));
-  
-  g_signal_handlers_block_by_func (view->priv->project,
-                                   glade_design_view_selection_changed,
-                                   view);
-}
-
-void
-_glade_design_view_thaw   (GladeDesignView *view)
-{
-  g_return_if_fail (GLADE_IS_DESIGN_VIEW (view));
-  
-  g_signal_handlers_unblock_by_func (view->priv->project,
-                                     glade_design_view_selection_changed,
-                                     view);
 }
 
 /* Public API */

@@ -12,10 +12,10 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: glade3.HEAD\n"
-"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
+"Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?"
 "product=glade&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2016-03-06 07:20+0000\n"
-"PO-Revision-Date: 2016-03-14 18:03+0200\n"
+"POT-Creation-Date: 2017-08-20 21:18+0000\n"
+"PO-Revision-Date: 2017-09-09 10:28+0200\n"
 "Last-Translator: Efstathios Iosifidis <iosifidis@opensuse.org>\n"
 "Language-Team: Greek, Modern (1453-) <opensuse-translation-el@opensuse.org>\n"
 "Language: el\n"
@@ -23,10 +23,11 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Gtranslator 2.91.7\n"
+"X-Generator: Poedit 1.5.7\n"
 "X-Project-Style: gnome\n"
 
-#: ../data/glade.desktop.in.in.h:1 ../src/main.c:42
+#: ../data/glade.desktop.in.in.h:1 ../data/glade.appdata.xml.in.h:1
+#: ../src/main.c:42
 msgid "Glade"
 msgstr "Glade"
 
@@ -38,7 +39,7 @@ msgstr "Σχεδιαστής διεπαφών"
 msgid "Glade Interface Designer"
 msgstr "Σχεδιαστής διεπαφών Glade"
 
-#: ../data/glade.desktop.in.in.h:4
+#: ../data/glade.desktop.in.in.h:4 ../data/glade.appdata.xml.in.h:2
 msgid "Create or open user interface designs for GTK+ applications"
 msgstr "Δημιουργήστε ή ανοίξτε σχέδια διεπαφής χρήστη για εφαρμογές GTK+"
 
@@ -47,7 +48,7 @@ msgid "GUI designer;user interface;ui builder;"
 msgstr "Σχεδιαστής GUI;διεπαφή χρήστη;GUI designer;user interface;ui builder;"
 
 #. To translators: AppData description first paragraph
-#: ../data/glade.appdata.xml.in.h:2
+#: ../data/glade.appdata.xml.in.h:4
 msgid ""
 "Glade is a RAD tool to enable quick &amp; easy development of user "
 "interfaces for the GTK+ 3 toolkit and the GNOME desktop environment."
@@ -57,7 +58,7 @@ msgstr ""
 "περιβάλλον επιφάνειας εργασίας GNOME."
 
 #. To translators: AppData description second paragraph
-#: ../data/glade.appdata.xml.in.h:4
+#: ../data/glade.appdata.xml.in.h:6
 msgid ""
 "The user interfaces designed in Glade are saved as XML and these can be "
 "loaded by applications dynamically as needed by using GtkBuilder or used "
@@ -71,7 +72,7 @@ msgstr ""
 "λειτουργίας του προτύπου Gtk+."
 
 #. To translators: AppData description third paragraph
-#: ../data/glade.appdata.xml.in.h:6
+#: ../data/glade.appdata.xml.in.h:8
 msgid ""
 "By using GtkBuilder, Glade XML files can be used in numerous programming "
 "languages including C, C++, C#, Vala, Java, Perl, Python, and others."
@@ -228,13 +229,13 @@ msgstr "Κλείσιμο _χωρίς αποθήκευση"
 
 #: ../src/glade-window.c:1480 ../src/glade-window.c:2656
 #: ../gladeui/glade-editor.c:765 ../gladeui/glade-editor.c:1121
-#: ../gladeui/glade-editor-property.c:1723
-#: ../gladeui/glade-editor-property.c:2030
-#: ../gladeui/glade-editor-property.c:2229
-#: ../gladeui/glade-editor-property.c:3170
-#: ../gladeui/glade-editor-property.c:3282
-#: ../gladeui/glade-editor-property.c:3299
-#: ../gladeui/glade-editor-property.c:3619 ../gladeui/glade-utils.c:483
+#: ../gladeui/glade-editor-property.c:1690
+#: ../gladeui/glade-editor-property.c:1997
+#: ../gladeui/glade-editor-property.c:2196
+#: ../gladeui/glade-editor-property.c:3137
+#: ../gladeui/glade-editor-property.c:3249
+#: ../gladeui/glade-editor-property.c:3266
+#: ../gladeui/glade-editor-property.c:3586 ../gladeui/glade-utils.c:483
 #: ../plugins/gtk+/glade-accels.c:525 ../plugins/gtk+/glade-attributes.c:1062
 msgid "_Cancel"
 msgstr "Άκ_υρο"
@@ -468,7 +469,7 @@ msgid "Edit widget alignment"
 msgstr "Επεξεργασία στοίχισης γραφικού στοιχείου"
 
 #. GtkFileChooserAction enumeration value
-#: ../src/glade.glade.h:29 ../plugins/gtk+/gtk+.xml.in.h:608
+#: ../src/glade.glade.h:29 ../plugins/gtk+/gtk+.xml.in.h:628
 msgid "Save"
 msgstr "Αποθήκευση"
 
@@ -489,7 +490,7 @@ msgid "Edit project properties"
 msgstr "Επεξεργασία ιδιοτήτων έργου"
 
 #. GtkButtonsType enumeration value
-#: ../src/glade.glade.h:35 ../plugins/gtk+/gtk+.xml.in.h:818
+#: ../src/glade.glade.h:35 ../plugins/gtk+/gtk+.xml.in.h:601
 msgid "Close"
 msgstr "Κλείσιμο"
 
@@ -658,7 +659,7 @@ msgid "Create a new project"
 msgstr "Δημιουργία νέου έργου"
 
 #. GtkFileChooserAction enumeration value
-#: ../src/glade.glade.h:77 ../plugins/gtk+/gtk+.xml.in.h:610
+#: ../src/glade.glade.h:77 ../plugins/gtk+/gtk+.xml.in.h:630
 msgid "Open"
 msgstr "Άνοιγμα"
 
@@ -833,7 +834,7 @@ msgid "Select a catalog search path"
 msgstr "Επιλέξτε μια διαδρομή αναζήτησης καταλόγου"
 
 #. translators: Email subject sent to the user after completing the survey
-#: ../src/glade-registration.c:32 ../src/glade-registration.glade.h:27
+#: ../src/glade-registration.c:32 ../src/glade-registration.glade.h:26
 msgid "Glade User Survey"
 msgstr "Έρευνα χρήστη του Glade"
 
@@ -899,49 +900,49 @@ msgstr ""
 "\n"
 "\tΗ ομάδα του Glade\n"
 
-#: ../src/glade-registration.c:308
+#: ../src/glade-registration.c:306
 #, c-format
 msgid "Connecting to %s"
 msgstr "Σύνδεση στο %s"
 
-#: ../src/glade-registration.c:311
+#: ../src/glade-registration.c:309
 #, c-format
 msgid "Sending data to %s"
 msgstr "Αποστολή δεδομένων στο %s"
 
-#: ../src/glade-registration.c:314
+#: ../src/glade-registration.c:312
 #, c-format
 msgid "Waiting for %s"
 msgstr "Αναμονή για %s"
 
-#: ../src/glade-registration.c:317
+#: ../src/glade-registration.c:315
 #, c-format
 msgid "Receiving data from %s"
 msgstr "Λήψη δεδομένων από %s"
 
-#: ../src/glade-registration.c:349
+#: ../src/glade-registration.c:347
 msgid "Sorry, automatic subscription to Glade Users mailing list failed"
 msgstr "Συγγνώμη, απέτυχε η εγγραφή στη λίστα αλληλογραφίας χρηστών του Glade"
 
-#: ../src/glade-registration.c:352
+#: ../src/glade-registration.c:350
 msgid "Open Glade Users Website"
 msgstr "Άνοιγμα της ιστοσελίδας χρηστών του Glade"
 
-#: ../src/glade-registration.c:404
+#: ../src/glade-registration.c:402
 msgid "Internal server error"
 msgstr "Εσωτερικό σφάλμα διακομιστή"
 
-#: ../src/glade-registration.c:428
+#: ../src/glade-registration.c:426
 msgid "Thank you for taking the time to complete the survey, we appreciate it!"
 msgstr ""
 "Σας ευχαριστούμε που βρήκατε τον χρόνο να συμπληρώσετε την έρευνα χρηστών "
 "του Glade, το εκτιμούμε!"
 
-#: ../src/glade-registration.c:436
+#: ../src/glade-registration.c:434
 msgid "Name and Email fields are required"
 msgstr "Είναι υποχρεωτικά το όνομα και η διεύθυνση ηλ. αλληλογγραφίας"
 
-#: ../src/glade-registration.c:439
+#: ../src/glade-registration.c:437
 msgid ""
 "Oops! Email address is already in use!\n"
 "To update information you need to provide the token that was sent to your "
@@ -951,17 +952,17 @@ msgstr ""
 "Για να ενημερώσετε τις πληροφορίες πρέπει να δώσετε το διακριτικό που σας "
 "στάλθηκε."
 
-#: ../src/glade-registration.c:442
+#: ../src/glade-registration.c:440
 #, c-format
 msgid "Oops! Error saving user information: %s"
 msgstr "Ωχ! Σφάλμα κατά την αποθήκευση πληροφοριών του χρήστη: %s"
 
-#: ../src/glade-registration.c:445
+#: ../src/glade-registration.c:443
 #, c-format
 msgid "Oops! Error saving survey data: %s"
 msgstr "Ωχ! Σφάλμα κατά την αποθήκευση δεδομένων της έρευνας: %s"
 
-#: ../src/glade-registration.c:448
+#: ../src/glade-registration.c:446
 #, c-format
 msgid "Oops! Error accessing DB: %s"
 msgstr "Ωχ! Σφάλμα κατά την πρόσβαση στη βάση δεδομένων: %s"
@@ -971,7 +972,7 @@ msgid "Glade Registration & User Survey"
 msgstr "Εγγραφή & έρευνα χρήστη του Glade"
 
 #. GtkButtonsType enumeration value
-#: ../src/glade-registration.glade.h:2 ../plugins/gtk+/gtk+.xml.in.h:820
+#: ../src/glade-registration.glade.h:2 ../plugins/gtk+/gtk+.xml.in.h:599
 msgid "Cancel"
 msgstr "Άκυρο"
 
@@ -1060,316 +1061,312 @@ msgstr ""
 "διαμοιρασμός στο κοινό ή σε τρίτους."
 
 #: ../src/glade-registration.glade.h:24
-msgid "See Privacy Note"
-msgstr "Δείτε τη σημείωση απορρήτου"
-
-#: ../src/glade-registration.glade.h:25
 msgid "Update Info"
 msgstr "Πληροφορίες ενημέρωσης"
 
-#: ../src/glade-registration.glade.h:26
+#: ../src/glade-registration.glade.h:25
 msgid "<Insert update token, if you want to update previously sent data>"
 msgstr ""
 "<Εισαγωγή διακριτικού ενημέρωσης, αν θέλετε να ενημερώσετε προηγουμένως "
 "απεσταλμένα δεδομένα>"
 
-#: ../src/glade-registration.glade.h:28
+#: ../src/glade-registration.glade.h:27
 msgid "How long have you been programming?"
 msgstr "Πόσον καιρό προγραμματίζετε;"
 
-#: ../src/glade-registration.glade.h:29
+#: ../src/glade-registration.glade.h:28
 msgid "0"
 msgstr "0"
 
-#: ../src/glade-registration.glade.h:30
+#: ../src/glade-registration.glade.h:29
 msgid "years"
 msgstr "χρόνια"
 
-#: ../src/glade-registration.glade.h:31
+#: ../src/glade-registration.glade.h:30
 msgid "months"
 msgstr "μήνες"
 
-#: ../src/glade-registration.glade.h:32
+#: ../src/glade-registration.glade.h:31
 msgid "I am not a programmer"
 msgstr "Δεν είμαι προγραμματιστής"
 
-#: ../src/glade-registration.glade.h:33
+#: ../src/glade-registration.glade.h:32
 msgid "Which programming languages do you prefer?"
 msgstr "Ποιες γλώσσες προγραμματισμού προτιμάτε;"
 
-#: ../src/glade-registration.glade.h:34
+#: ../src/glade-registration.glade.h:33
 msgid "C"
 msgstr "C"
 
-#: ../src/glade-registration.glade.h:35
+#: ../src/glade-registration.glade.h:34
 msgid "C++"
 msgstr "C++"
 
-#: ../src/glade-registration.glade.h:36
+#: ../src/glade-registration.glade.h:35
 msgid "C#"
 msgstr "C#"
 
-#: ../src/glade-registration.glade.h:37
+#: ../src/glade-registration.glade.h:36
 msgid "Java"
 msgstr "Java"
 
-#: ../src/glade-registration.glade.h:38
+#: ../src/glade-registration.glade.h:37
 msgid "Python"
 msgstr "Python"
 
-#: ../src/glade-registration.glade.h:39
+#: ../src/glade-registration.glade.h:38
 msgid "JavaScript"
 msgstr "JavaScript"
 
-#: ../src/glade-registration.glade.h:40
+#: ../src/glade-registration.glade.h:39
 msgid "Vala"
 msgstr "Vala"
 
-#: ../src/glade-registration.glade.h:41
+#: ../src/glade-registration.glade.h:40
 msgid "Perl"
 msgstr "Perl"
 
 #. GtkCellRendererAccelMode enumeration value
-#: ../src/glade-registration.glade.h:42
+#: ../src/glade-registration.glade.h:41
 #: ../gladeui/glade-project-properties.ui.h:19
-#: ../plugins/gtk+/gtk+.xml.in.h:766
+#: ../plugins/gtk+/gtk+.xml.in.h:787
 msgid "Other"
 msgstr "Άλλο"
 
-#: ../src/glade-registration.glade.h:43
+#: ../src/glade-registration.glade.h:42
 msgid "When did you start using Glade?"
 msgstr "Πότε αρχίσατε να χρησιμοποιείτε το Glade;"
 
-#: ../src/glade-registration.glade.h:44
+#: ../src/glade-registration.glade.h:43
 msgid "ago"
 msgstr "πριν"
 
-#: ../src/glade-registration.glade.h:45
+#: ../src/glade-registration.glade.h:44
 msgid "Which version do you normally use?"
 msgstr "Ποια έκδοση χρησιμοποιείτε κανονικά;"
 
-#: ../src/glade-registration.glade.h:46
+#: ../src/glade-registration.glade.h:45
 msgid "What is available in my OS"
 msgstr "Όποια είναι διαθέσιμη στο λειτουργικό σύστημά μου"
 
-#: ../src/glade-registration.glade.h:47
+#: ../src/glade-registration.glade.h:46
 msgid "Latest stable from sources"
 msgstr "Τελευταία σταθερά από τον πηγαίο κώδικα"
 
-#: ../src/glade-registration.glade.h:48
+#: ../src/glade-registration.glade.h:47
 msgid "3.8 for GTK+ 2"
 msgstr "3.8 για το Gtk+ 2"
 
-#: ../src/glade-registration.glade.h:49
+#: ../src/glade-registration.glade.h:48
 msgid "Master"
 msgstr "Κύριο"
 
-#: ../src/glade-registration.glade.h:50
+#: ../src/glade-registration.glade.h:49
 msgid "On what operating systems?"
 msgstr "Σε ποια λειτουργικά συστήματα;"
 
-#: ../src/glade-registration.glade.h:51
+#: ../src/glade-registration.glade.h:50
 msgid "distribution"
 msgstr "διανομή"
 
-#: ../src/glade-registration.glade.h:52
+#: ../src/glade-registration.glade.h:51
 msgid "Arch Linux"
 msgstr "Arch Linux"
 
-#: ../src/glade-registration.glade.h:53
+#: ../src/glade-registration.glade.h:52
 msgid "Debian"
 msgstr "Debian"
 
-#: ../src/glade-registration.glade.h:54
+#: ../src/glade-registration.glade.h:53
 msgid "openSUSE"
 msgstr "openSUSE"
 
-#: ../src/glade-registration.glade.h:55
+#: ../src/glade-registration.glade.h:54
 msgid "Fedora"
 msgstr "Fedora"
 
-#: ../src/glade-registration.glade.h:56
+#: ../src/glade-registration.glade.h:55
 msgid "Gentoo"
 msgstr "Gentoo"
 
-#: ../src/glade-registration.glade.h:57
+#: ../src/glade-registration.glade.h:56
 msgid "Mandriva"
 msgstr "Mandriva"
 
-#: ../src/glade-registration.glade.h:58
+#: ../src/glade-registration.glade.h:57
 msgid "Red Hat"
 msgstr "Red Hat"
 
-#: ../src/glade-registration.glade.h:59
+#: ../src/glade-registration.glade.h:58
 msgid "Turbolinux"
 msgstr "Turbolinux"
 
-#: ../src/glade-registration.glade.h:60
+#: ../src/glade-registration.glade.h:59
 msgid "Ubuntu"
 msgstr "Ubuntu"
 
-#: ../src/glade-registration.glade.h:61
+#: ../src/glade-registration.glade.h:60
 msgid "Xandros"
 msgstr "Xandros"
 
-#: ../src/glade-registration.glade.h:62
+#: ../src/glade-registration.glade.h:61
 msgid "Oracle"
 msgstr "Oracle"
 
-#: ../src/glade-registration.glade.h:63
+#: ../src/glade-registration.glade.h:62
 msgid "variant"
 msgstr "παραλλαγή"
 
-#: ../src/glade-registration.glade.h:64
+#: ../src/glade-registration.glade.h:63
 msgid "FreeBSD"
 msgstr "FreeBSD"
 
-#: ../src/glade-registration.glade.h:65
+#: ../src/glade-registration.glade.h:64
 msgid "OpenBSD"
 msgstr "OpenBSD"
 
-#: ../src/glade-registration.glade.h:66
+#: ../src/glade-registration.glade.h:65
 msgid "NetBSD"
 msgstr "NetBSD"
 
-#: ../src/glade-registration.glade.h:67
+#: ../src/glade-registration.glade.h:66
 msgid "Oracle Solaris"
 msgstr "Oracle Solaris"
 
-#: ../src/glade-registration.glade.h:68
+#: ../src/glade-registration.glade.h:67
 msgid "OpenSolaris"
 msgstr "OpenSolaris"
 
-#: ../src/glade-registration.glade.h:69
+#: ../src/glade-registration.glade.h:68
 msgid "illumos"
 msgstr "illumos"
 
-#: ../src/glade-registration.glade.h:70
+#: ../src/glade-registration.glade.h:69
 msgid "version"
 msgstr "έκδοση"
 
-#: ../src/glade-registration.glade.h:71
+#: ../src/glade-registration.glade.h:70
 msgid "2000"
 msgstr "2000"
 
-#: ../src/glade-registration.glade.h:72
+#: ../src/glade-registration.glade.h:71
 msgid "XP"
 msgstr "XP"
 
-#: ../src/glade-registration.glade.h:73
+#: ../src/glade-registration.glade.h:72
 msgid "2003"
 msgstr "2003"
 
-#: ../src/glade-registration.glade.h:74
+#: ../src/glade-registration.glade.h:73
 msgid "Vista"
 msgstr "Vista"
 
-#: ../src/glade-registration.glade.h:75
+#: ../src/glade-registration.glade.h:74
 msgid "2008"
 msgstr "2008"
 
-#: ../src/glade-registration.glade.h:76
+#: ../src/glade-registration.glade.h:75
 msgid "7"
 msgstr "7"
 
-#: ../src/glade-registration.glade.h:77
+#: ../src/glade-registration.glade.h:76
 msgid "8"
 msgstr "8"
 
-#: ../src/glade-registration.glade.h:78
+#: ../src/glade-registration.glade.h:77
 msgid "2012"
 msgstr "2012"
 
-#: ../src/glade-registration.glade.h:79
+#: ../src/glade-registration.glade.h:78
 msgid "Tiger"
 msgstr "Tiger"
 
-#: ../src/glade-registration.glade.h:80
+#: ../src/glade-registration.glade.h:79
 msgid "Leopard"
 msgstr "Leopard"
 
-#: ../src/glade-registration.glade.h:81
+#: ../src/glade-registration.glade.h:80
 msgid "Snow Leopard"
 msgstr "Snow Leopard"
 
-#: ../src/glade-registration.glade.h:82
+#: ../src/glade-registration.glade.h:81
 msgid "Lion"
 msgstr "Lion"
 
-#: ../src/glade-registration.glade.h:83
+#: ../src/glade-registration.glade.h:82
 msgid "Mountain Lion"
 msgstr "Mountain Lion"
 
-#: ../src/glade-registration.glade.h:84
+#: ../src/glade-registration.glade.h:83
 msgid "Mavericks"
 msgstr "Mavericks"
 
-#: ../src/glade-registration.glade.h:85
+#: ../src/glade-registration.glade.h:84
 msgid "GNU/Linux"
 msgstr "GNU/Linux"
 
 #. GtkLicense enumeration value
-#: ../src/glade-registration.glade.h:86 ../plugins/gtk+/gtk+.xml.in.h:796
+#: ../src/glade-registration.glade.h:85 ../plugins/gtk+/gtk+.xml.in.h:817
 msgid "BSD"
 msgstr "BSD"
 
-#: ../src/glade-registration.glade.h:87
+#: ../src/glade-registration.glade.h:86
 msgid "Windows"
 msgstr "Windows"
 
-#: ../src/glade-registration.glade.h:88
+#: ../src/glade-registration.glade.h:87
 msgid "Mac OS X"
 msgstr "Mac OSX"
 
-#: ../src/glade-registration.glade.h:89
+#: ../src/glade-registration.glade.h:88
 msgid "Solaris"
 msgstr "Solaris"
 
-#: ../src/glade-registration.glade.h:90
+#: ../src/glade-registration.glade.h:89
 msgid "How often do you use it?"
 msgstr "Πόσο συχνά το χρησιμοποιείτε;"
 
-#: ../src/glade-registration.glade.h:91
+#: ../src/glade-registration.glade.h:90
 msgid "Every day"
 msgstr "Κάθε ημέρα"
 
-#: ../src/glade-registration.glade.h:92
+#: ../src/glade-registration.glade.h:91
 msgid "Few days a week"
 msgstr "Λίγες ημέρες τη βδομάδα"
 
-#: ../src/glade-registration.glade.h:93
+#: ../src/glade-registration.glade.h:92
 msgid "Every week"
 msgstr "Κάθε εβδομάδα"
 
-#: ../src/glade-registration.glade.h:94
+#: ../src/glade-registration.glade.h:93
 msgid "A few times a month"
 msgstr "Λίγες φορές τον μήνα"
 
-#: ../src/glade-registration.glade.h:95
+#: ../src/glade-registration.glade.h:94
 msgid "Once a month"
 msgstr "Μια φορά το μήνα"
 
-#: ../src/glade-registration.glade.h:96
+#: ../src/glade-registration.glade.h:95
 msgid "A few times a year"
 msgstr "Λίγες φορές το έτος"
 
-#: ../src/glade-registration.glade.h:97
+#: ../src/glade-registration.glade.h:96
 msgid "What level of Glade user would you say you are?"
 msgstr "Ποιο επίπεδο χρήστη Glade θα λέγατε ότι είσαστε;"
 
-#: ../src/glade-registration.glade.h:98
+#: ../src/glade-registration.glade.h:97
 msgid "Beginner"
 msgstr "Αρχάριος"
 
-#: ../src/glade-registration.glade.h:99
+#: ../src/glade-registration.glade.h:98
 msgid "Intermediate"
 msgstr "Ενδιάμεσος"
 
-#: ../src/glade-registration.glade.h:100
+#: ../src/glade-registration.glade.h:99
 msgid "Advanced"
 msgstr "Προχωρημένος"
 
-#: ../src/glade-registration.glade.h:101
+#: ../src/glade-registration.glade.h:100
 msgid ""
 "Under what kind of license(s) do you release the software you used Glade to "
 "create?"
@@ -1377,123 +1374,125 @@ msgstr ""
 "Με ποιο είδος άδειας εκδίδετε το λογισμικό που δημιουργείτε χρησιμοποιώντας "
 "το Glade ;"
 
-#: ../src/glade-registration.glade.h:102
+#: ../src/glade-registration.glade.h:101
 msgid "Free software"
 msgstr "Ελεύθερο λογισμικό"
 
-#: ../src/glade-registration.glade.h:103
+#: ../src/glade-registration.glade.h:102
 msgid "Open source software"
 msgstr "Λογισμικό ανοικτού κώδικα"
 
-#: ../src/glade-registration.glade.h:104
+#: ../src/glade-registration.glade.h:103
 msgid "Commercial/Closed software"
 msgstr "Εμπορικό/Κλειστό λογισμικό"
 
-#: ../src/glade-registration.glade.h:105
+#: ../src/glade-registration.glade.h:104
 msgid "None - distributed internally"
 msgstr "Κανένα - εσωτερική διανομή"
 
-#: ../src/glade-registration.glade.h:106
+#: ../src/glade-registration.glade.h:105
 msgid ""
 "In what field(s) is the software you used Glade to create generally used?"
 msgstr ""
 "Σε ποια πεδία διατίθεται, γενικά, το λογισμικό που δημιουργείτε "
 "χρησιμοποιώντας το Glade;"
 
-#: ../src/glade-registration.glade.h:107
+#: ../src/glade-registration.glade.h:106
 msgid "Academic"
 msgstr "Ακαδημαϊκό"
 
-#: ../src/glade-registration.glade.h:108
+#: ../src/glade-registration.glade.h:107
 msgid "Embedded applications"
 msgstr "Ενσωματωμένες εφαρμογές"
 
-#: ../src/glade-registration.glade.h:109
+#: ../src/glade-registration.glade.h:108
 msgid "Accounting"
 msgstr "Λογιστικά"
 
-#: ../src/glade-registration.glade.h:110
+#: ../src/glade-registration.glade.h:109
 msgid "Desktop applications"
 msgstr "Εφαρμογές επιφάνειας εργασίας"
 
-#: ../src/glade-registration.glade.h:111
+#: ../src/glade-registration.glade.h:110
 msgid "Educational"
 msgstr "Εκπαιδευτικό"
 
-#: ../src/glade-registration.glade.h:112
+#: ../src/glade-registration.glade.h:111
 msgid "Medical"
 msgstr "Ιατρικό"
 
-#: ../src/glade-registration.glade.h:113
+#: ../src/glade-registration.glade.h:112
 msgid "Industrial applications"
 msgstr "Βιομηχανικές εφαρμογές"
 
-#: ../src/glade-registration.glade.h:114
+#: ../src/glade-registration.glade.h:113
 msgid "Scientific"
 msgstr "Επιστημονικό"
 
-#: ../src/glade-registration.glade.h:115
+#: ../src/glade-registration.glade.h:114
 msgid "What aspect of the software needs the most improvement?"
 msgstr "Ποια πλευρά του λογισμικού χρειάζεται την μεγαλύτερη βελτίωση;"
 
-#: ../src/glade-registration.glade.h:116
+#: ../src/glade-registration.glade.h:115
 msgid "In your opinion what is the biggest problem with Glade?"
 msgstr "Κατά τη γνώμη σας ποιο είναι το μεγαλύτερο πρόβλημα με το Glade;"
 
-#: ../src/glade-registration.glade.h:117
+#: ../src/glade-registration.glade.h:116
 msgid "Lack of documentation"
 msgstr "Έλλειψη τεκμηρίωσης"
 
-#: ../src/glade-registration.glade.h:118
+#: ../src/glade-registration.glade.h:117
 msgid "Lack of professional support"
 msgstr "Έλλειψη επαγγελματικής υποστήριξης"
 
-#: ../src/glade-registration.glade.h:119
+#: ../src/glade-registration.glade.h:118
 msgid "Lack of professional training"
 msgstr "Έλλειψη επαγγελματικής εκπαίδευσης"
 
-#: ../src/glade-registration.glade.h:120
+#: ../src/glade-registration.glade.h:119
 msgid "Lack of publicity/exposure"
 msgstr "Έλλειψη δημοσιότητας/έκθεση"
 
-#: ../src/glade-registration.glade.h:121
+#: ../src/glade-registration.glade.h:120
 msgid "Lack of official binary releases for other OS (Windows, Mac OS X)"
 msgstr ""
 "Έλλειψη επίσημων εκτελέσιμων εκδόσεων για άλλα λειτουργικά (Win32, OSX)"
 
-#: ../src/glade-registration.glade.h:122
+#: ../src/glade-registration.glade.h:121
 msgid "Have you ever encountered a bug?"
 msgstr "Έχετε ποτέ αντιμετωπίσει σφάλμα;"
 
-#: ../src/glade-registration.glade.h:123
+#. GtkResponseType enumeration value
+#: ../src/glade-registration.glade.h:122 ../plugins/gtk+/gtk+.xml.in.h:603
 msgid "Yes"
 msgstr "Ναι"
 
-#: ../src/glade-registration.glade.h:124
+#. GtkResponseType enumeration value
+#: ../src/glade-registration.glade.h:123 ../plugins/gtk+/gtk+.xml.in.h:605
 msgid "No"
 msgstr "Όχι"
 
-#: ../src/glade-registration.glade.h:125
+#: ../src/glade-registration.glade.h:124
 msgid "If so, did you file a bug report?"
 msgstr "Αν ναι, συμπληρώσατε μια αναφορά σφάλματος;"
 
-#: ../src/glade-registration.glade.h:126
+#: ../src/glade-registration.glade.h:125
 msgid "Have you ever thought about contributing?"
 msgstr "Σκεφτήκατε ποτέ να συνεισφέρετε;"
 
-#: ../src/glade-registration.glade.h:127
+#: ../src/glade-registration.glade.h:126
 msgid "Why not?"
 msgstr "Γιατί όχι;"
 
-#: ../src/glade-registration.glade.h:128
+#: ../src/glade-registration.glade.h:127
 msgid "Comments:"
 msgstr "Σχόλια:"
 
-#: ../src/glade-registration.glade.h:129
+#: ../src/glade-registration.glade.h:128
 msgid "Privacy Note:"
 msgstr "Σημείωση απορρήτου:"
 
-#: ../src/glade-registration.glade.h:130
+#: ../src/glade-registration.glade.h:129
 msgid ""
 "The sole purpose of this survey is to better know our user base.\n"
 "Your email address will be used to uniquely identify you as a Glade user and "
@@ -1599,40 +1598,42 @@ msgid "The container object this editor is currently editing"
 msgstr "Το αντικείμενο περιέκτη που τυγχάνει επεξεργασίας"
 
 #. translators: refers to a tab name used to group all the relevant widget's properties
-#: ../gladeui/glade-base-editor.c:1735 ../gladeui/glade-editor.c:919
+#: ../gladeui/glade-base-editor.c:1734 ../gladeui/glade-editor.c:919
 msgid "General"
 msgstr "Γενικά"
 
 #. translators: refers to a tab name used to show the widget hierarchy
-#: ../gladeui/glade-base-editor.c:1744
+#: ../gladeui/glade-base-editor.c:1743
 msgid "Hierarchy"
 msgstr "Ιεραρχία"
 
 #. AtkRole enumeration value
-#: ../gladeui/glade-base-editor.c:1782 ../plugins/gtk+/gtk+.xml.in.h:144
+#: ../gladeui/glade-base-editor.c:1781 ../plugins/gtk+/gtk+.xml.in.h:144
 #: ../plugins/gtk+/glade-about-dialog-editor.ui.h:9
 #: ../plugins/gtk+/glade-tool-button-editor.ui.h:2
 msgid "Label"
 msgstr "Ετικέτα"
 
-#: ../gladeui/glade-base-editor.c:1797 ../gladeui/glade-widget-adaptor.c:1460
+#: ../gladeui/glade-base-editor.c:1796 ../gladeui/glade-widget-adaptor.c:1446
+#: ../plugins/gtk+/glade-eprop-enum-int.c:70
+#: ../plugins/gtk+/glade-eprop-enum-int.c:71
 msgid "Type"
 msgstr "Τύπος"
 
 #. Name
 #. translators: The unique identifier of an object in the project
-#: ../gladeui/glade-base-editor.c:2034 ../gladeui/glade-editor-table.c:305
+#: ../gladeui/glade-base-editor.c:2033 ../gladeui/glade-editor-table.c:305
 #: ../gladeui/glade-editor-table.c:578
 msgid "ID:"
 msgstr "Αναγνωριστικό:"
 
 #. Type
-#: ../gladeui/glade-base-editor.c:2054
+#: ../gladeui/glade-base-editor.c:2053
 #: ../plugins/gtk+/glade-window-editor.ui.h:8
 msgid "Type:"
 msgstr "Τύπος:"
 
-#: ../gladeui/glade-base-editor.c:2274
+#: ../gladeui/glade-base-editor.c:2273
 msgid ""
 "<big><b>Tips:</b></big>\n"
 "  * Right-click over the treeview to add items.\n"
@@ -1748,12 +1749,12 @@ msgstr "Απενεργοποίηση της ιδιότητας %s στο γρα�
 msgid "Setting multiple properties"
 msgstr "Ρύθμιση πολλαπλών ιδιοτήτων"
 
-#: ../gladeui/glade-command.c:813 ../gladeui/glade-editor-property.c:3685
+#: ../gladeui/glade-command.c:813 ../gladeui/glade-editor-property.c:3652
 #, c-format
 msgid "Setting %s of %s"
 msgstr "Ρύθμιση %s από %s"
 
-#: ../gladeui/glade-command.c:819 ../gladeui/glade-editor-property.c:3390
+#: ../gladeui/glade-command.c:819 ../gladeui/glade-editor-property.c:3357
 #, c-format
 msgid "Setting %s of %s to %s"
 msgstr "Ρύθμιση %s από %s στο %s"
@@ -1897,11 +1898,11 @@ msgstr "Επεξεργασία στοίχισης του %s"
 msgid "Editing margins of %s"
 msgstr "Επεξεργασία περιθώριων του %s"
 
-#: ../gladeui/glade-design-layout.c:2091
+#: ../gladeui/glade-design-layout.c:2042
 msgid "Design View"
 msgstr "Προβολή σχεδίασης"
 
-#: ../gladeui/glade-design-layout.c:2092
+#: ../gladeui/glade-design-layout.c:2043
 msgid "The GladeDesignView that contains this layout"
 msgstr "Το GladeDesignView που περιέχει αυτή τη διάταξη"
 
@@ -1995,12 +1996,12 @@ msgstr ""
 msgid "Reset Widget Properties"
 msgstr "Επαναφορά ιδιοτήτων γραφικού στοιχείου"
 
-#: ../gladeui/glade-editor.c:1122 ../gladeui/glade-editor-property.c:1724
-#: ../gladeui/glade-editor-property.c:2031
-#: ../gladeui/glade-editor-property.c:3172
-#: ../gladeui/glade-editor-property.c:3285
-#: ../gladeui/glade-editor-property.c:3301
-#: ../gladeui/glade-editor-property.c:3620 ../plugins/gtk+/glade-accels.c:526
+#: ../gladeui/glade-editor.c:1122 ../gladeui/glade-editor-property.c:1691
+#: ../gladeui/glade-editor-property.c:1998
+#: ../gladeui/glade-editor-property.c:3139
+#: ../gladeui/glade-editor-property.c:3252
+#: ../gladeui/glade-editor-property.c:3268
+#: ../gladeui/glade-editor-property.c:3587 ../plugins/gtk+/glade-accels.c:526
 #: ../plugins/gtk+/glade-attributes.c:1063
 msgid "_OK"
 msgstr "Εν_τάξει"
@@ -2029,81 +2030,85 @@ msgstr "Περιγραφή ι_διοτήτων:"
 msgid "%s - %s Properties"
 msgstr "Ιδιότητες %s - %s"
 
-#: ../gladeui/glade-editor-property.c:724
+#: ../gladeui/glade-editor-property.c:725
 msgid "Property Class"
 msgstr "Κλάση ιδιοτήτων"
 
-#: ../gladeui/glade-editor-property.c:725
+#: ../gladeui/glade-editor-property.c:726
 msgid "The GladePropertyClass this GladeEditorProperty was created for"
 msgstr ""
 "Η κλάση GladePropertyClass που δημιουργήθηκε για το GladeEditorProperty"
 
-#: ../gladeui/glade-editor-property.c:731 ../gladeui/glade-property-shell.c:125
+#: ../gladeui/glade-editor-property.c:732
+#: ../gladeui/glade-property-shell.c:125
 msgid "Use Command"
 msgstr "Χρήση εντολής"
 
-#: ../gladeui/glade-editor-property.c:732
+#: ../gladeui/glade-editor-property.c:733
 msgid "Whether we should use the command API for the undo/redo stack"
 msgstr ""
 "Αν επιτρέπεται η χρήση της εντολής API για τη στοίβα με τις αναιρέσεις/"
 "επαναλήψεις"
 
-#: ../gladeui/glade-editor-property.c:738 ../gladeui/glade-property-shell.c:143
+#: ../gladeui/glade-editor-property.c:739
+#: ../gladeui/glade-property-shell.c:143
 msgid "Disable Check"
 msgstr "Απενεργοποίηση ελέγχου"
 
-#: ../gladeui/glade-editor-property.c:739 ../gladeui/glade-property-shell.c:144
+#: ../gladeui/glade-editor-property.c:740
+#: ../gladeui/glade-property-shell.c:144
 msgid "Whether to explicitly disable the check button"
 msgstr "Αν θα απενεργοποιηθεί ρητά το κουμπί ελέγχου"
 
-#: ../gladeui/glade-editor-property.c:745 ../gladeui/glade-property-label.c:152
-#: ../gladeui/glade-property-shell.c:137
+#: ../gladeui/glade-editor-property.c:746
+#: ../gladeui/glade-property-label.c:152 ../gladeui/glade-property-shell.c:137
 msgid "Custom Text"
 msgstr "Προσαρμοσμένο κείμενο"
 
-#: ../gladeui/glade-editor-property.c:746 ../gladeui/glade-property-shell.c:138
+#: ../gladeui/glade-editor-property.c:747
+#: ../gladeui/glade-property-shell.c:138
 msgid "Custom Text to display in the property label"
 msgstr "Προσαρμοσμένο κείμενο για εμφάνιση της ετικέτας ιδιότητας"
 
-#: ../gladeui/glade-editor-property.c:1353
+#: ../gladeui/glade-editor-property.c:1320
 msgid "Select Fields"
 msgstr "Επιλογή πεδίων"
 
-#: ../gladeui/glade-editor-property.c:1356
+#: ../gladeui/glade-editor-property.c:1323
 msgid "_Close"
 msgstr "Κ_λείσιμο"
 
-#: ../gladeui/glade-editor-property.c:1369
+#: ../gladeui/glade-editor-property.c:1336
 msgid "_Select individual fields:"
 msgstr "_Επιλογή ανεξάρτητων πεδίων:"
 
-#: ../gladeui/glade-editor-property.c:1719
+#: ../gladeui/glade-editor-property.c:1686
 msgid "Select Named Icon"
 msgstr "Επιλογή προσαρμοσμένου εικονιδίου"
 
-#: ../gladeui/glade-editor-property.c:2025
+#: ../gladeui/glade-editor-property.c:1992
 msgid "Edit Text"
 msgstr "Επεξεργασία κειμένου"
 
 #. Text
-#: ../gladeui/glade-editor-property.c:2048
+#: ../gladeui/glade-editor-property.c:2015
 msgid "_Text:"
 msgstr "_Κείμενο:"
 
 #. Translatable
-#: ../gladeui/glade-editor-property.c:2084
+#: ../gladeui/glade-editor-property.c:2051
 msgid "T_ranslatable"
 msgstr "Μεταφ_ράσιμο"
 
-#: ../gladeui/glade-editor-property.c:2090 ../gladeui/glade-property.c:680
+#: ../gladeui/glade-editor-property.c:2057 ../gladeui/glade-property.c:680
 msgid "Whether this property is translatable"
 msgstr "Αν αυτή η ιδιότητα μπορεί να μεταφραστεί ή όχι"
 
-#: ../gladeui/glade-editor-property.c:2098
+#: ../gladeui/glade-editor-property.c:2065
 msgid "Conte_xt for translation:"
 msgstr "Π_εριεχόμενο για μετάφραση:"
 
-#: ../gladeui/glade-editor-property.c:2104
+#: ../gladeui/glade-editor-property.c:2071
 msgid ""
 "For short and ambiguous strings: type a word here to differentiate the "
 "meaning of this string from the meaning of other occurrences of the same "
@@ -2113,75 +2118,75 @@ msgstr ""
 "διαφοροποιηθούν η έννοια της παρούσας συμβολοσειράς από την έννοια των άλλων "
 "περιστατικών της ίδιας σειράς"
 
-#: ../gladeui/glade-editor-property.c:2136
+#: ../gladeui/glade-editor-property.c:2103
 msgid "Co_mments for translators:"
 msgstr "Σχό_λια για τους μεταφραστές:"
 
-#: ../gladeui/glade-editor-property.c:2225
+#: ../gladeui/glade-editor-property.c:2192
 msgid "Select a file from the project resource directory"
 msgstr "Επιλογή αρχείου από τον κατάλογο πηγών του έργου"
 
-#: ../gladeui/glade-editor-property.c:2230 ../gladeui/glade-utils.c:486
+#: ../gladeui/glade-editor-property.c:2197 ../gladeui/glade-utils.c:486
 msgid "_Open"
 msgstr "Άν_οιγμα"
 
 #. GtkInputPurpose enumeration value
-#: ../gladeui/glade-editor-property.c:3090
-#: ../gladeui/glade-widget-adaptor.c:1453 ../gladeui/glade-widget.c:1341
+#: ../gladeui/glade-editor-property.c:3057
+#: ../gladeui/glade-widget-adaptor.c:1439 ../gladeui/glade-widget.c:1341
 #: ../plugins/gtk+/gtk+.xml.in.h:545
 msgid "Name"
 msgstr "Όνομα"
 
-#: ../gladeui/glade-editor-property.c:3099 ../gladeui/glade-property.c:647
+#: ../gladeui/glade-editor-property.c:3066 ../gladeui/glade-property.c:647
 msgid "Class"
 msgstr "Κλάση"
 
-#: ../gladeui/glade-editor-property.c:3119
+#: ../gladeui/glade-editor-property.c:3086
 #, c-format
 msgid "Choose parentless %s type objects in this project"
 msgstr "Επιλογή αντικειμένων τύπου %s χωρίς γονικό σε αυτό το έργο"
 
-#: ../gladeui/glade-editor-property.c:3121
+#: ../gladeui/glade-editor-property.c:3088
 #, c-format
 msgid "Choose %s type objects in this project"
 msgstr "Επιλογή αντικειμένων τύπου %s σε αυτό το έργο"
 
-#: ../gladeui/glade-editor-property.c:3141
+#: ../gladeui/glade-editor-property.c:3108
 #, c-format
 msgid "Choose a parentless %s in this project"
 msgstr "Επιλογή %s χωρίς γονικό σε αυτό το έργο"
 
-#: ../gladeui/glade-editor-property.c:3143
+#: ../gladeui/glade-editor-property.c:3110
 #, c-format
 msgid "Choose a %s in this project"
 msgstr "Επιλογή %s σε αυτό το έργο"
 
-#: ../gladeui/glade-editor-property.c:3171
-#: ../gladeui/glade-editor-property.c:3283
-#: ../gladeui/glade-editor-property.c:3300
-#: ../gladeui/glade-editor-property.c:3618 ../plugins/gtk+/glade-accels.c:524
+#: ../gladeui/glade-editor-property.c:3138
+#: ../gladeui/glade-editor-property.c:3250
+#: ../gladeui/glade-editor-property.c:3267
+#: ../gladeui/glade-editor-property.c:3585 ../plugins/gtk+/glade-accels.c:524
 #: ../plugins/gtk+/glade-attributes.c:1061
 msgid "C_lear"
 msgstr "Ε_κκαθάριση"
 
 #. Checklist
-#: ../gladeui/glade-editor-property.c:3193
-#: ../gladeui/glade-editor-property.c:3323
+#: ../gladeui/glade-editor-property.c:3160
+#: ../gladeui/glade-editor-property.c:3290
 msgid "O_bjects:"
 msgstr "Α_ντικείμενα:"
 
-#: ../gladeui/glade-editor-property.c:3284
+#: ../gladeui/glade-editor-property.c:3251
 msgid "_New"
 msgstr "_Νέο"
 
 #. translators: Creating 'a widget' for 'a property' of 'a widget'
-#: ../gladeui/glade-editor-property.c:3433
+#: ../gladeui/glade-editor-property.c:3400
 #, c-format
 msgid "Creating %s for %s of %s"
 msgstr "Δημιουργία %s για το %s του %s"
 
 #. Checklist
-#: ../gladeui/glade-editor-property.c:3636
+#: ../gladeui/glade-editor-property.c:3603
 msgid "Objects:"
 msgstr "Αντικείμενα:"
 
@@ -2311,100 +2316,128 @@ msgstr "Σφάλμα εκκίνησης προεπισκόπησης: %s\n"
 msgid "Failed to launch preview: %s.\n"
 msgstr "Αποτυχία εκκίνησης προγράμματος για προβολή: %s.\n"
 
-#: ../gladeui/glade-previewer.c:69
+#: ../gladeui/glade-previewer.c:202
+msgid "Glade Previewer log"
+msgstr "Καταγραφής προεπισκόπησης Glade"
+
+#: ../gladeui/glade-previewer.c:739 ../gladeui/glade-previewer.c:749
+msgid "user_data"
+msgstr "_δεδομένα χρήστη"
+
+#. translators: GConnectFlags values
+#: ../gladeui/glade-previewer.c:753
+msgid "Swapped | After"
+msgstr "Ανταλλάχθηκε | Μετά από"
+
+#. translators: GConnectFlags value
+#: ../gladeui/glade-previewer.c:756 ../gladeui/glade-signal.c:213
+msgid "Swapped"
+msgstr "Ανταλλάχθηκε"
+
+#. translators: GConnectFlags value
+#: ../gladeui/glade-previewer.c:759 ../gladeui/glade-signal.c:207
+#: ../gladeui/glade-signal-editor.c:1391 ../plugins/gtk+/gtk+.xml.in.h:669
+msgid "After"
+msgstr "Μετά από"
+
+#. translators: this will be shown in glade previewer when a signal %s::%s is emited one time
+#: ../gladeui/glade-previewer.c:782
+#, c-format
+msgid "%s::%s emitted one time"
+msgstr "%s::%s εκπέμφθηκε μία φορά"
+
+#. translators: this will be shown in glade previewer when a signal %s::%s is emited %d times
+#: ../gladeui/glade-previewer.c:786
+#, c-format
+msgid "%s::%s emitted %d times"
+msgstr "%s::%s εκπέμφθηκε %d φορές"
+
+#: ../gladeui/glade-previewer.c:791
+msgid "Run First"
+msgstr "Εκτέλεση στην αρχή"
+
+#: ../gladeui/glade-previewer.c:796
+msgid "Run Last"
+msgstr "Εκτέλεση στο τέλος"
+
+#: ../gladeui/glade-previewer.c:801
+msgid "Run Cleanup"
+msgstr "Εκτέλεση εκκαθάρισης"
+
+#: ../gladeui/glade-previewer-main.c:69
 #, c-format
 msgid "UI definition has no previewable widgets.\n"
 msgstr ""
 "Στον ορισμό διεπαφής χρήστη δεν υπάρχουν προεπισκοπήσιμα γραφικά στοιχεία.\n"
 
-#: ../gladeui/glade-previewer.c:79
+#: ../gladeui/glade-previewer-main.c:79
 #, c-format
 msgid "Object %s not found in UI definition.\n"
 msgstr "Το αντικείμενο %s δεν βρέθηκε στον ορισμό διεπαφής χρήστη.\n"
 
-#: ../gladeui/glade-previewer.c:85
+#: ../gladeui/glade-previewer-main.c:85
 #, c-format
 msgid "Object is not previewable.\n"
 msgstr "Το αντικείμενο δεν μπορεί να προβληθεί.\n"
 
-#: ../gladeui/glade-previewer.c:145 ../gladeui/glade-previewer.c:489
+#: ../gladeui/glade-previewer-main.c:145 ../gladeui/glade-previewer-main.c:396
 #, c-format
 msgid "Couldn't load builder definition: %s"
 msgstr "Δεν ήταν δυνατή η φόρτωση ορισμού δομητή: %s"
 
-#: ../gladeui/glade-previewer.c:177 ../gladeui/glade-previewer.c:197
+#: ../gladeui/glade-previewer-main.c:177 ../gladeui/glade-previewer-main.c:197
 #, c-format
 msgid "Error: %s.\n"
 msgstr "Σφάλμα: %s.\n"
 
-#: ../gladeui/glade-previewer.c:219 ../gladeui/glade-widget.c:2742
-#: ../plugins/gtk+/glade-gtk-widget.c:1018
-#: ../plugins/gtk+/glade-gtk-widget.c:1081
-msgid "(unnamed)"
-msgstr "(ανώνυμο)"
-
-#: ../gladeui/glade-previewer.c:231
-#, c-format
-msgid "Previewing %s - %s"
-msgstr "Προεπισκόπηση %s - %s"
-
-#: ../gladeui/glade-previewer.c:233 ../gladeui/glade-previewer.c:237
-#, c-format
-msgid "Previewing %s"
-msgstr "Προεπισκόπηση %s"
-
-#: ../gladeui/glade-previewer.c:241
-msgid "Glade Preview"
-msgstr "Προεπισκόπηση Glade"
-
-#: ../gladeui/glade-previewer.c:266
+#: ../gladeui/glade-previewer-main.c:227
 #, c-format
 msgid "Broken pipe!\n"
 msgstr "Διακοπείσα διοχεύτεση!\n"
 
-#: ../gladeui/glade-previewer.c:391
+#: ../gladeui/glade-previewer-main.c:299
 msgid "Name of the file to preview"
 msgstr "Όνομα του αρχείου για προεπισκόπηση"
 
-#: ../gladeui/glade-previewer.c:392
+#: ../gladeui/glade-previewer-main.c:300
 msgid "Creates dummy widget class to load a template"
 msgstr "Δημιουργεί εικονική κλάση γραφικών στοιχείων για φόρτωση προτύπου"
 
-#: ../gladeui/glade-previewer.c:393
+#: ../gladeui/glade-previewer-main.c:301
 msgid "Name of the toplevel to preview"
 msgstr "Ονομασία του ανώτατου πεδίου για προεπισκόπιση"
 
-#: ../gladeui/glade-previewer.c:394
+#: ../gladeui/glade-previewer-main.c:302
 msgid "File name to save a screenshot"
 msgstr "Όνομα αρχείου για αποθήκευση στιγμιότυπου"
 
-#: ../gladeui/glade-previewer.c:395
+#: ../gladeui/glade-previewer-main.c:303
 msgid "CSS file to use"
 msgstr "Αρχείο CSS για χρήση"
 
-#: ../gladeui/glade-previewer.c:396
+#: ../gladeui/glade-previewer-main.c:304
 msgid "Listen standard input"
 msgstr "Αναμονή από κανονική είσοδο"
 
-#: ../gladeui/glade-previewer.c:397
+#: ../gladeui/glade-previewer-main.c:305
 msgid "make a slideshow of every toplevel widget by adding them in a GtkStack"
 msgstr ""
 "δημιουργία μιας προβολής διαφανειών κάθε γραφικού στοιχείου ανωτάτου "
 "επιπέδου προσθέτοντας τα σε μια GtkStack"
 
-#: ../gladeui/glade-previewer.c:398
+#: ../gladeui/glade-previewer-main.c:306
 msgid "Print handlers signature on invocation"
 msgstr "Εμφάνιση υπογραφής χειριστών ενέργειας"
 
-#: ../gladeui/glade-previewer.c:399
+#: ../gladeui/glade-previewer-main.c:307
 msgid "Display previewer version"
 msgstr "Εμφάνιση έκδοσης προεπισκόπισης"
 
-#: ../gladeui/glade-previewer.c:418
+#: ../gladeui/glade-previewer-main.c:326
 msgid "- previews a glade UI definition"
 msgstr "- Προεπισκόπηση ορισμού ενός Glade περιβάλλοντος εργασίας χρήστη"
 
-#: ../gladeui/glade-previewer.c:424
+#: ../gladeui/glade-previewer-main.c:332
 #, c-format
 msgid ""
 "%s\n"
@@ -2414,59 +2447,10 @@ msgstr ""
 "Εκτελέστε '%s --help' για να δείτε μια πλήρη λίστα των διαθέσιμων επιλογών "
 "γραμμής εντολών.\n"
 
-#: ../gladeui/glade-previewer.c:441
+#: ../gladeui/glade-previewer-main.c:349
 #, c-format
 msgid "Either --listen or --filename must be specified.\n"
 msgstr "Είτε το --listen ή το --filename πρέπει να καθορισθεί.\n"
-
-#: ../gladeui/glade-preview-window.c:56
-#: ../plugins/gtk+/gtkunixprint.xml.in.h:10
-msgid "Preview"
-msgstr "Προεπισκόπηση"
-
-#: ../gladeui/glade-preview-window.c:664 ../gladeui/glade-preview-window.c:674
-msgid "user_data"
-msgstr "_δεδομένα χρήστη"
-
-#. translators: GConnectFlags values
-#: ../gladeui/glade-preview-window.c:678
-msgid "Swapped | After"
-msgstr "Ανταλλάχθηκε | Μετά από"
-
-#. translators: GConnectFlags value
-#: ../gladeui/glade-preview-window.c:681 ../gladeui/glade-signal.c:213
-msgid "Swapped"
-msgstr "Ανταλλάχθηκε"
-
-#. translators: GConnectFlags value
-#: ../gladeui/glade-preview-window.c:684 ../gladeui/glade-signal.c:207
-#: ../gladeui/glade-signal-editor.c:1391 ../plugins/gtk+/gtk+.xml.in.h:649
-msgid "After"
-msgstr "Μετά από"
-
-#. translators: this will be shown in glade previewer when a signal %s::%s is emited one time
-#: ../gladeui/glade-preview-window.c:707
-#, c-format
-msgid "%s::%s emitted one time"
-msgstr "%s::%s εκπέμφθηκε μία φορά"
-
-#. translators: this will be shown in glade previewer when a signal %s::%s is emited %d times
-#: ../gladeui/glade-preview-window.c:711
-#, c-format
-msgid "%s::%s emitted %d times"
-msgstr "%s::%s εκπέμφθηκε %d φορές"
-
-#: ../gladeui/glade-preview-window.c:716
-msgid "Run First"
-msgstr "Εκτέλεση στην αρχή"
-
-#: ../gladeui/glade-preview-window.c:721
-msgid "Run Last"
-msgstr "Εκτέλεση στο τέλος"
-
-#: ../gladeui/glade-preview-window.c:726
-msgid "Run Cleanup"
-msgstr "Εκτέλεση εκκαθάρισης"
 
 #: ../gladeui/glade-project.c:958
 msgid "Whether project has been modified since it was last saved"
@@ -3054,7 +3038,7 @@ msgid "Whether this action is sensitive"
 msgstr "Εάν αυτή η ενέργεια είναι ευαίσθητη"
 
 #: ../gladeui/glade-widget-action.c:197 ../gladeui/glade-widget.c:1430
-#: ../plugins/gtk+/gtk+.xml.in.h:914
+#: ../plugins/gtk+/gtk+.xml.in.h:931
 msgid "Visible"
 msgstr "Ορατό"
 
@@ -3062,74 +3046,74 @@ msgstr "Ορατό"
 msgid "Whether this action is visible"
 msgstr "Αν αυτή η ενέργεια είναι ορατή"
 
-#: ../gladeui/glade-widget-adaptor.c:255
+#: ../gladeui/glade-widget-adaptor.c:241
 #, c-format
 msgid "A derived adaptor (%s) of %s already exist!"
 msgstr "Ένας προσαρμογέας (%s) έχει ήδη προσαρμοστεί από το %s!"
 
-#: ../gladeui/glade-widget-adaptor.c:957
+#: ../gladeui/glade-widget-adaptor.c:943
 #, c-format
 msgid "%s does not support adding any children."
 msgstr "%s δεν υποστηρίζει την προσθήκη θυγατρικών."
 
-#: ../gladeui/glade-widget-adaptor.c:1454
+#: ../gladeui/glade-widget-adaptor.c:1440
 msgid "Name of the class"
 msgstr "Όνομα της κλάσης"
 
-#: ../gladeui/glade-widget-adaptor.c:1461
+#: ../gladeui/glade-widget-adaptor.c:1447
 msgid "GType of the class"
 msgstr "Τύπος GType της κλάσης"
 
-#: ../gladeui/glade-widget-adaptor.c:1467
+#: ../gladeui/glade-widget-adaptor.c:1453
 msgid "Title"
 msgstr "Τίτλος"
 
-#: ../gladeui/glade-widget-adaptor.c:1468
+#: ../gladeui/glade-widget-adaptor.c:1454
 msgid "Translated title for the class used in the glade UI"
 msgstr ""
 "Μεταφρασμένος τίτλος για την κλάση που θα χρησιμοποιηθεί στη γραφική διεπαφή "
 "του glade"
 
-#: ../gladeui/glade-widget-adaptor.c:1474
+#: ../gladeui/glade-widget-adaptor.c:1460
 msgid "Generic Name"
 msgstr "Γενικό όνομα"
 
-#: ../gladeui/glade-widget-adaptor.c:1475
+#: ../gladeui/glade-widget-adaptor.c:1461
 msgid "Used to generate names of new widgets"
 msgstr "Χρησιμοποιείται για τη δημιουργία ονομάτων των νέων γραφικών στοιχείων"
 
-#: ../gladeui/glade-widget-adaptor.c:1481 ../plugins/gtk+/gtk+.xml.in.h:641
+#: ../gladeui/glade-widget-adaptor.c:1467 ../plugins/gtk+/gtk+.xml.in.h:661
 #: ../plugins/gtk+/glade-window-editor.ui.h:6
 msgid "Icon Name"
 msgstr "Όνομα εικονιδίου"
 
-#: ../gladeui/glade-widget-adaptor.c:1482
+#: ../gladeui/glade-widget-adaptor.c:1468
 msgid "The icon name"
 msgstr "Το όνομα του εικονιδίου"
 
-#: ../gladeui/glade-widget-adaptor.c:1488
+#: ../gladeui/glade-widget-adaptor.c:1474
 msgid "Catalog"
 msgstr "Κατάλογος"
 
-#: ../gladeui/glade-widget-adaptor.c:1489
+#: ../gladeui/glade-widget-adaptor.c:1475
 msgid "The name of the widget catalog this class was declared by"
 msgstr ""
 "Το όνομα του καταλόγου γραφικού στοιχείου από τον οποίο αυτή η κλάση δηλώθηκε"
 
-#: ../gladeui/glade-widget-adaptor.c:1495
+#: ../gladeui/glade-widget-adaptor.c:1481
 msgid "Book"
 msgstr "Βιβλίο"
 
-#: ../gladeui/glade-widget-adaptor.c:1496
+#: ../gladeui/glade-widget-adaptor.c:1482
 msgid "DevHelp search namespace for this widget class"
 msgstr ""
 "Αναζήτηση DevHelp για χώρο ονομάτων αυτής τηνς κλάσης γραφικού στοιχείου"
 
-#: ../gladeui/glade-widget-adaptor.c:1502
+#: ../gladeui/glade-widget-adaptor.c:1488
 msgid "Special Child Type"
 msgstr "Ειδικός θυγατρικός τύπος"
 
-#: ../gladeui/glade-widget-adaptor.c:1503
+#: ../gladeui/glade-widget-adaptor.c:1489
 msgid ""
 "Holds the name of the packing property to depict special children for this "
 "container class"
@@ -3137,11 +3121,11 @@ msgstr ""
 "Κρατά το όνομα της ιδιότητας πακεταρίσματος για να περιγράφονται ειδικά "
 "θυγατρικά για αυτήν τη κλάση του περιέκτη"
 
-#: ../gladeui/glade-widget-adaptor.c:1510
+#: ../gladeui/glade-widget-adaptor.c:1496
 msgid "Cursor"
 msgstr "Δρομέας"
 
-#: ../gladeui/glade-widget-adaptor.c:1511
+#: ../gladeui/glade-widget-adaptor.c:1497
 msgid "A cursor for inserting widgets in the UI"
 msgstr "Ένας δρομέας για την εισαγωγή γραφικών στοιχείων στη γραφική διεπαφή"
 
@@ -3262,6 +3246,11 @@ msgid "Whether this widget is the template for a composite widget"
 msgstr ""
 "Αν αυτό το γραφικό στοιχείο είναι το πρότυπο για ένα σύνθετο γραφικό στοιχείο"
 
+#: ../gladeui/glade-widget.c:2742 ../plugins/gtk+/glade-gtk-widget.c:1018
+#: ../plugins/gtk+/glade-gtk-widget.c:1081
+msgid "(unnamed)"
+msgstr "(ανώνυμο)"
+
 #: ../gladeui/glade-widget.c:4803
 #, c-format
 msgid "Template classes are not supported in gtk+ %d.%d"
@@ -3292,7 +3281,7 @@ msgstr "Κάποια σήματα έχουν προβλήματα έκδοσης
 msgid "Actions"
 msgstr "Ενέργειες"
 
-#: ../gladeui/icon-naming-spec.c:40 ../plugins/gtk+/gtk+.xml.in.h:1061
+#: ../gladeui/icon-naming-spec.c:40 ../plugins/gtk+/gtk+.xml.in.h:1078
 msgid "Applications"
 msgstr "Εφαρμογές"
 
@@ -3751,7 +3740,7 @@ msgstr ""
 "Ρύθμιση του δευτερεύοντος εικονιδίου του %s για μη χρήση σήμανσης συμβουλής "
 "οθόνης"
 
-#: ../plugins/gtk+/glade-fixed.c:623 ../plugins/gtk+/glade-gtk-grid.c:994
+#: ../plugins/gtk+/glade-fixed.c:623 ../plugins/gtk+/glade-gtk-grid.c:1018
 #, c-format
 msgid "Placing %s inside %s"
 msgstr "Τοποθέτηση του %s μέσα στο %s"
@@ -3808,7 +3797,7 @@ msgstr ""
 
 #: ../plugins/gtk+/glade-gtk-action-group.c:180
 #: ../plugins/gtk+/glade-gtk-action-group.c:219
-#: ../plugins/gtk+/gtk+.xml.in.h:868
+#: ../plugins/gtk+/gtk+.xml.in.h:885
 msgid "Action"
 msgstr "Ενέργεια"
 
@@ -3850,32 +3839,18 @@ msgstr "Σελίδα περιεχομένων"
 msgid "Confirmation page"
 msgstr "Σελίδα επιβεβαίωσης"
 
-#: ../plugins/gtk+/glade-gtk-box.c:615 ../plugins/gtk+/glade-gtk-box.c:623
-#: ../plugins/gtk+/glade-gtk-header-bar.c:113
-#: ../plugins/gtk+/glade-gtk-stack.c:160
-#, c-format
-msgid "Insert placeholder to %s"
-msgstr "Εισαγωγή διαχωριστή στο %s"
-
-#: ../plugins/gtk+/glade-gtk-box.c:631
-#: ../plugins/gtk+/glade-gtk-header-bar.c:137
-#: ../plugins/gtk+/glade-gtk-stack.c:197
-#, c-format
-msgid "Remove placeholder from %s"
-msgstr "Αφαίρεση διαχωριστή από το %s"
-
-#: ../plugins/gtk+/glade-gtk-box.c:830
+#: ../plugins/gtk+/glade-gtk-box.c:821
 #, c-format
 msgid "Ordering children of %s"
 msgstr "Διάταξη των θυγατρικών του %s"
 
 #: ../plugins/gtk+/glade-gtk-cell-layout.c:356
-#: ../plugins/gtk+/gtk+.xml.in.h:891
+#: ../plugins/gtk+/gtk+.xml.in.h:908
 msgid "Tree View Column"
 msgstr "Στήλη προβολής δέντρου"
 
 #: ../plugins/gtk+/glade-gtk-cell-layout.c:356
-#: ../plugins/gtk+/gtk+.xml.in.h:899
+#: ../plugins/gtk+/gtk+.xml.in.h:916
 msgid "Cell Renderer"
 msgstr "Απεικονιστής κελιών"
 
@@ -3896,7 +3871,7 @@ msgstr "Κείμενο"
 
 #. Accelerator
 #: ../plugins/gtk+/glade-gtk-cell-layout.c:413
-#: ../plugins/gtk+/glade-gtk-tree-view.c:92 ../plugins/gtk+/gtk+.xml.in.h:870
+#: ../plugins/gtk+/glade-gtk-tree-view.c:92 ../plugins/gtk+/gtk+.xml.in.h:887
 msgid "Accelerator"
 msgstr "Συντομεύσεις"
 
@@ -3918,7 +3893,7 @@ msgstr "Pixbuf"
 
 #. GtkAssistantPageType enumeration value
 #: ../plugins/gtk+/glade-gtk-cell-layout.c:417
-#: ../plugins/gtk+/glade-gtk-tree-view.c:96 ../plugins/gtk+/gtk+.xml.in.h:843
+#: ../plugins/gtk+/glade-gtk-tree-view.c:96 ../plugins/gtk+/gtk+.xml.in.h:860
 #: ../plugins/gtk+/glade-entry-editor.ui.h:4
 msgid "Progress"
 msgstr "Πρόοδος"
@@ -3997,32 +3972,29 @@ msgstr ""
 "Αυτή η ιδιότητα είναι διαθέσιμη μόνο\n"
 "αν οι χαρακτήρες της καταχώρισης είναι αόρατοι"
 
-#: ../plugins/gtk+/glade-gtk-flow-box.c:249
-#: ../plugins/gtk+/glade-gtk-flow-box.c:255
+#: ../plugins/gtk+/glade-gtk-flow-box.c:204
 #, c-format
 msgid "Insert Child on %s"
 msgstr "Προσθήκη θυγατρικού στο %s"
 
-#: ../plugins/gtk+/glade-gtk-grid.c:597 ../plugins/gtk+/glade-gtk-grid.c:604
-#: ../plugins/gtk+/glade-gtk-list-box.c:252
-#: ../plugins/gtk+/glade-gtk-list-box.c:258
-#: ../plugins/gtk+/glade-gtk-table.c:643 ../plugins/gtk+/glade-gtk-table.c:650
+#: ../plugins/gtk+/glade-gtk-grid.c:507
+#: ../plugins/gtk+/glade-gtk-list-box.c:207
+#: ../plugins/gtk+/glade-gtk-table.c:538
 #, c-format
 msgid "Insert Row on %s"
 msgstr "Προσθήκη γραμμής στο %s"
 
-#: ../plugins/gtk+/glade-gtk-grid.c:612 ../plugins/gtk+/glade-gtk-grid.c:619
-#: ../plugins/gtk+/glade-gtk-table.c:658 ../plugins/gtk+/glade-gtk-table.c:665
+#: ../plugins/gtk+/glade-gtk-grid.c:510 ../plugins/gtk+/glade-gtk-table.c:541
 #, c-format
 msgid "Insert Column on %s"
 msgstr "Προσθήκη στήλης στο %s"
 
-#: ../plugins/gtk+/glade-gtk-grid.c:626 ../plugins/gtk+/glade-gtk-table.c:672
+#: ../plugins/gtk+/glade-gtk-grid.c:513 ../plugins/gtk+/glade-gtk-table.c:544
 #, c-format
 msgid "Remove Column on %s"
 msgstr "Αφαίρεση στήλης από το %s"
 
-#: ../plugins/gtk+/glade-gtk-grid.c:633 ../plugins/gtk+/glade-gtk-table.c:679
+#: ../plugins/gtk+/glade-gtk-grid.c:516 ../plugins/gtk+/glade-gtk-table.c:547
 #, c-format
 msgid "Remove Row on %s"
 msgstr "Αφαίρεση γραμμής από το %s"
@@ -4031,6 +4003,20 @@ msgstr "Αφαίρεση γραμμής από το %s"
 msgid "This property does not apply when a custom title is set"
 msgstr ""
 "Αυτή η ιδιότητα δεν εφαρμόζεται όταν ορίζεται ένας προσαρμοσμένος τίτλος"
+
+#: ../plugins/gtk+/glade-gtk-header-bar.c:113
+#: ../plugins/gtk+/glade-gtk-notebook.c:992
+#: ../plugins/gtk+/glade-gtk-stack.c:160
+#, c-format
+msgid "Insert placeholder to %s"
+msgstr "Εισαγωγή διαχωριστή στο %s"
+
+#: ../plugins/gtk+/glade-gtk-header-bar.c:137
+#: ../plugins/gtk+/glade-gtk-notebook.c:990
+#: ../plugins/gtk+/glade-gtk-stack.c:197
+#, c-format
+msgid "Remove placeholder from %s"
+msgstr "Αφαίρεση διαχωριστή από το %s"
 
 #: ../plugins/gtk+/glade-gtk-header-bar.c:304
 msgid ""
@@ -4132,29 +4118,31 @@ msgstr "Πρόσφατο μενού"
 msgid "Tool Item"
 msgstr "Στοιχείο εργαλείου"
 
-#: ../plugins/gtk+/glade-gtk-menu-shell.c:541 ../plugins/gtk+/gtk+.xml.in.h:496
+#: ../plugins/gtk+/glade-gtk-menu-shell.c:541
+#: ../plugins/gtk+/gtk+.xml.in.h:496
 msgid "Tool Item Group"
 msgstr "Εργαλείο ομαδοποίησης στοιχείου"
 
-#: ../plugins/gtk+/glade-gtk-menu-shell.c:560 ../plugins/gtk+/gtk+.xml.in.h:731
+#: ../plugins/gtk+/glade-gtk-menu-shell.c:560
+#: ../plugins/gtk+/gtk+.xml.in.h:751
 msgid "Recent Chooser Menu"
 msgstr "Πρόσφατος επιλογέας μενού"
 
 #. AtkRole enumeration value
-#: ../plugins/gtk+/glade-gtk-menu-shell.c:598 ../plugins/gtk+/gtk+.xml.in.h:156
+#: ../plugins/gtk+/glade-gtk-menu-shell.c:598
+#: ../plugins/gtk+/gtk+.xml.in.h:156
 msgid "Menu Item"
 msgstr "Στοιχείο μενού"
 
-#: ../plugins/gtk+/glade-gtk-notebook.c:939
-#: ../plugins/gtk+/glade-gtk-notebook.c:946
-#, c-format
-msgid "Insert page on %s"
-msgstr "Προσθήκη σελίδας στο %s"
-
-#: ../plugins/gtk+/glade-gtk-notebook.c:954
+#: ../plugins/gtk+/glade-gtk-notebook.c:983
 #, c-format
 msgid "Remove page from %s"
 msgstr "Αφαίρεση σελίδας από το %s"
+
+#: ../plugins/gtk+/glade-gtk-notebook.c:985
+#, c-format
+msgid "Insert page on %s"
+msgstr "Προσθήκη σελίδας στο %s"
 
 #: ../plugins/gtk+/glade-gtk-progress-bar.c:30
 msgid "This progressbar does not show text"
@@ -4198,7 +4186,8 @@ msgstr "Μενού"
 #. GtkRecentSortType enumeration value
 #: ../plugins/gtk+/glade-gtk-toolbar.c:239
 #: ../plugins/gtk+/glade-gtk-tool-palette.c:186
-#: ../plugins/gtk+/gtk+.xml.in.h:786 ../plugins/gtk+/glade-widget-editor.ui.h:7
+#: ../plugins/gtk+/gtk+.xml.in.h:807
+#: ../plugins/gtk+/glade-widget-editor.ui.h:7
 msgid "Custom"
 msgstr "Προσαρμοσμένο"
 
@@ -4398,7 +4387,7 @@ msgstr ""
 msgid "Set the state for this source of '%s'"
 msgstr "Ορισμός της κατάστασης για αυτή την πηγή του '%s'"
 
-#: ../plugins/gtk+/glade-icon-sources.c:848 ../plugins/gtk+/gtk+.xml.in.h:642
+#: ../plugins/gtk+/glade-icon-sources.c:848 ../plugins/gtk+/gtk+.xml.in.h:662
 msgid "File Name"
 msgstr "Όνομα αρχείου"
 
@@ -4617,7 +4606,7 @@ msgstr "Συρραφή"
 msgid "Reverse"
 msgstr "Αντιστροφή"
 
-#: ../plugins/gtk+/gtkunixprint.xml.in.h:7 ../plugins/gtk+/gtk+.xml.in.h:726
+#: ../plugins/gtk+/gtkunixprint.xml.in.h:7 ../plugins/gtk+/gtk+.xml.in.h:746
 msgid "Scale"
 msgstr "Κλίμακα"
 
@@ -4628,6 +4617,10 @@ msgstr "Δημιουργία PDF"
 #: ../plugins/gtk+/gtkunixprint.xml.in.h:9
 msgid "Generate PS"
 msgstr "Δημιουργία PS"
+
+#: ../plugins/gtk+/gtkunixprint.xml.in.h:10
+msgid "Preview"
+msgstr "Προεπισκόπηση"
 
 #: ../plugins/gtk+/gtkunixprint.xml.in.h:11
 msgid "Number Up"
@@ -5832,7 +5825,8 @@ msgstr "Επικάλυψη"
 msgid "Menu Shell"
 msgstr "Κέλυφος μενού"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:441 ../plugins/gtk+/glade-button-editor.ui.h:8
+#: ../plugins/gtk+/gtk+.xml.in.h:441
+#: ../plugins/gtk+/glade-button-editor.ui.h:8
 msgid "Position"
 msgstr "Θέση"
 
@@ -6268,78 +6262,113 @@ msgstr "Προβολή κειμένου"
 msgid "Search Bar"
 msgstr "Γραμμή αναζήτησης"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:590 ../plugins/gtk+/glade-button-editor.ui.h:7
+#. GtkResponseType enumeration value
+#: ../plugins/gtk+/gtk+.xml.in.h:591
+#| msgid "Object"
+msgid "Reject"
+msgstr "Απόρριψη"
+
+#. GtkResponseType enumeration value
+#: ../plugins/gtk+/gtk+.xml.in.h:593
+msgid "Accept"
+msgstr "Αποδοχή"
+
+#. GtkResponseType enumeration value
+#: ../plugins/gtk+/gtk+.xml.in.h:595
+#| msgid "Delete %s"
+msgid "Delete Event"
+msgstr "Διαγραφή συμβάντος"
+
+#. GtkResponseType enumeration value
+#: ../plugins/gtk+/gtk+.xml.in.h:597
+#| msgid "_OK"
+msgid "OK"
+msgstr "Εντάξει"
+
+#. GtkResponseType enumeration value
+#: ../plugins/gtk+/gtk+.xml.in.h:607
+msgid "Apply"
+msgstr "Εφαρμογή"
+
+#. GtkResponseType enumeration value
+#: ../plugins/gtk+/gtk+.xml.in.h:609
+#| msgid "_Help"
+msgid "Help"
+msgstr "Βοήθεια"
+
+#: ../plugins/gtk+/gtk+.xml.in.h:610
+#: ../plugins/gtk+/glade-button-editor.ui.h:7
 msgid "Stock Button"
 msgstr "Έτοιμο κουμπί"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:591
+#: ../plugins/gtk+/gtk+.xml.in.h:611
 msgid "Response ID"
 msgstr "Ταυτότητα Απόκρισης"
 
 #. Atk press property
-#: ../plugins/gtk+/gtk+.xml.in.h:593
+#: ../plugins/gtk+/gtk+.xml.in.h:613
 msgid "Press"
 msgstr "Πάτημα"
 
 #. Atk release property
-#: ../plugins/gtk+/gtk+.xml.in.h:595
+#: ../plugins/gtk+/gtk+.xml.in.h:615
 msgid "Release"
 msgstr "Απελευθέρωση"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:596
+#: ../plugins/gtk+/gtk+.xml.in.h:616
 msgid "The stock item for this button"
 msgstr "Το έτοιμο στοιχείο για αυτό το κουμπί"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:597
+#: ../plugins/gtk+/gtk+.xml.in.h:617
 msgid "The response ID of this button in a dialog"
 msgstr "Το αναγνωριστικό της απόκρισης αυτού του κουμπιού σε ένα διάλογο"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:598
+#: ../plugins/gtk+/gtk+.xml.in.h:618
 msgid "Set the description of the Press atk action"
 msgstr "Ορισμός της περιγραφής της ενέργειας πατήματος atk"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:599
+#: ../plugins/gtk+/gtk+.xml.in.h:619
 msgid "Set the description of the Release atk action"
 msgstr "Ορισμός της περιγραφής της ενέργειας απελευθέρωσης atk"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:600
+#: ../plugins/gtk+/gtk+.xml.in.h:620
 msgid "Check Button"
 msgstr "Κουμπί ελέγχου"
 
 #. GtkPolicyType enumeration value
-#: ../plugins/gtk+/gtk+.xml.in.h:602
+#: ../plugins/gtk+/gtk+.xml.in.h:622
 msgid "Always"
 msgstr "Πάντα"
 
 #. GtkSpinButtonUpdatePolicy enumeration value
-#: ../plugins/gtk+/gtk+.xml.in.h:604
+#: ../plugins/gtk+/gtk+.xml.in.h:624
 msgid "If Valid"
 msgstr "Εάν είναι έγκυρο"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:605
+#: ../plugins/gtk+/gtk+.xml.in.h:625
 msgid "Switch"
 msgstr "Διακόπτης"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:606
+#: ../plugins/gtk+/gtk+.xml.in.h:626
 #: ../plugins/gtk+/glade-file-chooser-button-editor.ui.h:1
 msgid "File Chooser Button"
 msgstr "Κουμπί επιλογής αρχείου"
 
 #. GtkFileChooserAction enumeration value
-#: ../plugins/gtk+/gtk+.xml.in.h:612
+#: ../plugins/gtk+/gtk+.xml.in.h:632
 msgid "Select Folder"
 msgstr "Επιλογή φακέλου"
 
 #. GtkFileChooserAction enumeration value
-#: ../plugins/gtk+/gtk+.xml.in.h:614
+#: ../plugins/gtk+/gtk+.xml.in.h:634
 msgid "Create Folder"
 msgstr "Δημιουργία φακέλου"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:615
+#: ../plugins/gtk+/gtk+.xml.in.h:635
 msgid "Scale Button"
 msgstr "Κουμπί κλιμάκωσης"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:616
+#: ../plugins/gtk+/gtk+.xml.in.h:636
 msgid ""
 "The names of the icons to be used by the scale button. The first item in the "
 "array will be used in the button when the current value is the lowest value, "
@@ -6352,523 +6381,527 @@ msgstr ""
 "επόμενα εικονίδια θα χρησιμοποιηθούν για όλες τις άλλες τιμές, που καλύπτουν "
 "ομοιόμορφα την περιοχή των τιμών"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:617
+#: ../plugins/gtk+/gtk+.xml.in.h:637
 msgid "Volume Button"
 msgstr "Κουμπί έντασης ήχου"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:618
+#: ../plugins/gtk+/gtk+.xml.in.h:638
 msgid "File Chooser Widget"
 msgstr "Γραφικό στοιχείο επιλογής αρχείου"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:619
+#: ../plugins/gtk+/gtk+.xml.in.h:639
 msgid "Application Chooser Widget"
 msgstr "Γραφικό στοιχείο επιλογής εφαρμογών"
 
 #. GtkPlacesOpenFlags enumeration value
-#: ../plugins/gtk+/gtk+.xml.in.h:621
+#: ../plugins/gtk+/gtk+.xml.in.h:641
 msgid "New Tab"
 msgstr "Νέα καρτέλα"
 
 #. GtkPlacesOpenFlags enumeration value
-#: ../plugins/gtk+/gtk+.xml.in.h:623
+#: ../plugins/gtk+/gtk+.xml.in.h:643
 msgid "New Window"
 msgstr "Νέο παράθυρο"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:624
+#: ../plugins/gtk+/gtk+.xml.in.h:644
 msgid "Color Button"
 msgstr "Κουμπί χρωμάτων"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:625
+#: ../plugins/gtk+/gtk+.xml.in.h:645
 msgid "Font Button"
 msgstr "Κουμπί γραμματοσειράς"
 
 #. GtkTreeViewColumnSizing enumeration value
-#: ../plugins/gtk+/gtk+.xml.in.h:627
+#: ../plugins/gtk+/gtk+.xml.in.h:647
 msgid "Automatic"
 msgstr "Αυτόματο"
 
 #. GtkSensitivityType enumeration value
-#: ../plugins/gtk+/gtk+.xml.in.h:629
+#: ../plugins/gtk+/gtk+.xml.in.h:649
 msgid "On"
 msgstr "Ενεργό"
 
 #. GtkSensitivityType enumeration value
-#: ../plugins/gtk+/gtk+.xml.in.h:631
+#: ../plugins/gtk+/gtk+.xml.in.h:651
 msgid "Off"
 msgstr "Ανενεργό"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:632
+#: ../plugins/gtk+/gtk+.xml.in.h:652
 msgid "Combo Box Text"
 msgstr "Κείμενο σύνθετου πλαισίου"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:633
+#: ../plugins/gtk+/gtk+.xml.in.h:653
 msgid "Items"
 msgstr "Στοιχεία"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:634
+#: ../plugins/gtk+/gtk+.xml.in.h:654
 msgid "The list of items to show in the combo box"
 msgstr "Η λίστα στοιχείων προς εμφάνιση στο σύνθετο πλαίσιο"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:635
+#: ../plugins/gtk+/gtk+.xml.in.h:655
 msgid "Application Chooser Button"
 msgstr "Κουμπί επιλογέα εφαρμογής"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:636
+#: ../plugins/gtk+/gtk+.xml.in.h:656
 msgid "Progress Bar"
 msgstr "Γραμμή προόδου"
 
 #. GtkUpdateType enumeration value
-#: ../plugins/gtk+/gtk+.xml.in.h:638
+#: ../plugins/gtk+/gtk+.xml.in.h:658
 msgid "Continuous"
 msgstr "Συνεχόμενο"
 
 #. GtkLevelBarMode enumeration value
-#: ../plugins/gtk+/gtk+.xml.in.h:640
+#: ../plugins/gtk+/gtk+.xml.in.h:660
 msgid "Discrete"
 msgstr "Διακριτό"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:643
+#: ../plugins/gtk+/gtk+.xml.in.h:663
 msgid "Resource Name"
 msgstr "Όνομα πόρου"
 
 #. We have to save/load icon-size as int, and fake the enum
-#: ../plugins/gtk+/gtk+.xml.in.h:645
+#: ../plugins/gtk+/gtk+.xml.in.h:665
 msgid "Icon Size"
 msgstr "Μέγεθος εικονιδίου"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:646
+#: ../plugins/gtk+/gtk+.xml.in.h:666
 msgid "Dialog Box"
 msgstr "Πλαίσιο διαλόγου"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:647
+#: ../plugins/gtk+/gtk+.xml.in.h:667
 msgid "Insert Row"
 msgstr "Εισαγωγή γραμμής"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:648
+#: ../plugins/gtk+/gtk+.xml.in.h:668
 msgid "Before"
 msgstr "Πριν"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:650
+#: ../plugins/gtk+/gtk+.xml.in.h:670
 msgid "Insert Column"
 msgstr "Εισαγωγή στήλης"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:651
+#: ../plugins/gtk+/gtk+.xml.in.h:671
 msgid "Remove Row"
 msgstr "Αφαίρεση γραμμής"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:652
+#: ../plugins/gtk+/gtk+.xml.in.h:672
 msgid "Remove Column"
 msgstr "Αφαίρεση στήλης"
 
 #. GtkButtonBoxStyle enumeration value
-#: ../plugins/gtk+/gtk+.xml.in.h:654
+#: ../plugins/gtk+/gtk+.xml.in.h:674
 #: ../plugins/gtk+/glade-widget-editor.ui.h:10
 msgid "Expand"
 msgstr "Επέκταση"
 
 #. GtkAttachOptions enumeration value
-#: ../plugins/gtk+/gtk+.xml.in.h:656
+#: ../plugins/gtk+/gtk+.xml.in.h:676
 msgid "Shrink"
 msgstr "Συρρίκνωση"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:657 ../plugins/gtk+/glade-grid-editor.ui.h:2
+#: ../plugins/gtk+/gtk+.xml.in.h:677 ../plugins/gtk+/glade-grid-editor.ui.h:2
 msgid "Rows"
 msgstr "Γραμμές"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:658 ../plugins/gtk+/glade-grid-editor.ui.h:3
+#: ../plugins/gtk+/gtk+.xml.in.h:678 ../plugins/gtk+/glade-grid-editor.ui.h:3
 msgid "Columns"
 msgstr "Στήλες"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:659
+#: ../plugins/gtk+/gtk+.xml.in.h:679
 msgid "The number of rows for this grid"
 msgstr "Ο αριθμός σειρών για το πλέγμα"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:660
+#: ../plugins/gtk+/gtk+.xml.in.h:680
 msgid "The number of columns for this grid"
 msgstr "Ο αριθμός στηλών για το πλέγμα"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:661
+#: ../plugins/gtk+/gtk+.xml.in.h:681
 msgid "Horizontal Panes"
 msgstr "Οριζόντια παράθυρα"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:662
+#: ../plugins/gtk+/gtk+.xml.in.h:682
 msgid "Vertical Panes"
 msgstr "Κατακόρυφα παράθυρα"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:663
+#: ../plugins/gtk+/gtk+.xml.in.h:683
 msgid "Notebook"
 msgstr "Σημειωματάριο"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:664
+#: ../plugins/gtk+/gtk+.xml.in.h:684
 msgid "Insert Page Before"
 msgstr "Εισαγωγή σελίδας πριν"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:665
+#: ../plugins/gtk+/gtk+.xml.in.h:685
 msgid "Insert Page After"
 msgstr "Εισαγωγή σελίδας μετά"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:666
+#: ../plugins/gtk+/gtk+.xml.in.h:686
 msgid "Remove Page"
 msgstr "Αφαίρεση σελίδας"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:667
+#: ../plugins/gtk+/gtk+.xml.in.h:687
 msgid "Number of pages"
 msgstr "Αριθμός σελίδων"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:668
+#: ../plugins/gtk+/gtk+.xml.in.h:688
 msgid "Start Action"
 msgstr "Ενέργεια έναρξης"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:669
+#: ../plugins/gtk+/gtk+.xml.in.h:689
 msgid "End Action"
 msgstr "Ενέργεια λήξης"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:670
+#: ../plugins/gtk+/gtk+.xml.in.h:690
 msgid "Set the currently active page to edit, this property will not be saved"
 msgstr ""
 "Ορισμός της τρέχουσας ενεργής σελίδας για επεξεργασία, αυτή η ιδιότητα δεν "
 "θα αποθηκευτεί"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:671
+#: ../plugins/gtk+/gtk+.xml.in.h:691
 msgid "The number of pages in the notebook"
 msgstr "Το πλήθος των σελίδων στο σημειωματάριο"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:672
+#: ../plugins/gtk+/gtk+.xml.in.h:692
 msgid "HeaderBar"
 msgstr "Γραμμή κεφαλίδων"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:673
+#: ../plugins/gtk+/gtk+.xml.in.h:693
 msgid "Reserve space for subtitle"
 msgstr "Δέσμευση χώρου για υπότιτλους"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:674
+#: ../plugins/gtk+/gtk+.xml.in.h:694
 msgid "Custom Title"
 msgstr "Προσαρμοσμένος τίτλος"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:675
+#: ../plugins/gtk+/gtk+.xml.in.h:695
 msgid "Add Slot"
 msgstr "Προσθήκη υποδοχής"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:676
+#: ../plugins/gtk+/gtk+.xml.in.h:696
 msgid "Keep the headerbar height the same as the subtitle changes dynamically."
 msgstr ""
 "Διατήρηση του ύψους γραμμής κεφαλίδων το ίδιο με τις δυναμικές αλλαγές "
 "υπότιτλου."
 
-#: ../plugins/gtk+/gtk+.xml.in.h:677
+#: ../plugins/gtk+/gtk+.xml.in.h:697
 msgid "The number of items in the header bar"
 msgstr "Το πλήθος των στοιχείων στη γραμμή κεφαλίδων"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:678
+#: ../plugins/gtk+/gtk+.xml.in.h:698
 msgid "Edit page"
 msgstr "Επεξεργασία σελίδας"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:679
+#: ../plugins/gtk+/gtk+.xml.in.h:699
 msgid "Visible child"
 msgstr "Ορατό θυγατρικό"
 
 #. GtkRevealerTransitionType enumeration value
-#: ../plugins/gtk+/gtk+.xml.in.h:681
+#: ../plugins/gtk+/gtk+.xml.in.h:701
 msgid "Crossfade"
 msgstr "Σταδιακή μετάβαση"
 
 #. GtkRevealerTransitionType enumeration value
-#: ../plugins/gtk+/gtk+.xml.in.h:683
+#: ../plugins/gtk+/gtk+.xml.in.h:703
 msgid "Slide Right"
 msgstr "Μετακίνηση προς τα δεξιά"
 
 #. GtkRevealerTransitionType enumeration value
-#: ../plugins/gtk+/gtk+.xml.in.h:685
+#: ../plugins/gtk+/gtk+.xml.in.h:705
 msgid "Slide Left"
 msgstr "Μετακίνηση προς τα αριστερά"
 
 #. GtkRevealerTransitionType enumeration value
-#: ../plugins/gtk+/gtk+.xml.in.h:687
+#: ../plugins/gtk+/gtk+.xml.in.h:707
 msgid "Slide Up"
 msgstr "Μετακίνηση προς τα πάνω"
 
 #. GtkRevealerTransitionType enumeration value
-#: ../plugins/gtk+/gtk+.xml.in.h:689
+#: ../plugins/gtk+/gtk+.xml.in.h:709
 msgid "Slide Down"
 msgstr "Μετακίνηση προς τα κάτω"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:690
+#: ../plugins/gtk+/gtk+.xml.in.h:710
 msgid "Slide Left-Right"
 msgstr "Μετακίνηση προς τα αριστερά-δεξιά"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:691
+#: ../plugins/gtk+/gtk+.xml.in.h:711
 msgid "Slide Up-Down"
 msgstr "Μετακίνηση προς τα πάνω-κάτω"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:692
+#: ../plugins/gtk+/gtk+.xml.in.h:712
 msgid "Move Over Up"
 msgstr "Μετακίνηση προς τα πάνω για δημιουργία χώρου προς τα πάνω"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:693
+#: ../plugins/gtk+/gtk+.xml.in.h:713
 msgid "Move Over Down"
 msgstr "Μετακίνηση προς τα πάνω για δημιουργία χώρου προς τα κάτω"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:694
+#: ../plugins/gtk+/gtk+.xml.in.h:714
 msgid "Move Over Left"
 msgstr "Μετακίνηση προς τα πάνω για δημιουργία χώρου προς τα αριστερά"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:695
+#: ../plugins/gtk+/gtk+.xml.in.h:715
 msgid "Move Over Right"
 msgstr "Μετακίνηση προς τα πάνω για δημιουργία χώρου προς τα δεξιά"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:696
+#: ../plugins/gtk+/gtk+.xml.in.h:716
 msgid "Move Over Up-Down"
 msgstr "Μετακίνηση προς τα πάνω για δημιουργία χώρου πάνω-κάτω"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:697
+#: ../plugins/gtk+/gtk+.xml.in.h:717
 msgid "Move Over Down-Up"
 msgstr "Μετακίνηση προς τα πάνω για δημιουργία χώρου κάθετα"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:698
+#: ../plugins/gtk+/gtk+.xml.in.h:718
 msgid "Move Over Left-Right"
 msgstr "Μετακίνηση προς τα πάνω για δημιουργία χώρου αριστερά-δεξιά"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:699
+#: ../plugins/gtk+/gtk+.xml.in.h:719
 msgid "Move Over Right-Left"
 msgstr "Μετακίνηση προς τα πάνω για δημιουργία χώρου προς τα δεξιά-αριστερά"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:700
+#: ../plugins/gtk+/gtk+.xml.in.h:720
 msgid "Move Under Up"
 msgstr "Μετακίνηση προς τα κάτω για δημιουργία χώρου επάνω"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:701
+#: ../plugins/gtk+/gtk+.xml.in.h:721
 msgid "Move Under Down"
 msgstr "Μετακίνηση προς τα κάτω για δημιουργία χώρου κάτω"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:702
+#: ../plugins/gtk+/gtk+.xml.in.h:722
 msgid "Move Under Left"
 msgstr "Μετακίνηση προς τα κάτω για δημιουργία χώρου αριστερά"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:703
+#: ../plugins/gtk+/gtk+.xml.in.h:723
 msgid "Move Under Right"
 msgstr "Μετακίνηση προς τα κάτω για δημιουργία χώρου δεξιά"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:704
+#: ../plugins/gtk+/gtk+.xml.in.h:724
 msgid "The number of pages in the stack"
 msgstr "Ο αριθμός των σελίδων στη στοίβα"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:705
+#: ../plugins/gtk+/gtk+.xml.in.h:725
 msgid "Stack Switcher"
 msgstr "Εναλλαγή στοίβας"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:706
+#: ../plugins/gtk+/gtk+.xml.in.h:726
 msgid "Stack Sidebar"
 msgstr "Πλευρική στήλη στοίβας"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:707
+#: ../plugins/gtk+/gtk+.xml.in.h:727
 msgid "Revealer"
 msgstr "Αποκαλυπτής"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:708
+#: ../plugins/gtk+/gtk+.xml.in.h:728
 msgid "Add Row"
 msgstr "Προσθήκη γραμμής"
 
 #. PangoUnderline enumeration value
-#: ../plugins/gtk+/gtk+.xml.in.h:710
+#: ../plugins/gtk+/gtk+.xml.in.h:730
 msgid "Single"
 msgstr "Μονό"
 
 #. GtkSelectionMode enumeration value
-#: ../plugins/gtk+/gtk+.xml.in.h:712
+#: ../plugins/gtk+/gtk+.xml.in.h:732
 msgid "Browse"
 msgstr "Περιήγηση"
 
 #. GtkSelectionMode enumeration value
-#: ../plugins/gtk+/gtk+.xml.in.h:714
+#: ../plugins/gtk+/gtk+.xml.in.h:734
 msgid "Multiple"
 msgstr "Πολλαπλό"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:715
+#: ../plugins/gtk+/gtk+.xml.in.h:735
 msgid "The position of the row item in the listbox"
 msgstr "Η θέση του στοιχείου γραμμής στο πλαίσιο λίστας"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:716
+#: ../plugins/gtk+/gtk+.xml.in.h:736
 msgid "List Box Row"
 msgstr "Γραμμή πλαισίου λίστας"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:717
+#: ../plugins/gtk+/gtk+.xml.in.h:737
 msgid "Flow Box"
 msgstr "Πλαίσιο ροής"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:718
+#: ../plugins/gtk+/gtk+.xml.in.h:738
 msgid "Add Child"
 msgstr "Προσθήκη θυγατρικού"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:719
+#: ../plugins/gtk+/gtk+.xml.in.h:739
 msgid "The position of the child in the flowbox"
 msgstr "Η θέση του θυγατρικού στο πλαίσιο ροής"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:720
+#: ../plugins/gtk+/gtk+.xml.in.h:740
 msgid "Flow Box Child"
 msgstr "Θυγατρικό πλαισίου ροής"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:721
+#: ../plugins/gtk+/gtk+.xml.in.h:741
 msgid "Range"
 msgstr "Περιοχή"
 
 #. GtkUpdateType enumeration value
-#: ../plugins/gtk+/gtk+.xml.in.h:723
+#: ../plugins/gtk+/gtk+.xml.in.h:743
 msgid "Discontinuous"
 msgstr "Ασυνεχής"
 
 #. GtkUpdateType enumeration value
-#: ../plugins/gtk+/gtk+.xml.in.h:725
+#: ../plugins/gtk+/gtk+.xml.in.h:745
 msgid "Delayed"
 msgstr "Ανεσταλμένο"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:727
+#: ../plugins/gtk+/gtk+.xml.in.h:747
 msgid "The number of digits to round the value to when the value changes"
 msgstr "Ο αριθμός των ψηφίων για στρογγυλοποίηση της τιμής όταν η τιμή αλλάζει"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:728
+#: ../plugins/gtk+/gtk+.xml.in.h:748
 msgid ""
 "Whether to highlight the area of the trough from the bottom or left leading "
 "up to the knob"
 msgstr "Αν θα επισημαίνετε η περιοχή από κάτω ή αριστερά που οδηγεί στο κουμπί"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:729
+#: ../plugins/gtk+/gtk+.xml.in.h:749
 msgid "Horizontal Scale"
 msgstr "Οριζόντια κλιμάκωση"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:730
+#: ../plugins/gtk+/gtk+.xml.in.h:750
 msgid "Vertical Scale"
 msgstr "Κατακόρυφη κλιμάκωση"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:732
+#: ../plugins/gtk+/gtk+.xml.in.h:752
 msgid "Scrollbar"
 msgstr "Γραμμή κύλισης"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:733
+#: ../plugins/gtk+/gtk+.xml.in.h:753
 msgid "Horizontal Scrollbar"
 msgstr "Οριζόντια γραμμή κύλισης"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:734
+#: ../plugins/gtk+/gtk+.xml.in.h:754
 msgid "Vertical Scrollbar"
 msgstr "Κατακόρυφη γραμμή κύλισης"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:735
+#: ../plugins/gtk+/gtk+.xml.in.h:755
 msgid "Button Box"
 msgstr "Πλαίσιο κουμπιού"
 
 #. GtkButtonBoxStyle enumeration value
-#: ../plugins/gtk+/gtk+.xml.in.h:737
+#: ../plugins/gtk+/gtk+.xml.in.h:757
 msgid "Default"
 msgstr "Προεπιλογή"
 
 #. GtkButtonBoxStyle enumeration value
-#: ../plugins/gtk+/gtk+.xml.in.h:739
+#: ../plugins/gtk+/gtk+.xml.in.h:759
 msgid "Spread"
 msgstr "Διάδοση"
 
 #. GtkButtonBoxStyle enumeration value
-#: ../plugins/gtk+/gtk+.xml.in.h:741
+#: ../plugins/gtk+/gtk+.xml.in.h:761
 msgid "Edge"
 msgstr "Άκρη"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:742
+#: ../plugins/gtk+/gtk+.xml.in.h:762
 msgid "Horizontal Button Box"
 msgstr "Οριζόντιο πλαίσιο κουμπιού"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:743
+#: ../plugins/gtk+/gtk+.xml.in.h:763
 msgid "Vertical Button Box"
 msgstr "Κατακόρυφο πλαίσιο κουμπιού"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:744
+#: ../plugins/gtk+/gtk+.xml.in.h:764
 msgid "Horizontal Separator"
 msgstr "Οριζόντιο διαχωριστικό"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:745
+#: ../plugins/gtk+/gtk+.xml.in.h:765
 msgid "Vertical Separator"
 msgstr "Κατακόρυφο διαχωριστικό"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:746
+#: ../plugins/gtk+/gtk+.xml.in.h:766
 msgid "Accel Label"
 msgstr "Ετικέτα Accel"
 
 #. GtkArrowType enumeration value
-#: ../plugins/gtk+/gtk+.xml.in.h:748
+#: ../plugins/gtk+/gtk+.xml.in.h:768
 msgid "Up"
 msgstr "Επάνω"
 
 #. GtkArrowType enumeration value
-#: ../plugins/gtk+/gtk+.xml.in.h:750
+#: ../plugins/gtk+/gtk+.xml.in.h:770
 msgid "Down"
 msgstr "Κάτω"
 
 #. Declare menu button here because the arrow-type values already exist
-#: ../plugins/gtk+/gtk+.xml.in.h:752
+#: ../plugins/gtk+/gtk+.xml.in.h:772
 msgid "Menu Button"
 msgstr "Κουμπί μενού"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:753
+#: ../plugins/gtk+/gtk+.xml.in.h:773
 msgid "Lock Button"
 msgstr "Πλήκτρο κλειδώματος"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:754
+#: ../plugins/gtk+/gtk+.xml.in.h:774
 msgid "Layout"
 msgstr "Διάταξη"
 
 #. GtkTreeViewColumnSizing enumeration value
-#: ../plugins/gtk+/gtk+.xml.in.h:756
+#: ../plugins/gtk+/gtk+.xml.in.h:776
 msgid "Fixed"
 msgstr "Σταθερό"
 
+#: ../plugins/gtk+/gtk+.xml.in.h:777
+msgid "OpenGL Area"
+msgstr "Περιοχή OpenGL"
+
 #. GtkMessageType enumeration value
-#: ../plugins/gtk+/gtk+.xml.in.h:758
+#: ../plugins/gtk+/gtk+.xml.in.h:779
 msgid "Info"
 msgstr "Πληροφορίες"
 
 #. GtkMessageType enumeration value
-#: ../plugins/gtk+/gtk+.xml.in.h:760
+#: ../plugins/gtk+/gtk+.xml.in.h:781
 msgid "Warning"
 msgstr "Προειδοποίηση"
 
 #. GtkMessageType enumeration value
-#: ../plugins/gtk+/gtk+.xml.in.h:762
+#: ../plugins/gtk+/gtk+.xml.in.h:783
 msgid "Question"
 msgstr "Ερώτηση"
 
 #. PangoUnderline enumeration value
-#: ../plugins/gtk+/gtk+.xml.in.h:764
+#: ../plugins/gtk+/gtk+.xml.in.h:785
 msgid "Error"
 msgstr "Σφάλμα"
 
 #. GtkPolicyType enumeration value
-#: ../plugins/gtk+/gtk+.xml.in.h:768
+#: ../plugins/gtk+/gtk+.xml.in.h:789
 msgid "Never"
 msgstr "Ποτέ"
 
 #. GtkPolicyType enumeration value
-#: ../plugins/gtk+/gtk+.xml.in.h:770
+#: ../plugins/gtk+/gtk+.xml.in.h:791
 msgid "External"
 msgstr "Εξωτερικό"
 
 #. GtkCornerType enumeration value
-#: ../plugins/gtk+/gtk+.xml.in.h:772
+#: ../plugins/gtk+/gtk+.xml.in.h:793
 msgid "Top Left"
 msgstr "Πάνω αριστερά"
 
 #. GtkCornerType enumeration value
-#: ../plugins/gtk+/gtk+.xml.in.h:774
+#: ../plugins/gtk+/gtk+.xml.in.h:795
 msgid "Bottom Left"
 msgstr "Κάτω αριστερά"
 
 #. GtkCornerType enumeration value
-#: ../plugins/gtk+/gtk+.xml.in.h:776
+#: ../plugins/gtk+/gtk+.xml.in.h:797
 msgid "Top Right"
 msgstr "Πάνω δεξιά"
 
 #. GtkCornerType enumeration value
-#: ../plugins/gtk+/gtk+.xml.in.h:778
+#: ../plugins/gtk+/gtk+.xml.in.h:799
 msgid "Bottom Right"
 msgstr "Κάτω δεξιά"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:779
+#: ../plugins/gtk+/gtk+.xml.in.h:800
 msgid ""
 "If overlay scrolling is enabled, scrollbars are only added as traditional "
 "widgets when a mouse is present"
@@ -6880,61 +6913,61 @@ msgstr ""
 #. <glade-widget-class name="GtkPlug" generic-name="plug" _title="Plug"/>
 #. <glade-widget-class name="GtkSocket" generic-name="socket" _title="Socket"/>
 #.
-#: ../plugins/gtk+/gtk+.xml.in.h:784
+#: ../plugins/gtk+/gtk+.xml.in.h:805
 msgid "About Dialog"
 msgstr "Σχετικά με τον διάλογο"
 
 #. GtkLicense enumeration value
-#: ../plugins/gtk+/gtk+.xml.in.h:788
+#: ../plugins/gtk+/gtk+.xml.in.h:809
 msgid "GPL 2.0"
 msgstr "GPL 2.0"
 
 #. GtkLicense enumeration value
-#: ../plugins/gtk+/gtk+.xml.in.h:790
+#: ../plugins/gtk+/gtk+.xml.in.h:811
 msgid "GPL 3.0"
 msgstr "GPL 3.0"
 
 #. GtkLicense enumeration value
-#: ../plugins/gtk+/gtk+.xml.in.h:792
+#: ../plugins/gtk+/gtk+.xml.in.h:813
 msgid "LGPL 2.1"
 msgstr "LGPL 2.1"
 
 #. GtkLicense enumeration value
-#: ../plugins/gtk+/gtk+.xml.in.h:794
+#: ../plugins/gtk+/gtk+.xml.in.h:815
 msgid "LGPL 3.0"
 msgstr "LGPL 3.0"
 
 #. GtkLicense enumeration value
-#: ../plugins/gtk+/gtk+.xml.in.h:798
+#: ../plugins/gtk+/gtk+.xml.in.h:819
 msgid "MIT X11"
 msgstr "ΜΙΤ Χ11"
 
 #. GtkLicense enumeration value
-#: ../plugins/gtk+/gtk+.xml.in.h:800
+#: ../plugins/gtk+/gtk+.xml.in.h:821
 msgid "Artistic"
 msgstr "Καλλιτεχνικό"
 
 #. GtkLicense enumeration value
-#: ../plugins/gtk+/gtk+.xml.in.h:802
+#: ../plugins/gtk+/gtk+.xml.in.h:823
 msgid "GPL 2.0 Only"
 msgstr "Μόνο GPL 2.0"
 
 #. GtkLicense enumeration value
-#: ../plugins/gtk+/gtk+.xml.in.h:804
+#: ../plugins/gtk+/gtk+.xml.in.h:825
 msgid "GPL 3.0 Only"
 msgstr "Μόνο GPL 3.0"
 
 #. GtkLicense enumeration value
-#: ../plugins/gtk+/gtk+.xml.in.h:806
+#: ../plugins/gtk+/gtk+.xml.in.h:827
 msgid "LGPL 2.1 Only"
 msgstr "Μόνο LGPL 2.1"
 
 #. GtkLicense enumeration value
-#: ../plugins/gtk+/gtk+.xml.in.h:808
+#: ../plugins/gtk+/gtk+.xml.in.h:829
 msgid "LGPL 3.0 Only"
 msgstr "Μόνο LGPL 3.0"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:809
+#: ../plugins/gtk+/gtk+.xml.in.h:830
 msgid ""
 "You can mark this as translatable and set one name/address if you want to "
 "show a translation specific translator, otherwise you should list all "
@@ -6945,102 +6978,102 @@ msgstr ""
 "να αναφέρερε όλους τους μεταφραστές και να ξεμαρκάρετε αυτή τη σειρά για "
 "μετάφραση"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:810
+#: ../plugins/gtk+/gtk+.xml.in.h:831
 msgid "Color Selection Dialog"
 msgstr "Διάλογος επιλογής χρωμάτων"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:811
+#: ../plugins/gtk+/gtk+.xml.in.h:832
 msgid "File Chooser Dialog"
 msgstr "Διάλογος επιλογής αρχείου"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:812
+#: ../plugins/gtk+/gtk+.xml.in.h:833
 msgid "Font Selection Dialog"
 msgstr "Διάλογος επιλογής γραμματοσειράς"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:813
+#: ../plugins/gtk+/gtk+.xml.in.h:834
 msgid "Application Chooser Dialog"
 msgstr "Διάλογος επιλογής εφαρμογής"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:814
+#: ../plugins/gtk+/gtk+.xml.in.h:835
 msgid "Message Dialog"
 msgstr "Διάλογος μηνύματος"
 
 #. GtkButtonsType enumeration value
-#: ../plugins/gtk+/gtk+.xml.in.h:816
+#: ../plugins/gtk+/gtk+.xml.in.h:837
 msgid "Ok"
 msgstr "Εντάξει"
 
 #. GtkButtonsType enumeration value
-#: ../plugins/gtk+/gtk+.xml.in.h:822
+#: ../plugins/gtk+/gtk+.xml.in.h:839
 msgid "Yes, No"
 msgstr "Ναι, Όχι"
 
 #. GtkButtonsType enumeration value
-#: ../plugins/gtk+/gtk+.xml.in.h:824
+#: ../plugins/gtk+/gtk+.xml.in.h:841
 msgid "Ok, Cancel"
 msgstr "Εντάξει, Ακύρωση"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:825
+#: ../plugins/gtk+/gtk+.xml.in.h:842
 msgid "Color Selection"
 msgstr "Επιλογή χρωμάτων"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:826
+#: ../plugins/gtk+/gtk+.xml.in.h:843
 msgid "Color Chooser Widget"
 msgstr "Γραφικό στοιχείο επιλογής χρώματος"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:827
+#: ../plugins/gtk+/gtk+.xml.in.h:844
 msgid "Color Chooser Dialog"
 msgstr "Διάλογος επιλογής χρώματος"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:828
+#: ../plugins/gtk+/gtk+.xml.in.h:845
 msgid "Font Chooser Widget"
 msgstr "Γραφικό στοιχείο επιλογής γραμματοσειράς"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:829
+#: ../plugins/gtk+/gtk+.xml.in.h:846
 msgid "Font Chooser Dialog"
 msgstr "Διάλογος επιλογής γραμματοσειράς"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:830
+#: ../plugins/gtk+/gtk+.xml.in.h:847
 msgid "Font Selection"
 msgstr "Επιλογή γραμματοσειράς"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:831
+#: ../plugins/gtk+/gtk+.xml.in.h:848
 msgid "Assistant"
 msgstr "Βοηθός"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:832
+#: ../plugins/gtk+/gtk+.xml.in.h:849
 msgid "Number of Pages"
 msgstr "Αριθμός σελίδων"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:833
+#: ../plugins/gtk+/gtk+.xml.in.h:850
 msgid "Initially Complete"
 msgstr "Αρχικά πλήρης"
 
 #. GtkAssistantPageType enumeration value
-#: ../plugins/gtk+/gtk+.xml.in.h:835
+#: ../plugins/gtk+/gtk+.xml.in.h:852
 msgid "Content"
 msgstr "Περιεχόμενο"
 
 #. GtkAssistantPageType enumeration value
-#: ../plugins/gtk+/gtk+.xml.in.h:837
+#: ../plugins/gtk+/gtk+.xml.in.h:854
 msgid "Intro"
 msgstr "Εισαγωγή"
 
 #. GtkAssistantPageType enumeration value
-#: ../plugins/gtk+/gtk+.xml.in.h:839
+#: ../plugins/gtk+/gtk+.xml.in.h:856
 msgid "Confirm"
 msgstr "Επιβεβαίωση"
 
 #. GtkAssistantPageType enumeration value
-#: ../plugins/gtk+/gtk+.xml.in.h:841
+#: ../plugins/gtk+/gtk+.xml.in.h:858
 msgid "Summary"
 msgstr "Σύνοψη"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:844
+#: ../plugins/gtk+/gtk+.xml.in.h:861
 msgid "Number of pages in this assistant"
 msgstr "Το πλήθος των σελίδων στο βοηθό"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:845
+#: ../plugins/gtk+/gtk+.xml.in.h:862
 msgid ""
 "Whether this page will initially be marked as complete regardless of user "
 "input."
@@ -7048,761 +7081,761 @@ msgstr ""
 "Εάν αυτή η σελίδα θα πρέπει να σημειώνεται αρχικά ως πλήρης, ανεξάρτητα από "
 "την εισαγωγή δεδομένων του χρήστη."
 
-#: ../plugins/gtk+/gtk+.xml.in.h:846
+#: ../plugins/gtk+/gtk+.xml.in.h:863
 msgid "The page position in the Assistant"
 msgstr "Η θέση της σελίδας στον βοηθό"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:847
+#: ../plugins/gtk+/gtk+.xml.in.h:864
 msgid "Popover"
 msgstr "Αναδυόμενο"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:848
+#: ../plugins/gtk+/gtk+.xml.in.h:865
 msgid "Popover Menu"
 msgstr "Αναδυόμενο μενού"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:849
+#: ../plugins/gtk+/gtk+.xml.in.h:866
 msgid "Number of submenus"
 msgstr "Αριθμός υπομενού"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:850
+#: ../plugins/gtk+/gtk+.xml.in.h:867
 msgid "Edit menu"
 msgstr "Επεξεργασία μενού"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:851
+#: ../plugins/gtk+/gtk+.xml.in.h:868
 msgid "The number of submenus in the popover menu"
 msgstr "Το πλήθος των υπομενού στο αναδυόμενο μενού"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:852
+#: ../plugins/gtk+/gtk+.xml.in.h:869
 msgid ""
 "Set the currently active submenu to edit, this property will not be saved"
 msgstr ""
 "Ορισμός του τρέχοντος ενεργού υπομενού για επεξεργασία, αυτή η ιδιότητα δεν "
 "θα αποθηκευτεί"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:853
+#: ../plugins/gtk+/gtk+.xml.in.h:870
 msgid "Model Button"
 msgstr "Κουμπί μοντέλου"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:854
+#: ../plugins/gtk+/gtk+.xml.in.h:871
 msgid "Link Button"
 msgstr "Κουμπί σύνδεσης"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:855
+#: ../plugins/gtk+/gtk+.xml.in.h:872
 msgid "Recent Chooser"
 msgstr "Επιλογή προσφάτων"
 
 #. GtkRecentSortType enumeration value
-#: ../plugins/gtk+/gtk+.xml.in.h:857
+#: ../plugins/gtk+/gtk+.xml.in.h:874
 msgid "Most Recently Used first"
 msgstr "Το πιο πρόσφατα χρησιμοποιημένο πρώτο"
 
 #. GtkRecentSortType enumeration value
-#: ../plugins/gtk+/gtk+.xml.in.h:859
+#: ../plugins/gtk+/gtk+.xml.in.h:876
 msgid "Least Recently Used first"
 msgstr "Το μικρότερο από τα πρόσφατα χρησιμοποιούμενα πρώτο"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:860
+#: ../plugins/gtk+/gtk+.xml.in.h:877
 msgid "Recent Chooser Dialog"
 msgstr "Διάλογος επιλογής προσφάτων"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:861
+#: ../plugins/gtk+/gtk+.xml.in.h:878
 msgid "Size Group"
 msgstr "Ομάδα μεγέθους"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:862
+#: ../plugins/gtk+/gtk+.xml.in.h:879
 msgid "Widgets"
 msgstr "Γραφικά στοιχεία"
 
 #. GtkSizeGroupMode enumeration value
-#: ../plugins/gtk+/gtk+.xml.in.h:864
+#: ../plugins/gtk+/gtk+.xml.in.h:881
 msgid "Both"
 msgstr "Όλα"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:865
+#: ../plugins/gtk+/gtk+.xml.in.h:882
 msgid "List of widgets in this group"
 msgstr "Λίστα των γραφικών στοιχείων της ομάδας"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:866
+#: ../plugins/gtk+/gtk+.xml.in.h:883
 msgid "Window Group"
 msgstr "Ομάδα παραθύρων"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:867
+#: ../plugins/gtk+/gtk+.xml.in.h:884
 msgid "Adjustment"
 msgstr "Στοίχιση"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:871
+#: ../plugins/gtk+/gtk+.xml.in.h:888
 msgid "An accelerator key for this action"
 msgstr "Ένα κλειδί συντόμευσης για αυτή την ενέργεια"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:872
+#: ../plugins/gtk+/gtk+.xml.in.h:889
 msgid "Toggle Action"
 msgstr "Ενέργεια εναλλαγής"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:873
+#: ../plugins/gtk+/gtk+.xml.in.h:890
 msgid "Radio Action"
 msgstr "Ενέργεια ραδιοπλήκτρου"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:874
+#: ../plugins/gtk+/gtk+.xml.in.h:891
 msgid "Recent Action"
 msgstr "Πρόσφατη ενέργεια"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:875
+#: ../plugins/gtk+/gtk+.xml.in.h:892
 msgid "Action Group"
 msgstr "Ομάδα ενεργειών"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:876
+#: ../plugins/gtk+/gtk+.xml.in.h:893
 msgid "Entry Completion"
 msgstr "Συμπλήρωση εγγραφών"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:877
+#: ../plugins/gtk+/gtk+.xml.in.h:894
 msgid "Icon Factory"
 msgstr "Εργοστάσιο εικονιδίων"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:878
+#: ../plugins/gtk+/gtk+.xml.in.h:895
 msgid "Icon Sources"
 msgstr "Πηγές εικονιδίων"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:879
+#: ../plugins/gtk+/gtk+.xml.in.h:896
 msgid "A list of sources for this icon factory"
 msgstr "Μία λίστα πηγών για αυτό το εργοστάσιο εικονιδίων"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:880
+#: ../plugins/gtk+/gtk+.xml.in.h:897
 msgid "List Store"
 msgstr "Αποθήκη λιστών"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:881
+#: ../plugins/gtk+/gtk+.xml.in.h:898
 msgid "Data"
 msgstr "Δεδομένα"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:882
+#: ../plugins/gtk+/gtk+.xml.in.h:899
 msgid "Enter a list of column types for this data store"
 msgstr "Εισάγετε λίστα τύπων στηλών για αυτή την αποθήκη δεδομένων"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:883
+#: ../plugins/gtk+/gtk+.xml.in.h:900
 msgid "Enter a list of values to be applied on each row"
 msgstr "Εισάγετε λίστα τιμών που θα εφαρμοστουν σε κάθε γραμμή"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:884
+#: ../plugins/gtk+/gtk+.xml.in.h:901
 msgid "Tree Store"
 msgstr "Αποθήκη δέντρου"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:885
+#: ../plugins/gtk+/gtk+.xml.in.h:902
 msgid "Tree Model Filter"
 msgstr "Φίλτρο μοντέλου δέντρου"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:886
+#: ../plugins/gtk+/gtk+.xml.in.h:903
 msgid "Tree Model Sort"
 msgstr "Ταξινόμηση μοντέλου δέντρου"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:887
+#: ../plugins/gtk+/gtk+.xml.in.h:904
 msgid "Tree Selection"
 msgstr "Επιλογή δέντρου"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:888
+#: ../plugins/gtk+/gtk+.xml.in.h:905
 msgid "Tree View"
 msgstr "Προβολή δένδρου"
 
 #. GtkTreeViewGridLines enumeration value
-#: ../plugins/gtk+/gtk+.xml.in.h:890
+#: ../plugins/gtk+/gtk+.xml.in.h:907
 msgid "Horizontal and Vertical"
 msgstr "Οριζόντια και κατακόρυφα"
 
 #. GtkSortType enumeration value
-#: ../plugins/gtk+/gtk+.xml.in.h:893
+#: ../plugins/gtk+/gtk+.xml.in.h:910
 msgid "Ascending"
 msgstr "Αύξουσα"
 
 #. GtkSortType enumeration value
-#: ../plugins/gtk+/gtk+.xml.in.h:895
+#: ../plugins/gtk+/gtk+.xml.in.h:912
 msgid "Descending"
 msgstr "Φθίνουσα"
 
 #. GtkTreeViewColumnSizing enumeration value
-#: ../plugins/gtk+/gtk+.xml.in.h:897
+#: ../plugins/gtk+/gtk+.xml.in.h:914
 msgid "Grow Only"
 msgstr "Μόνο αύξηση"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:898
+#: ../plugins/gtk+/gtk+.xml.in.h:915
 msgid "Icon View"
 msgstr "Προβολή εικονιδίων"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:900
+#: ../plugins/gtk+/gtk+.xml.in.h:917
 msgid "Cell Background Color name column"
 msgstr "Στήλη ονόματος χρώματος φόντου κελιού"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:901
+#: ../plugins/gtk+/gtk+.xml.in.h:918
 msgid "Cell Background Color column"
 msgstr "Στήλη χρώματος φόντου κελιού"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:902
+#: ../plugins/gtk+/gtk+.xml.in.h:919
 msgid "Cell Background RGBA column"
 msgstr "Στήλη χρώματος RGBA κελιού"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:903
+#: ../plugins/gtk+/gtk+.xml.in.h:920
 msgid "Width column"
 msgstr "Στήλη πλάτους"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:904
+#: ../plugins/gtk+/gtk+.xml.in.h:921
 msgid "Height column"
 msgstr "Στήλη ύψους"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:905
+#: ../plugins/gtk+/gtk+.xml.in.h:922
 msgid "Horizontal Padding"
 msgstr "Οριζόντιο γέμισμα"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:906
+#: ../plugins/gtk+/gtk+.xml.in.h:923
 msgid "Horizontal Padding column"
 msgstr "Στήλη οριζόντιου γεμίσματος"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:907
+#: ../plugins/gtk+/gtk+.xml.in.h:924
 msgid "Vertical Padding"
 msgstr "Κατακόρυφο γέμισμα"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:908
+#: ../plugins/gtk+/gtk+.xml.in.h:925
 msgid "Vertical Padding column"
 msgstr "Στήλη κατακόρυφου γεμίσματος"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:909
+#: ../plugins/gtk+/gtk+.xml.in.h:926
 msgid "Horizontal Alignment"
 msgstr "Οριζόντια στοίχιση"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:910
+#: ../plugins/gtk+/gtk+.xml.in.h:927
 msgid "Horizontal Alignment column"
 msgstr "Στήλη οριζόντιας στοίχισης"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:911
+#: ../plugins/gtk+/gtk+.xml.in.h:928
 msgid "Vertical Alignment"
 msgstr "Κατακόρυφη στοίχιση"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:912
+#: ../plugins/gtk+/gtk+.xml.in.h:929
 msgid "Vertical Alignment column"
 msgstr "Στήλη κατακόρυφης στοίχισης"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:913
+#: ../plugins/gtk+/gtk+.xml.in.h:930
 msgid "Sensitive column"
 msgstr "Στήλη ευαίσθητων"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:915
+#: ../plugins/gtk+/gtk+.xml.in.h:932
 msgid "Visible column"
 msgstr "Στήλη ορατότητας"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:916
+#: ../plugins/gtk+/gtk+.xml.in.h:933
 msgid "The column in the model to load the value from"
 msgstr "Η στήλη του μοντέλου από την οποία θα φορτωθεί η τιμή"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:917
+#: ../plugins/gtk+/gtk+.xml.in.h:934
 msgid "Text Renderer"
 msgstr "Απεικόνιση κειμένου"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:918
+#: ../plugins/gtk+/gtk+.xml.in.h:935
 msgid "Alignment column"
 msgstr "Στήλη στοίχισης"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:919
+#: ../plugins/gtk+/gtk+.xml.in.h:936
 msgid "Attributes column"
 msgstr "Στήλη γνωρισμάτων"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:920
+#: ../plugins/gtk+/gtk+.xml.in.h:937
 msgid "Background Color Name column"
 msgstr "Στήλη ονόματος χρώματος φόντου"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:921
+#: ../plugins/gtk+/gtk+.xml.in.h:938
 msgid "Background Color column"
 msgstr "Στήλη χρώματος φόντου"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:922
+#: ../plugins/gtk+/gtk+.xml.in.h:939
 msgid "Editable column"
 msgstr "Τροποποιήσιμη στήλη"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:923
+#: ../plugins/gtk+/gtk+.xml.in.h:940
 msgid "Ellipsize column"
 msgstr "Ελλειπτική στήλης"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:924
+#: ../plugins/gtk+/gtk+.xml.in.h:941
 msgid "Family column"
 msgstr "Στήλη οικογένειας"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:925
+#: ../plugins/gtk+/gtk+.xml.in.h:942
 msgid "Font column"
 msgstr "Στήλη γραμματοσειράς"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:926
+#: ../plugins/gtk+/gtk+.xml.in.h:943
 msgid "Font Description column"
 msgstr "Στήλη περιγραφής γραμματοσειράς"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:927
+#: ../plugins/gtk+/gtk+.xml.in.h:944
 msgid "Foreground Color Name column"
 msgstr "Στήλη ονόματος χρώματος προσκηνίου"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:928
+#: ../plugins/gtk+/gtk+.xml.in.h:945
 msgid "Foreground Color column"
 msgstr "Στήλη χρώματος προσκηνίου"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:929
+#: ../plugins/gtk+/gtk+.xml.in.h:946
 msgid "Language column"
 msgstr "Στήλη γλώσσας"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:930
+#: ../plugins/gtk+/gtk+.xml.in.h:947
 msgid "Markup column"
 msgstr "Στήλη σήμανσης"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:931
+#: ../plugins/gtk+/gtk+.xml.in.h:948
 msgid "Rise column"
 msgstr "Ανύψωση στήλης"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:932
+#: ../plugins/gtk+/gtk+.xml.in.h:949
 msgid "Scale column"
 msgstr "Κλιμάκωση στήλης"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:933
+#: ../plugins/gtk+/gtk+.xml.in.h:950
 msgid "Single Paragraph Mode column"
 msgstr "Στήλη λειτουργίας μονής παραγράφου"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:934
+#: ../plugins/gtk+/gtk+.xml.in.h:951
 msgid "Size column"
 msgstr "Στήλη μεγέθους"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:935
+#: ../plugins/gtk+/gtk+.xml.in.h:952
 msgid "Data column"
 msgstr "Στήλη δεδομένων"
 
 #. PangoStretch enumeration value
-#: ../plugins/gtk+/gtk+.xml.in.h:937
+#: ../plugins/gtk+/gtk+.xml.in.h:954
 msgid "Ultra Condensed"
 msgstr "Πλήρως συμπτυγμένα"
 
 #. PangoStretch enumeration value
-#: ../plugins/gtk+/gtk+.xml.in.h:939
+#: ../plugins/gtk+/gtk+.xml.in.h:956
 msgid "Extra Condensed"
 msgstr "Ιδιαίτερα συμπτυγμένα"
 
 #. PangoStretch enumeration value
-#: ../plugins/gtk+/gtk+.xml.in.h:941
+#: ../plugins/gtk+/gtk+.xml.in.h:958
 msgid "Condensed"
 msgstr "Συμπτυγμένα"
 
 #. PangoStretch enumeration value
-#: ../plugins/gtk+/gtk+.xml.in.h:943
+#: ../plugins/gtk+/gtk+.xml.in.h:960
 msgid "Semi Condensed"
 msgstr "Ημισυμπτυγμένα"
 
 #. PangoStretch enumeration value
-#: ../plugins/gtk+/gtk+.xml.in.h:945
+#: ../plugins/gtk+/gtk+.xml.in.h:962
 msgid "Semi Expanded"
 msgstr "Ημιαναπτυγμένα"
 
 #. PangoStretch enumeration value
-#: ../plugins/gtk+/gtk+.xml.in.h:947
+#: ../plugins/gtk+/gtk+.xml.in.h:964
 msgid "Expanded"
 msgstr "Αναπτυγμένα"
 
 #. PangoStretch enumeration value
-#: ../plugins/gtk+/gtk+.xml.in.h:949
+#: ../plugins/gtk+/gtk+.xml.in.h:966
 msgid "Extra Expanded"
 msgstr "Ιδιαίτερα αναπτυγμένα"
 
 #. PangoStretch enumeration value
-#: ../plugins/gtk+/gtk+.xml.in.h:951
+#: ../plugins/gtk+/gtk+.xml.in.h:968
 msgid "Ultra Expanded"
 msgstr "Πλήρως αναπτυγμένα"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:952
+#: ../plugins/gtk+/gtk+.xml.in.h:969
 msgid "Stretch column"
 msgstr "Στήλη επιμήκυνσης"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:953
+#: ../plugins/gtk+/gtk+.xml.in.h:970
 msgid "Strikethrough column"
 msgstr "Στήλη διακριτής διαγραφής"
 
 #. PangoStyle enumeration value
-#: ../plugins/gtk+/gtk+.xml.in.h:955
+#: ../plugins/gtk+/gtk+.xml.in.h:972
 msgid "Oblique"
 msgstr "Λοξά"
 
 #. PangoStyle enumeration value
-#: ../plugins/gtk+/gtk+.xml.in.h:957
+#: ../plugins/gtk+/gtk+.xml.in.h:974
 msgid "Italic"
 msgstr "Πλάγια"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:958
+#: ../plugins/gtk+/gtk+.xml.in.h:975
 msgid "Style column"
 msgstr "Στήλη στυλ"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:959
+#: ../plugins/gtk+/gtk+.xml.in.h:976
 msgid "Text column"
 msgstr "Στήλη κειμένου"
 
 #. PangoUnderline enumeration value
-#: ../plugins/gtk+/gtk+.xml.in.h:961
+#: ../plugins/gtk+/gtk+.xml.in.h:978
 msgid "Double"
 msgstr "Διπλό"
 
 #. PangoUnderline enumeration value
-#: ../plugins/gtk+/gtk+.xml.in.h:963
+#: ../plugins/gtk+/gtk+.xml.in.h:980
 msgid "Low"
 msgstr "Χαμηλό"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:964
+#: ../plugins/gtk+/gtk+.xml.in.h:981
 msgid "Underline column"
 msgstr "Στήλη υπογράμμισης"
 
 #. PangoVariant enumeration value
-#: ../plugins/gtk+/gtk+.xml.in.h:966
+#: ../plugins/gtk+/gtk+.xml.in.h:983
 msgid "Small Capitals"
 msgstr "Μικρά κεφαλαία"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:967
+#: ../plugins/gtk+/gtk+.xml.in.h:984
 msgid "Variant column"
 msgstr "Στήλη παραλλαγής"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:968
+#: ../plugins/gtk+/gtk+.xml.in.h:985
 msgid "Weight column"
 msgstr "Στήλη πάχους"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:969
+#: ../plugins/gtk+/gtk+.xml.in.h:986
 msgid "Width in Characters column"
 msgstr "Στήλη πλάτους σε χαρακτήρες"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:970
+#: ../plugins/gtk+/gtk+.xml.in.h:987
 msgid "Wrap Mode column"
 msgstr "Στήλη λειτουργίας αναδίπλωσης"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:971
+#: ../plugins/gtk+/gtk+.xml.in.h:988
 msgid "Wrap Width column"
 msgstr "Στήλη πλάτους αναδίπλωσης"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:972
+#: ../plugins/gtk+/gtk+.xml.in.h:989
 msgid "Background RGBA column"
 msgstr "Στήλη RGBA φόντου"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:973
+#: ../plugins/gtk+/gtk+.xml.in.h:990
 msgid "Foreground RGBA column"
 msgstr "Στήλη RGBA προσκήνιου"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:974
+#: ../plugins/gtk+/gtk+.xml.in.h:991
 msgid "Maximum width in characters"
 msgstr "Μέγιστο πλάτος σε χαρακτήρες"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:975
+#: ../plugins/gtk+/gtk+.xml.in.h:992
 msgid "Placeholder text"
 msgstr "Κείμενο δεσμευτικού θέσης"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:976
+#: ../plugins/gtk+/gtk+.xml.in.h:993
 msgid "Accelerator Renderer"
 msgstr "Απεικόνιση συντομεύσεων"
 
 #. GtkCellRendererAccelMode enumeration value
-#: ../plugins/gtk+/gtk+.xml.in.h:978
+#: ../plugins/gtk+/gtk+.xml.in.h:995
 msgid "Gtk"
 msgstr "Gtk"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:979
+#: ../plugins/gtk+/gtk+.xml.in.h:996
 msgid "Accelerator Mode column"
 msgstr "Στήλη λειτουργίας συντομεύσεων"
 
 #. GdkModifierType enumeration value
-#: ../plugins/gtk+/gtk+.xml.in.h:981
+#: ../plugins/gtk+/gtk+.xml.in.h:998
 msgid "Shift Key"
 msgstr "Πλήκτρο Shift"
 
 #. GdkModifierType enumeration value
-#: ../plugins/gtk+/gtk+.xml.in.h:983
+#: ../plugins/gtk+/gtk+.xml.in.h:1000
 msgid "Lock Key"
 msgstr "Πλήκτρο κλειδώματος"
 
 #. GdkModifierType enumeration value
-#: ../plugins/gtk+/gtk+.xml.in.h:985
+#: ../plugins/gtk+/gtk+.xml.in.h:1002
 msgid "Control Key"
 msgstr "Πλήκτρο Control"
 
 #. GdkModifierType enumeration value
-#: ../plugins/gtk+/gtk+.xml.in.h:987
+#: ../plugins/gtk+/gtk+.xml.in.h:1004
 msgid "Alt Key"
 msgstr "Πλήκτρο Alt"
 
 #. GdkModifierType enumeration value
-#: ../plugins/gtk+/gtk+.xml.in.h:989
+#: ../plugins/gtk+/gtk+.xml.in.h:1006
 msgid "Fifth Key"
 msgstr "Πέμπτο πλήκτρο"
 
 #. GdkModifierType enumeration value
-#: ../plugins/gtk+/gtk+.xml.in.h:991
+#: ../plugins/gtk+/gtk+.xml.in.h:1008
 msgid "Sixth Key"
 msgstr "Έκτο πλήκτρο"
 
 #. GdkModifierType enumeration value
-#: ../plugins/gtk+/gtk+.xml.in.h:993
+#: ../plugins/gtk+/gtk+.xml.in.h:1010
 msgid "Seventh Key"
 msgstr "Έβδομο πλήκτρο"
 
 #. GdkModifierType enumeration value
-#: ../plugins/gtk+/gtk+.xml.in.h:995
+#: ../plugins/gtk+/gtk+.xml.in.h:1012
 msgid "Eighth Key"
 msgstr "Όγδοο πλήκτρο"
 
 #. GdkModifierType enumeration value
-#: ../plugins/gtk+/gtk+.xml.in.h:997
+#: ../plugins/gtk+/gtk+.xml.in.h:1014
 msgid "First Mouse Button"
 msgstr "Πρώτο κουμπί ποντικιού"
 
 #. GdkModifierType enumeration value
-#: ../plugins/gtk+/gtk+.xml.in.h:999
+#: ../plugins/gtk+/gtk+.xml.in.h:1016
 msgid "Second Mouse Button"
 msgstr "Δεύτερο κουμπί ποντικιού"
 
 #. GdkModifierType enumeration value
-#: ../plugins/gtk+/gtk+.xml.in.h:1001
+#: ../plugins/gtk+/gtk+.xml.in.h:1018
 msgid "Third Mouse Button"
 msgstr "Τρίτο κουμπί ποντικιού"
 
 #. GdkModifierType enumeration value
-#: ../plugins/gtk+/gtk+.xml.in.h:1003
+#: ../plugins/gtk+/gtk+.xml.in.h:1020
 msgid "Fourth Mouse Button"
 msgstr "Τέταρτο κουμπί ποντικιού"
 
 #. GdkModifierType enumeration value
-#: ../plugins/gtk+/gtk+.xml.in.h:1005
+#: ../plugins/gtk+/gtk+.xml.in.h:1022
 msgid "Fifth Mouse Button"
 msgstr "Πέμπτο κουμπί ποντικιού"
 
 #. GdkModifierType enumeration value
-#: ../plugins/gtk+/gtk+.xml.in.h:1007
+#: ../plugins/gtk+/gtk+.xml.in.h:1024
 msgid "Super Modifier"
 msgstr "Τροποποιητής Super"
 
 #. GdkModifierType enumeration value
-#: ../plugins/gtk+/gtk+.xml.in.h:1009
+#: ../plugins/gtk+/gtk+.xml.in.h:1026
 msgid "Hyper Modifier"
 msgstr "Τροποποιητής Hyper"
 
 #. GdkModifierType enumeration value
-#: ../plugins/gtk+/gtk+.xml.in.h:1011
+#: ../plugins/gtk+/gtk+.xml.in.h:1028
 msgid "Meta Modifier"
 msgstr "Τροποποιητής Meta"
 
 #. GdkModifierType enumeration value
-#: ../plugins/gtk+/gtk+.xml.in.h:1013
+#: ../plugins/gtk+/gtk+.xml.in.h:1030
 msgid "Release Modifier"
 msgstr "Τροποποιητής απελευθέρωσης"
 
 #. GdkModifierType enumeration value
-#: ../plugins/gtk+/gtk+.xml.in.h:1015
+#: ../plugins/gtk+/gtk+.xml.in.h:1032
 msgid "All Modifiers"
 msgstr "Όλοι οι τροποποιητές"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:1016
+#: ../plugins/gtk+/gtk+.xml.in.h:1033
 msgid "Accelerator Modifiers column"
 msgstr "Στήλη τροποποιητών συντομεύσεων"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:1017
+#: ../plugins/gtk+/gtk+.xml.in.h:1034
 msgid "Keycode column"
 msgstr "Στήλη κωδικού πλήκτρων"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:1018
+#: ../plugins/gtk+/gtk+.xml.in.h:1035
 msgid "Combo Renderer"
 msgstr "Απεικόνιση σύνθετου"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:1019
+#: ../plugins/gtk+/gtk+.xml.in.h:1036
 msgid "Has Entry column"
 msgstr "Διαθέτει στήλη εγγραφής"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:1020
+#: ../plugins/gtk+/gtk+.xml.in.h:1037
 msgid "Model column"
 msgstr "Στήλη μοντέλου"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:1021
+#: ../plugins/gtk+/gtk+.xml.in.h:1038
 msgid "Text Column column"
 msgstr "Στήλη στήλης κειμένου"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:1022
+#: ../plugins/gtk+/gtk+.xml.in.h:1039
 msgid "Spin Renderer"
 msgstr "Απεικόνιση κουμπιών περιστροφής"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:1023
+#: ../plugins/gtk+/gtk+.xml.in.h:1040
 msgid "Adjustment column"
 msgstr "Στήλη στοίχισης"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:1024
+#: ../plugins/gtk+/gtk+.xml.in.h:1041
 msgid "Climb Rate column"
 msgstr "Στήλη ρυθμού ανόδου"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:1025
+#: ../plugins/gtk+/gtk+.xml.in.h:1042
 msgid "Digits column"
 msgstr "Στήλη ψηφίων"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:1026
+#: ../plugins/gtk+/gtk+.xml.in.h:1043
 msgid "Pixbuf Renderer"
 msgstr "Απεικόνιση Pixbuf"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:1027
+#: ../plugins/gtk+/gtk+.xml.in.h:1044
 msgid "Follow State column"
 msgstr "Ακολουθήστε τη στήλη κατάστασης"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:1028
+#: ../plugins/gtk+/gtk+.xml.in.h:1045
 msgid "Icon Name column"
 msgstr "Στήλη ονόματος εικονιδίων"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:1029
+#: ../plugins/gtk+/gtk+.xml.in.h:1046
 msgid "Pixbuf column"
 msgstr "Στήλη Pixbuf"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:1030
+#: ../plugins/gtk+/gtk+.xml.in.h:1047
 msgid "GIcon column"
 msgstr "Στήλη GIcon"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:1031
+#: ../plugins/gtk+/gtk+.xml.in.h:1048
 msgid "Pixbuf Expander Closed column"
 msgstr "Στήλη κλειστής επέκτασης Pixbuf"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:1032
+#: ../plugins/gtk+/gtk+.xml.in.h:1049
 msgid "Pixbuf Expander Open column"
 msgstr "Στήλη ανοιχτής επέκτασης Pixbuf"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:1033
+#: ../plugins/gtk+/gtk+.xml.in.h:1050
 msgid "Stock Detail column"
 msgstr "Στήλη λεπτομερειών stock"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:1034
+#: ../plugins/gtk+/gtk+.xml.in.h:1051
 msgid "Stock column"
 msgstr "Στήλη stock"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:1035
+#: ../plugins/gtk+/gtk+.xml.in.h:1052
 msgid "Stock Size column"
 msgstr "Στήλη μεγέθους stock"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:1036
+#: ../plugins/gtk+/gtk+.xml.in.h:1053
 msgid "Progress Renderer"
 msgstr "Απεικόνιση γραμμών προόδου"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:1037
+#: ../plugins/gtk+/gtk+.xml.in.h:1054
 msgid "Orientation column"
 msgstr "Στήλη προσανατολισμού"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:1038
+#: ../plugins/gtk+/gtk+.xml.in.h:1055
 msgid "Pulse column"
 msgstr "Στήλη παλμού"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:1039
+#: ../plugins/gtk+/gtk+.xml.in.h:1056
 msgid "Text Horizontal Alignment column"
 msgstr "Στήλη οριζόντιας στοίχισης κειμένου"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:1040
+#: ../plugins/gtk+/gtk+.xml.in.h:1057
 msgid "Text Vertical Alignment column"
 msgstr "Στήλη κατακόρυφης στοίχισης κειμένου"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:1041
+#: ../plugins/gtk+/gtk+.xml.in.h:1058
 msgid "Value column"
 msgstr "Στήλη τιμής"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:1042
+#: ../plugins/gtk+/gtk+.xml.in.h:1059
 msgid "Inverted column"
 msgstr "Ανεστραμμένη στήλη"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:1043
+#: ../plugins/gtk+/gtk+.xml.in.h:1060
 msgid "Spinner Renderer"
 msgstr "Απεικόνιση κουμπιών περιστροφής"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:1044
+#: ../plugins/gtk+/gtk+.xml.in.h:1061
 msgid "Active column"
 msgstr "Ενεργή στήλη"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:1045
+#: ../plugins/gtk+/gtk+.xml.in.h:1062
 msgid "Toggle Renderer"
 msgstr "Απεικόνιση εναλλαγής"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:1046
+#: ../plugins/gtk+/gtk+.xml.in.h:1063
 msgid "Activatable column"
 msgstr "Ενεργοποιήσιμη στήλη"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:1047
+#: ../plugins/gtk+/gtk+.xml.in.h:1064
 msgid "Inconsistent column"
 msgstr "Μεταβλητή στήλη"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:1048
+#: ../plugins/gtk+/gtk+.xml.in.h:1065
 msgid "Indicator Size column"
 msgstr "Στήλη μεγέθους ένδειξης"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:1049
+#: ../plugins/gtk+/gtk+.xml.in.h:1066
 msgid "Radio column"
 msgstr "Στήλη κουμπιού επιλογής"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:1050
+#: ../plugins/gtk+/gtk+.xml.in.h:1067
 msgid "Status Icon"
 msgstr "Εικονίδιο γραμμής κατάστασης"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:1051
+#: ../plugins/gtk+/gtk+.xml.in.h:1068
 msgid "Text Buffer"
 msgstr "Ενδιάμεση μνήμη κειμένου"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:1052
+#: ../plugins/gtk+/gtk+.xml.in.h:1069
 msgid "Entry Buffer"
 msgstr "Ενδιάμεση μνήμη εισαγωγής"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:1053
+#: ../plugins/gtk+/gtk+.xml.in.h:1070
 msgid "Text Tag"
 msgstr "Ετικέτα κειμένου"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:1054
+#: ../plugins/gtk+/gtk+.xml.in.h:1071
 msgid "Text Tag Table"
 msgstr "Πίνακας ετικετών κειμένου"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:1055
+#: ../plugins/gtk+/gtk+.xml.in.h:1072
 msgid "File Filter"
 msgstr "Φίλτρο αρχείων"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:1056
+#: ../plugins/gtk+/gtk+.xml.in.h:1073
 msgid "Mime Types"
 msgstr "Τύποι MIME"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:1057
+#: ../plugins/gtk+/gtk+.xml.in.h:1074
 msgid "Patterns"
 msgstr "Μοτίβα"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:1058
+#: ../plugins/gtk+/gtk+.xml.in.h:1075
 msgid "The list of mime types to add to the filter"
 msgstr "Η λίστα τύπων mime για προσθήκη στο φίλτρο"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:1059
+#: ../plugins/gtk+/gtk+.xml.in.h:1076
 msgid "The list of file name patterns to add to the filter"
 msgstr "Η λίστα των μοντέλων ονόματος αρχείου για προσθήκη το φίλτρο"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:1060
+#: ../plugins/gtk+/gtk+.xml.in.h:1077
 msgid "Recent Filter"
 msgstr "Πρόσφατο φίλτρο"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:1062
+#: ../plugins/gtk+/gtk+.xml.in.h:1079
 msgid "The list of application names to add to the filter"
 msgstr "Η λίστα ονομάτων εφαρμογών για προσθήκη στο φίλτρο"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:1063
+#: ../plugins/gtk+/gtk+.xml.in.h:1080
 msgid "Recent Manager"
 msgstr "Πρόσφατος διαχειριστής"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:1064
+#: ../plugins/gtk+/gtk+.xml.in.h:1081
 msgid "Themed Icon"
 msgstr "Θεματικό εικονίδιο"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:1065
+#: ../plugins/gtk+/gtk+.xml.in.h:1082
 msgid "Toplevels"
 msgstr "Ανώτατα επίπεδα"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:1066
+#: ../plugins/gtk+/gtk+.xml.in.h:1083
 msgid "Containers"
 msgstr "Περιέκτες"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:1067
+#: ../plugins/gtk+/gtk+.xml.in.h:1084
 msgid "Control and Display"
 msgstr "Έλεγχος και εμφάνιση"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:1068
+#: ../plugins/gtk+/gtk+.xml.in.h:1085
 msgid "Composite Widgets"
 msgstr "Σύνθετα γραφικά στοιχεία"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:1069
+#: ../plugins/gtk+/gtk+.xml.in.h:1086
 msgid "Miscellaneous"
 msgstr "Διάφορα"
 
-#: ../plugins/gtk+/gtk+.xml.in.h:1070
+#: ../plugins/gtk+/gtk+.xml.in.h:1087
 msgid "Deprecated"
 msgstr "Παρωχημένο"
 
@@ -8451,6 +8484,15 @@ msgstr "Διακοσμήσεις πλευρικού παραθύρου πελά�
 msgid "Whether this window should include a custom titlebar."
 msgstr ""
 "Αν αυτό το παράθυρο πρέπει να περιλαμβάνει μια προσαρμοσμένη γραμμή τίτλου."
+
+#~ msgid "See Privacy Note"
+#~ msgstr "Δείτε τη σημείωση απορρήτου"
+
+#~ msgid "Previewing %s - %s"
+#~ msgstr "Προεπισκόπηση %s - %s"
+
+#~ msgid "Previewing %s"
+#~ msgstr "Προεπισκόπηση %s"
 
 #~ msgid "Sidebar"
 #~ msgstr "Πλευρική στήλη"

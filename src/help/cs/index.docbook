@@ -246,7 +246,7 @@
                   <varlistentry> 
                          <term>Režim umisťování v nejvyšší úrovni</term> 
                          <listitem> 
-                                <para>Do režimu umisťování v nejvyšší úrovni se přepnete výběrem ovládacího prvku ve skupině Nejvyšší úroveň na panelu <application>Paleta</application>. Po výběru ovládacího prvku nejvyšší úrovně v <application>Paletě</application> se ovládací prvek ihned objeví na návrhářské ploše. Hned se také zapne režimu výběru a vy můžete ovládací prvek upravovat.</para>
+                                <para>Do režimu umisťování v nejvyšší úrovni se přepnete výběrem ovládacího prvku ve skupině Nejvyšší úroveň na panelu <guilabel>Paleta</guilabel>. Po výběru ovládacího prvku nejvyšší úrovně v <guilabel>Paletě</guilabel> se ovládací prvek ihned objeví na návrhářské ploše. Hned se také zapne režimu výběru a vy můžete ovládací prvek upravovat.</para>
                          </listitem> 
                   </varlistentry> 
                 </variablelist> 

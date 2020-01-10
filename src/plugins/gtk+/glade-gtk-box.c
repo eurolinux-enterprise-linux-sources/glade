@@ -57,7 +57,7 @@ glade_gtk_box_create_editable (GladeWidgetAdaptor * adaptor,
 }
 
 static void
-glade_gtk_box_parse_finished (GladeProject * project, GObject *gbox)
+glade_gtk_box_parse_finished (GladeProject * project, GladeWidget *gbox)
 {
   GObject *box = glade_widget_get_object (gbox);
 
@@ -602,34 +602,25 @@ glade_gtk_box_replace_child (GladeWidgetAdaptor * adaptor,
 }
 
 void
-glade_gtk_box_child_action_activate (GladeWidgetAdaptor * adaptor,
-                                     GObject * container,
-                                     GObject * object,
-                                     const gchar * action_path)
+glade_gtk_box_child_action_activate (GladeWidgetAdaptor *adaptor,
+                                     GObject            *container,
+                                     GObject            *object,
+                                     const gchar        *action_path)
 {
   if (strcmp (action_path, "insert_after") == 0)
     {
       glade_gtk_box_notebook_child_insert_remove_action (adaptor, container,
-                                                         object, "size",
-                                                         _
-                                                         ("Insert placeholder to %s"),
-                                                         FALSE, TRUE);
+                                                         object, FALSE, TRUE);
     }
   else if (strcmp (action_path, "insert_before") == 0)
     {
       glade_gtk_box_notebook_child_insert_remove_action (adaptor, container,
-                                                         object, "size",
-                                                         _
-                                                         ("Insert placeholder to %s"),
-                                                         FALSE, FALSE);
+                                                         object, FALSE, FALSE);
     }
   else if (strcmp (action_path, "remove_slot") == 0)
     {
       glade_gtk_box_notebook_child_insert_remove_action (adaptor, container,
-                                                         object, "size",
-                                                         _
-                                                         ("Remove placeholder from %s"),
-                                                         TRUE, FALSE);
+                                                         object, TRUE, FALSE);
     }
   else
     GWA_GET_CLASS (GTK_TYPE_CONTAINER)->child_action_activate (adaptor,

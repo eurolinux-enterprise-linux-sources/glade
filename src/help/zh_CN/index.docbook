@@ -249,7 +249,18 @@
                   <varlistentry> 
                          <term>顶层模式</term> 
                          <listitem> 
-                                <para>要使用顶层模式，从 <application>构件库</application> 窗口中选择一个定义为顶层的控件。从 <guilabel>构件库</guilabel> 选择一个顶层模式的控件时，这个控件立即表现在您的桌面上，可以随后编辑这个控件。选择一个顶层控件之后，返回至选择模式。</para>
+                                <para lang="en">
+                                  To use top level placement mode, select a
+defined top-level
+                                  widget in the
+<guilabel>Palette</guilabel> window. When you select a top-level
+                                  widget in the 
+                                  <guilabel>Palette</guilabel> window, the
+widget appears
+                                  immediately on your desktop. You can then
+edit the widget. After you select a top-level widget,
+                                  the mode returns to selection mode.
+                                </para>
                          </listitem> 
                   </varlistentry> 
                 </variablelist> 

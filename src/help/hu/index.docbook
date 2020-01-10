@@ -103,7 +103,11 @@
     </othercredit>
     <copyright>
       
-        <year>2014.</year>
+        <year>2014</year>
+      
+        <year>2017</year>
+      
+        <year>2018.</year>
       
       <holder>Úr Balázs</holder>
     </copyright>
@@ -259,7 +263,7 @@
                   <varlistentry> 
                          <term>Felsőszintű elhelyezési mód</term> 
                          <listitem> 
-                                <para>A felsőszintű elhelyezési mód használatához válasszon egy felsőszintűnek jelzett felületi elemet a <guilabel>Paletta</guilabel> ablakból. Ekkor a felületi elem azonnal megjelenik a munkaasztalon. A felületi elem ekkor szerkeszthető. A felsőszintű felületi elem kiválasztása után a program újra kiválasztási módba kerül.</para>
+                                <para>A felsőszintű elhelyezési mód használatához válasszon egy felsőszintűnek jelzett felületi elemet a <guilabel>Paletta</guilabel> ablakból. Amikor kiválaszt egy felsőszintű felületi elemet a <guilabel>Paletta</guilabel> ablakban, akkor a felületi elem azonnal megjelenik a munkaasztalon. A felületi elem ekkor szerkeszthető. A felsőszintű felületi elem kiválasztása után a program újra kiválasztási módba kerül.</para>
                          </listitem> 
                   </varlistentry> 
                 </variablelist> 

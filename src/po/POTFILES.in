@@ -4,7 +4,6 @@
 # Main application
 data/glade.desktop.in.in
 data/glade.appdata.xml.in
-src/glade-close-button.c
 src/glade-window.c
 src/main.c
 [type: gettext/glade]src/glade.glade
@@ -35,7 +34,7 @@ gladeui/glade-placeholder.c
 gladeui/glade-popup.c
 gladeui/glade-preview.c
 gladeui/glade-previewer.c
-gladeui/glade-preview-window.c
+gladeui/glade-previewer-main.c
 gladeui/glade-project.c
 gladeui/glade-project-properties.c
 gladeui/glade-property.c
@@ -73,6 +72,7 @@ plugins/gtk+/glade-column-types.c
 plugins/gtk+/glade-combo-box-editor.c
 plugins/gtk+/glade-combo-box-text-editor.c
 plugins/gtk+/glade-entry-editor.c
+plugins/gtk+/glade-eprop-enum-int.c
 plugins/gtk+/glade-file-chooser-button-editor.c
 plugins/gtk+/glade-file-chooser-dialog-editor.c
 plugins/gtk+/glade-file-chooser-editor.c
@@ -109,6 +109,7 @@ plugins/gtk+/glade-gtk-flow-box.c
 plugins/gtk+/glade-gtk-font-chooser-widget.c
 plugins/gtk+/glade-gtk-frame.c
 plugins/gtk+/glade-gtk-grid.c
+plugins/gtk+/glade-gtk.h
 plugins/gtk+/glade-gtk-header-bar.c
 plugins/gtk+/glade-gtk-icon-factory.c
 plugins/gtk+/glade-gtk-icon-view.c

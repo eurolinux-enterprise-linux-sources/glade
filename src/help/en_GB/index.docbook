@@ -296,7 +296,18 @@
                   <varlistentry> 
                          <term>Top-level placement mode</term> 
                          <listitem> 
-                                <para>To use top level placement mode, select a defined top-level widget in the <application>Palette</application> window. When you select a top-level widget in the <guilabel>Palette</guilabel> window, the widget appears immediately on your desktop. You can then edit the widget. After you select a top-level widget, the mode returns to selection mode.</para>
+                                <para lang="en">
+                                  To use top level placement mode, select a
+defined top-level
+                                  widget in the
+<guilabel>Palette</guilabel> window. When you select a top-level
+                                  widget in the 
+                                  <guilabel>Palette</guilabel> window, the
+widget appears
+                                  immediately on your desktop. You can then
+edit the widget. After you select a top-level widget,
+                                  the mode returns to selection mode.
+                                </para>
                          </listitem> 
                   </varlistentry> 
                 </variablelist> 

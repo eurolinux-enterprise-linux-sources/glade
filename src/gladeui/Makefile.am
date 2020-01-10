@@ -22,8 +22,8 @@ glade_previewer_LDFLAGS = $(AM_LDFLAGS)
 glade_previewer_LDADD = libgladeui-2.la $(GTK_MAC_LIBS)
 
 glade_previewer_SOURCES = \
+	glade-previewer-main.c \
 	glade-previewer.c \
-	glade-preview-window.c \
 	glade-preview-template.c
 
 if NATIVE_WIN32
@@ -60,7 +60,9 @@ UI_FILES = 				\
 	glade-design-layout.css		\
 	glade-editor.ui			\
 	glade-project-properties.ui	\
+	glade-adaptor-chooser-widget.ui	\
 	glade-adaptor-chooser.ui	\
+	glade-base-editor.ui		\
 	glade-property-label.ui
 
 GRAPHICS_FILES = \
@@ -85,6 +87,7 @@ libgladeui_2_la_SOURCES = \
 	glade-accumulators.c \
 	glade-app.c \
 	glade-base-editor.c \
+	glade-adaptor-chooser-widget.c \
 	glade-adaptor-chooser.c \
 	glade-builtins.c \
 	glade-catalog.c \
@@ -152,6 +155,7 @@ libgladeuiincludedir=$(includedir)/libgladeui-2.0/gladeui
 libgladeuiinclude_HEADERS = \
 	glade.h \
 	glade-app.h \
+	glade-adaptor-chooser.h \
 	glade-base-editor.h \
 	glade-builtins.h \
 	glade-catalog.h \
@@ -188,7 +192,7 @@ libgladeuiinclude_HEADERS = \
 
 noinst_HEADERS = \
 	glade-accumulators.h \
-	glade-adaptor-chooser.h \
+	glade-adaptor-chooser-widget.h \
 	glade-design-layout.h \
 	glade-design-private.h \
 	glade-marshallers.h \
@@ -197,7 +201,7 @@ noinst_HEADERS = \
 	glade-popup.h \
 	glade-preview.h \
 	glade-preview-tokens.h \
-	glade-preview-window.h \
+	glade-previewer.h \
 	glade-preview-template.h \
 	glade-private.h \
 	glade-project-properties.h \

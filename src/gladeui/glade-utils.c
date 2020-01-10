@@ -633,7 +633,8 @@ gtk_container_children_callback (GtkWidget *widget, gpointer client_data)
   GList **children;
 
   children = (GList **) client_data;
-  *children = g_list_prepend (*children, widget);
+  if (!g_list_find (*children, widget))
+    *children = g_list_prepend (*children, widget);
 }
 
 /**
@@ -657,6 +658,7 @@ glade_util_container_get_all_children (GtkContainer *container)
   g_return_val_if_fail (GTK_IS_CONTAINER (container), NULL);
 
   gtk_container_forall (container, gtk_container_children_callback, &children);
+  gtk_container_foreach (container, gtk_container_children_callback, &children);
 
   /* Preserve the natural order by reversing the list */
   return g_list_reverse (children);
@@ -1587,6 +1589,53 @@ glade_utils_value_from_string (GType type,
   return NULL;
 }
 
+/**
+ * glade_utils_boolean_from_string:
+ * @string: the string to convert
+ * @value: return location
+ *
+ * Parse a boolean value
+ *
+ * Returns: True if there was an error on the conversion.
+ */
+gboolean
+glade_utils_boolean_from_string (const gchar *string, gboolean *value)
+{
+  if (string)
+    {
+      const gchar *c = string;
+
+      /* Skip white spaces */
+      while (g_ascii_isspace (*c))
+        c++;
+
+      /* We only need the first char */
+      switch (*c)
+        {
+          case '1':
+          case 't':
+          case 'T':
+          case 'y':
+          case 'Y':
+            if (value)
+              *value = TRUE;
+            return FALSE;
+          break;
+
+          case '0':
+          case 'f':
+          case 'F':
+          case 'n':
+          case 'N':
+            if (value)
+              *value = FALSE;
+            return FALSE;
+          break;
+        }
+    }
+
+  return TRUE;
+}
 
 /**
  * glade_utils_string_from_value:
@@ -2022,4 +2071,79 @@ glade_utils_get_pointer (GtkWidget *widget,
     *x = final_x;
   if (y)
     *y = final_y;
+}
+
+/* Use this to disable scroll events on property editors,
+ * we dont want them handling scroll because they are inside
+ * a scrolled window and interrupt workflow causing unexpected
+ * results when scrolled.
+ */
+static gint
+abort_scroll_events (GtkWidget *widget,
+		     GdkEvent  *event,
+		     gpointer   user_data)
+{
+  GtkWidget *parent = gtk_widget_get_parent (widget);
+
+  /* Removing the events from the mask doesnt work for
+   * stubborn combo boxes which call gtk_widget_add_events()
+   * in it's gtk_combo_box_init() - so handle the event and propagate
+   * it up the tree so the scrollwindow still handles the scroll event.
+   */
+  gtk_propagate_event (parent, event);
+
+  return TRUE;
+}
+
+void
+glade_util_remove_scroll_events (GtkWidget *widget)
+{
+  gint events = gtk_widget_get_events (widget);
+
+  events &= ~(GDK_SCROLL_MASK | GDK_SMOOTH_SCROLL_MASK);
+  gtk_widget_set_events (widget, events);
+
+  g_signal_connect (G_OBJECT (widget), "scroll-event",
+		    G_CALLBACK (abort_scroll_events), NULL);
+}
+
+/**
+ * _glade_util_file_get_relative_path:
+ * @target: input GFile
+ * @source: input GFile
+ *
+ * Gets the path for @source relative to @target even if @source is not a
+ * descendant of @target.
+ *
+ */
+gchar *
+_glade_util_file_get_relative_path (GFile *target, GFile *source)
+{
+  gchar *relative_path;
+
+  if ((relative_path = g_file_get_relative_path (target, source)) == NULL)
+    {
+      GString *relpath = g_string_new ("");
+
+      g_object_ref (target);
+
+      while (relative_path == NULL)
+        {
+          GFile *old_target = target;
+          target = g_file_get_parent (target);
+
+          relative_path = g_file_get_relative_path (target, source);
+
+          g_string_append (relpath, "..");
+          g_string_append_c (relpath, G_DIR_SEPARATOR);
+
+          g_object_unref (old_target);
+        }
+
+      g_string_append (relpath, relative_path);
+      g_free (relative_path);
+      relative_path = g_string_free (relpath, FALSE);
+    }
+
+  return relative_path;
 }

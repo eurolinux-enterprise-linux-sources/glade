@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd" [
+<!ENTITY appversion "3.1.0">
+<!ENTITY manrevision "3.0">
+<!ENTITY app "Glade">
+]>
+<!-- 
+  Maintained by the GNOME Documentation Project
+  http://developer.gnome.org/projects/gdp
+  Template version: 2.0 beta
+  Template last modified Apr 11, 2002
+-->
+<article id="index" lang="pl">
+
+  <articleinfo> 
+    <title>Podręcznik narzędzia do projektowania interfejsów Glade</title> 
+      
+    <abstract role="description"><para>Glade jest narzędziem do projektowania interfejsów programów GTK+.</para>
+    </abstract>
+
+    <copyright><year>2006</year> <holder>Vincent Geddes</holder></copyright>
+    <copyright><year>2004</year> <year>2003</year> <holder>Sun Microsystems</holder></copyright> 
+    <copyright><year>2002</year><year>2000</year> <holder>Michael Vance</holder></copyright> 
+
+    <publisher> 
+      <publishername>Projekt dokumentacji GNOME</publishername> 
+    </publisher> 
+
+   <include xmlns="http://www.w3.org/2001/XInclude" href="legal.xml"/>
+
+    <authorgroup> 
+      <author role="maintainer"><firstname>Vincent</firstname> <surname>Geddes</surname> <affiliation> <orgname>Projekt dokumentacji GNOME</orgname> <address><email>vincent.geddes@gmail.com</email></address> </affiliation></author> 
+      <author><firstname>Sun</firstname> <surname>Zespół dokumentacji GNOME</surname> <affiliation> <orgname>Sun Microsystems</orgname> </affiliation></author> 
+       <author><firstname>Michael</firstname> <surname>Vance</surname> <affiliation> <orgname>Projekt dokumentacji GNOME</orgname> </affiliation></author> 
+    </authorgroup>
+
+
+<!-- According to GNU FDL, revision history is mandatory if you are -->
+<!-- modifying/reusing someone else's document.  If not, you can omit it. -->
+<!-- Remember to remove the &manrevision; entity from the revision entries other
+-->
+<!-- than the current revision. -->
+<!-- The revision numbering system for GNOME manuals is as follows: -->
+<!-- * the revision number consists of two components -->
+<!-- * the first component of the revision number reflects the release version of the GNOME desktop. -->
+<!-- * the second component of the revision number is a decimal unit that is incremented with each revision of the manual. -->
+<!-- For example, if the GNOME desktop release is V2.x, the first version of the manual that -->
+<!-- is written in that desktop timeframe is V2.0, the second version of the manual is V2.1, etc. -->
+<!-- When the desktop release version changes to V3.x, the revision number of the manual changes -->
+<!-- to V3.0, and so on. -->  
+    <revhistory>
+        <revision><revnumber>Podręcznik programu Glade 3.0</revnumber> <date>5 grudnia 2006</date> <revdescription> 
+	  		<para role="author">Vincent Geddes</para>
+	  		<para role="publisher">Projekt dokumentacji GNOME</para>
+		</revdescription></revision>
+        <revision><revnumber>Podręcznik programu Glade 2.1</revnumber> <date>17 czerwca 2004</date> <revdescription> 
+                        <para role="author">Zespół dokumentacji GNOME firmy Sun</para>
+                        <para role="publisher">Projekt dokumentacji GNOME</para>
+                </revdescription></revision>
+        <revision><revnumber>Podręcznik programu Glade 2.0</revnumber> <date>25 lutego 2004</date> <revdescription> 
+                        <para role="author">Zespół dokumentacji GNOME firmy Sun</para>
+                        <para role="publisher">Projekt dokumentacji GNOME</para>
+                </revdescription></revision>             
+        <revision><revnumber>Podręcznik programu Glade 1.2</revnumber> <date>10 lutego 2004</date> <revdescription> 
+                        <para role="author">Zespół dokumentacji GNOME firmy Sun</para>
+                        <para role="publisher">Projekt dokumentacji GNOME</para>
+                </revdescription></revision>  
+        <revision><revnumber>Podręcznik programu Glade 1.1</revnumber> <date>30 marca 2002</date> <revdescription> 
+                        <para role="author">Michael Vance</para>
+                        <para role="publisher">Projekt dokumentacji GNOME</para>
+                </revdescription></revision> 
+        <revision><revnumber>Podręcznik programu Glade 1.0</revnumber> <date>11 maja 2000</date> <revdescription> 
+                        <para role="author">Michael Vance</para>
+                        <para role="publisher">Projekt dokumentacji GNOME</para>
+                </revdescription></revision> 
+    </revhistory> 
+
+    <releaseinfo>Ten podręcznik opisuje wersję 3.1.0 programu Glade.</releaseinfo> 
+    <legalnotice> 
+      <title>Informacje zwrotne</title> 
+      <para><ulink url="help:gnome-feedback" type="help">Strona wysyłania informacji zwrotnych GNOME</ulink> zawiera instrukcje, jak zgłosić błąd lub propozycję zmiany programu Glade lub tego podręcznika.</para>
+<!-- Translators may also add here feedback address for translations -->
+    </legalnotice> 
+  
+    <othercredit class="translator">
+      <personname>
+        <firstname>Piotr Drąg</firstname>
+      </personname>
+      <email>piotrdrag@gmail.com</email>
+    </othercredit>
+    <copyright>
+      
+        <year>2017</year>
+      
+      <holder>Piotr Drąg</holder>
+    </copyright>
+  
+    <othercredit class="translator">
+      <personname>
+        <firstname>Aviary.pl</firstname>
+      </personname>
+      <email>community-poland@mozilla.org</email>
+    </othercredit>
+    <copyright>
+      
+        <year>2017</year>
+      
+      <holder>Aviary.pl</holder>
+    </copyright>
+  </articleinfo> 
+
+    <indexterm><primary>glade</primary></indexterm>
+    <indexterm><primary>narzędzie do projektowania interfejsów</primary></indexterm>
+
+
+<!-- ============= Document Body ============================= -->
+<!-- ============= Introduction ============================== -->
+<!-- Use the Introduction section to give a brief overview of what
+     the application is and what it does. -->
+  <sect1 id="introduction"> 
+    <title>Wprowadzenie</title> 
+
+    <para>Narzędzie do projektowania interfejsów <application>Glade</application> umożliwia tworzenie i modyfikowanie interfejsów użytkownika dla programów <application>GTK+</application>.</para>
+
+    <para>Biblioteka GTK+ dostarcza rozbudowany zbiór podstawowych elementów interfejsu użytkownika, takich jak pola tekstowe, etykiety okien, wpisy numeryczne, pola wyboru i menu. Te elementy są nazywane <emphasis>widżetami</emphasis>. Można używać programu Glade do rozmieszczania widżetów w graficznym interfejsie użytkownika. Glade umożliwia modyfikowanie układu i właściwości tych widżetów. Można także używać programu Glade do dodawania połączeń między widżetami a kodem źródłowym programu.</para>
+
+    <para>Interfejsy użytkownika zaprojektowane w programie Glade są przechowywane w formacie XML, umożliwiając łatwą integrację z zewnętrznymi narzędziami. Można używać biblioteki <application>libglade</application> do dynamicznego tworzenia graficznych interfejsów użytkownika z opisu XML.</para>
+
+  </sect1>
+
+  <sect1 id="getting-started"> 
+    <title>Pierwsze kroki</title> 
+
+    <sect2 id="glade-start">
+    <title>Uruchamianie programu <application>Glade</application></title>
+    <para>Można uruchomić program <application>Glade</application> na jeden z tych sposobów:</para> 
+    <variablelist>
+    	<varlistentry>
+    		<term>Menu <guimenu>Programy</guimenu></term>
+    		<listitem>
+    		<para>Wybierz <menuchoice> <guisubmenu>Programowanie</guisubmenu> <guimenuitem>Narzędzi do projektowania interfejsów Glade</guimenuitem> </menuchoice>.</para>
+    		</listitem>
+    	</varlistentry>
+    	<varlistentry>
+    		<term>Wiersz poleceń</term>
+    		<listitem>
+			<para>Aby uruchomić program <application>Glade</application> z wiersza poleceń, wpisz <command>glade</command>, a następnie naciśnij klawisz <keycap>Enter</keycap>.</para>
+    		</listitem>
+    	</varlistentry>
+    </variablelist>
+    </sect2>
+
+    <sect2 id="glade-when-start">
+    <title>Po uruchomieniu programu <application>Glade</application></title>
+    <para>Po uruchomieniu programu <application>Glade</application> wyświetlone zostanie poniższe okno.</para>
+
+        <figure id="main-window-fig"> 
+          <title>Okno programu <application>Glade</application></title> 
+            <screenshot> 
+              <mediaobject><imageobject><imagedata fileref="figures/main-window.png" format="PNG"/></imageobject> <textobject><phrase>Okno programu <application>Glade</application>.</phrase></textobject></mediaobject> 
+            </screenshot> 
+        </figure>
+        
+        <para>Okno programu <application>Glade</application> zawiera następujące elementy:</para>
+
+        <variablelist>
+          <varlistentry> <term>Pasek menu</term>
+            <listitem>
+            <para>Menu na pasku menu zawierają większość poleceń potrzebnych do działania na plikach w programie <application>Glade</application>.</para>
+            </listitem>
+          </varlistentry>
+          <varlistentry> <term>Pasek narzędziowy</term>
+            <listitem>
+            <para>Pasek narzędziowy zawiera podzestaw poleceń, których można używać z paska menu.</para>
+            </listitem>
+          </varlistentry>
+          <varlistentry> <term>Obszar projektowania</term>
+            <listitem>
+            <para>Obszar projektowania to miejsce, w którym można wizualnie modyfikować interfejs użytkownika.</para>
+            </listitem>
+          </varlistentry>
+          <varlistentry> <term>Paleta</term>
+            <listitem>
+            <para>Paleta zawiera widżety, których można używać do zbudowania interfejsu użytkownika.</para>
+            </listitem>
+          </varlistentry>
+          <varlistentry> <term>Inspektor</term>
+            <listitem>
+            <para>Inspektor wyświetla informacje o widżetach w projekcie.</para>
+            </listitem>
+          </varlistentry>
+          <varlistentry> <term>Edytor właściwości</term>
+            <listitem>
+            <para>Edytor właściwości jest używany do manipulowania właściwościami widżetów, a także dodawania połączeń do kodu źródłowego.</para>
+            </listitem>
+          </varlistentry>
+          <varlistentry> <term>Pasek stanu</term>
+            <listitem>
+            <para>Pasek stanu wyświetla informacje o obecnym stanie programu <application>Glade</application> i informacje kontekstowe o elementach menu.</para>
+            </listitem>
+          </varlistentry>
+        </variablelist>
+
+    </sect2>
+  </sect1>
+
+  <sect1 id="working-with-projects"> 
+         <title>Praca na projektach</title> 
+  
+ 
+<!-- To Create a New Project  -->
+	 <sect2 id="glade-create-new-project"> 
+		<title>Tworzenie nowego projektu</title>
+		<para>Aby utworzyć nowy projekt, wybierz <menuchoice><guimenu>Plik</guimenu><guimenuitem>Nowy</guimenuitem></menuchoice>. Program wyświetli nowy pusty projekt w oknie <application>Glade</application>.</para>
+	 </sect2>
+
+	 <sect2 id="glade-open-project"> 
+		<title>Otwieranie projektu</title>
+		<para>Aby otworzyć istniejący projekt, wybierz <menuchoice><guimenu>Plik</guimenu><guimenuitem>Otwórz</guimenuitem></menuchoice>. Program wyświetli projekt w nowym oknie <application>Glade</application>.</para>
+	 </sect2>
+
+<!-- To Save a Project -->
+	 <sect2 id="glade-save-project"> 
+		<title>Zapisywanie projektu</title>
+		<para>Można zapisywać projekty na jeden z tych sposobów:</para>
+		<itemizedlist> 
+		  <listitem><para>Aby zapisać zmiany w istniejącym pliku projektu, wybierz <menuchoice><guimenu>Plik</guimenu><guimenuitem>Zapisz</guimenuitem></menuchoice>.</para>
+		  </listitem>
+		  <listitem><para>Aby zapisać nowy plik projektu lub zapisać istniejący pod nową nazwą, wybierz <menuchoice> <guimenu>Plik</guimenu> <guimenuitem>Zapisz jako</guimenuitem> </menuchoice>. Wpisz nazwę pliku projektu w oknie <guilabel>Zapis jako</guilabel>, a następnie kliknij przycisk <guibutton>Zapisz</guibutton>.</para>
+		  </listitem>
+		</itemizedlist>
+	 </sect2>
+  </sect1>
+
+
+  <sect1 id="working-with-widgets"> 
+         <title>Praca z widżetami</title>
+         <sect2 id="select-widgets-palette">
+                <title>Wybór widżetów z okna palety</title>
+                <para>Można pracować z widżetami w oknie <guilabel>Palety</guilabel> na jeden z tych sposobów:</para>
+                <variablelist> 
+                  <varlistentry> 
+                         <term>Tryb wyboru</term> 
+                         <listitem>
+                                <para>Aby użyć trybu wyboru, kliknij strzałkę <guilabel>Wybór</guilabel>. Kursor zmieni się na strzałkę, co wskazuje, że tryb wyboru jest aktywny. W tym trybie można używać myszy do wyboru widżetów w projekcie. Następnie można użyć okna <guilabel>Właściwości</guilabel> do modyfikacji właściwości widżetów.</para>
+<para>Można także użyć menu kontekstowego widżetu, aby wybrać widżet. Kliknij widżet prawym przyciskiem myszy, aby je otworzyć.</para><para>Można dodać wiele widżetów danego typu z <guilabel>Palety</guilabel> do projektu przytrzymując klawisz <keycap>Ctrl</keycap> podczas wybierania widżetu. Należy kliknąć strzałkę <guilabel>Wybór</guilabel> lub inny widżet w <guilabel>Palecie</guilabel>, aby wrócić do zwykłego trybu.</para>
+                         </listitem> 
+                  </varlistentry> 
+                </variablelist> 
+                <variablelist> 
+                  <varlistentry> 
+                         <term>Tryb rozmieszczania widżetów</term> 
+                         <listitem> 
+                                <para>Aby użyć trybu rozmieszczania widżetów, wybierz widżet w oknie <guilabel>Palety</guilabel>. Podczas wybierania większości widżetów kursor zmienia się na kursor z krzyżykiem. Można wtedy umieścić widżet w kontenerze, widżecie najwyższego poziomu i tak dalej. Po umieszczeniu widżetu program wróci do trybu wyboru.</para>
+                         </listitem> 
+                  </varlistentry> 
+                </variablelist> 
+                <variablelist> 
+                  <varlistentry> 
+                         <term>Tryb rozmieszczania najwyższego poziomu</term> 
+                         <listitem> 
+                                <para>Aby użyć trybu rozmieszczania najwyższego poziomu, wybierz określony widżet najwyższego poziomu w oknie <guilabel>Palety</guilabel>. Po wybraniu widżetu najwyższego poziomu w oknie <guilabel>Palety</guilabel> pojawi się on od razu na pulpicie. Można go wtedy modyfikować. Po wyborze widżetu najwyższego poziomu program wróci do trybu wyboru.</para>
+                         </listitem> 
+                  </varlistentry> 
+                </variablelist> 
+         </sect2>
+<sect2 id="organize-widgets">
+<title>Organizowanie widżetów w projekcie</title>
+<para>Kontenery widżetów (pola) są używane do układania i organizowania widżetów w oknie projektu. Można wybrać te kontenery widżetów z okna <guilabel>Palety</guilabel>:</para>
+<itemizedlist>
+<listitem><para>Pole poziome</para>
+</listitem><listitem><para>Pole pionowe</para></listitem>
+<listitem><para>Tabela</para></listitem>
+<listitem><para>Stałe miejsca</para></listitem>
+<listitem><para>Poziome pole przycisku</para></listitem>
+<listitem><para>Pionowe pole przycisku</para></listitem>
+<listitem><para>Panele poziome</para></listitem>
+<listitem><para>Panele pionowe</para></listitem>
+<listitem><para>Notatnik</para></listitem>
+<listitem><para>Ramka</para></listitem>
+<listitem><para>Przewijane okno</para></listitem>
+<listitem><para>Obszar wyświetlania</para></listitem>
+</itemizedlist>
+<para>Można zagnieżdżać pola, aby tworzyć złożone struktury. Podczas tworzenia poziomych i pionowych pól program <application>Glade</application> pyta, ile rzędów i kolumn utworzyć początkowo. Można je później łatwo dodawać i usuwać.</para>
+<para>Po utworzeniu wszystkich potrzebnych pól można dodać konkretne widżety, takie jak etykiety, przyciski i bardziej skomplikowane widżety do pól. Zauważ, że program <application>Glade</application> pakuje widżety w układzie, co eliminuje wiele uciążliwej pracy. Użycie pól umożliwia zmianę rozmiaru okien, aby różne rozmiary etykiet z powodu różnych języków się mieściły.</para></sect2>
+         <sect2 id="place-widgets-clipboard"> 
+                <title>Umieszczanie widżetu w schowku</title> 
+                <para>Aby usunąć widżet z elementu nadrzędnego i umieścić go w schowku, zaznacz go, a następnie wybierz <menuchoice> <guimenu>Edycja</guimenu> <guisubmenu>Wytnij</guisubmenu> </menuchoice>.</para>
+         </sect2> 
+         <sect2 id="copy-widget-clipboard"> 
+                <title>Kopiowanie widżetu do schowka</title> 
+                <para>Aby skopiować widżet do schowka, zaznacz go, a następnie wybierz <menuchoice> <guimenu>Edycja</guimenu> <guisubmenu>Skopiuj</guisubmenu> </menuchoice>. Oryginalny widżet nadal jest połączony do elementu nadrzędnego.</para>
+         </sect2> 
+         <sect2 id="paste-widget-clipboard"> 
+                <title>Wklejanie widżetu ze schowka do projektu</title> 
+                <para>Aby wkleić widżet istniejący w schowku do projektu, wybierz <menuchoice> <guimenu>Edycja</guimenu> <guisubmenu>Wklej</guisubmenu> </menuchoice>.</para><para>Wszystkie widżety w programie <application>Glade</application> muszą mieć unikalną nazwę. Jeśli widżet zostanie wycięty, a następnie wklejony w projekcie, to widżet i jego wszystkie elementy potomne zachowują swoje oryginalne nazwy. Jeśli widżet zostanie skopiowany, albo wklejony w projekcie wiele razy, to program <application>Glade</application> utworzy nowe nazwy kopii widżetów.</para>
+         </sect2> 
+         <sect2 id="delete-widget"> 
+                <title>Usuwanie widżetu</title> 
+                <para>Aby usunąć widżet z elementu nadrzędnego bez przenoszenia widżetu do schowka, zaznacz go, a następnie wybierz <menuchoice> <guimenu>Edycja</guimenu> <guisubmenu>Usuń</guisubmenu> </menuchoice>.</para>
+                 
+         </sect2> 
+         
+         <sect2 id="edit-widget"> 
+                <title>Zmiana właściwości widżetu</title> 
+                <para>Edytor właściwości jest używany do modyfikowania właściwości wybranego widżetu. Aby zmienić właściwość widżetu, zaznacz go, a następnie wpisz odpowiednią wartość w jednym z pól okna właściwości.</para>
+                
+                
+         </sect2> 
+  </sect1>
+  
+<sect1 id="about"> 
+    <title>O programie Glade</title> 
+    <para>Glade jest tworzony przez programistów projektu Glade i wolontariuszy społeczności GNOME. <ulink url="http://glade.gnome.org" type="http">Strona projektu Glade</ulink> zawiera więcej informacji o programie Glade.</para>
+    <para><ulink url="http://bugzilla.gnome.org/enter_bug.cgi?product=glade3" type="http">Bugzilla</ulink> umożliwia zgłoszenie błędu lub propozycję zmiany gry lub tego podręcznika.</para>
+
+    <para>Innym doskonałym źródłem informacji są listy pocztowe <ulink url="http://lists.ximian.com/mailman/listinfo/glade-users" type="http">użytkowników</ulink> i <ulink url="http://lists.ximian.com/mailman/listinfo/glade-devel" type="http">programistów</ulink> programu Glade (w języku angielskim). Można je subskrybować lub przejrzeć ich archiwa, dostępne pod tymi samymi adresami.</para>
+
+    <para>Niniejszy program jest rozpowszechniany na warunkach Powszechnej Licencji Publicznej GNU, wydanej przez Fundację Wolnego Oprogramowania (Free Software Foundation) — według wersji drugiej tej Licencji lub którejś z późniejszych wersji. Egzemplarz licencji można znaleźć pod tym <ulink url="help:gpl" type="help">odnośnikiem</ulink> lub w pliku COPYING dołączonym do kodu źródłowego tego programu.</para>
+  </sect1> 
+
+</article>

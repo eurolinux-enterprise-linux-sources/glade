@@ -296,7 +296,18 @@
                   <varlistentry> 
                          <term>Режим розташування на верхньому рівні</term> 
                          <listitem> 
-                                <para>Для використання режиму розташування верхнього рівня , виберіть визначений віджет верхнього рівня в вікні <application>Палітри</application> і віджет безпосередньо з'явиться на Вашій стільниці. Потім можете редагувати його. Після вибору віджету верхнього рівня, режим розташування повертається знову в режим виділення.</para>
+                                <para lang="en">
+                                  To use top level placement mode, select a
+defined top-level
+                                  widget in the
+<guilabel>Palette</guilabel> window. When you select a top-level
+                                  widget in the 
+                                  <guilabel>Palette</guilabel> window, the
+widget appears
+                                  immediately on your desktop. You can then
+edit the widget. After you select a top-level widget,
+                                  the mode returns to selection mode.
+                                </para>
                          </listitem> 
                   </varlistentry> 
                 </variablelist> 

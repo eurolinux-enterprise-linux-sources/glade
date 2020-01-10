@@ -234,7 +234,18 @@
                   <varlistentry> 
                          <term>상위레벨 배치 모드</term> 
                          <listitem> 
-                                <para>상위레벨 배치 모드를 사용하려면 <application>팔레트</application> 창에 있는 상위레벨 위젯을 선택하세요. <guilabel>팔레트</guilabel> 창에 있는 상위레벨 위젯을 선택하면 바탕 화면에 바로 나타납니다. 이 상태에서 위젯을 수정 할 수 있습니다. 상위레벨 위젯을 선택하고나면 선택모드로 변경 됩니다.</para>
+                                <para lang="en">
+                                  To use top level placement mode, select a
+defined top-level
+                                  widget in the
+<guilabel>Palette</guilabel> window. When you select a top-level
+                                  widget in the 
+                                  <guilabel>Palette</guilabel> window, the
+widget appears
+                                  immediately on your desktop. You can then
+edit the widget. After you select a top-level widget,
+                                  the mode returns to selection mode.
+                                </para>
                          </listitem> 
                   </varlistentry> 
                 </variablelist> 

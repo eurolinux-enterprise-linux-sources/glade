@@ -94,7 +94,7 @@
       
         <year>2013</year>
       
-        <year>2016</year>
+        <year>2016-2018</year>
       
       <holder>Mario Blättermann</holder>
     </copyright>
@@ -263,7 +263,7 @@
                   <varlistentry> 
                          <term>Platzierungsmodus in der obersten Ebene</term> 
                          <listitem> 
-                                <para>Zum Benutzen des Platzierungsmodus in der obersten Ebene wählen Sie ein beliebiges Widget der obersten Ebene aus der <application>Palette</application> aus. Wenn Sie ein Widget der obersten Ebene aus der <guilabel>Palette</guilabel> gewählt haben, erscheint das Widget sofort im Entwurfsbereich. Sie können das Widget dann bearbeiten. Nach dem Auswählen eines Widgets der oberste Ebene wechselt der Modus zurück in den Auswahlmodus.</para>
+                                <para>Zum Benutzen des Platzierungsmodus in der obersten Ebene wählen Sie ein beliebiges Widget der obersten Ebene aus der <guilabel>Palette</guilabel> aus. Wenn Sie ein Widget der obersten Ebene aus der <guilabel>Palette</guilabel> gewählt haben, erscheint das Widget sofort im Entwurfsbereich. Sie können das Widget dann bearbeiten. Nach dem Auswählen eines Widgets der oberste Ebene wechselt der Modus zurück in den Auswahlmodus.</para>
                          </listitem> 
                   </varlistentry> 
                 </variablelist> 
@@ -289,7 +289,7 @@
 <para>Wenn Sie alle benötigten Boxen erstellt haben, können Sie spezifische Widgets wie Beschriftungen, Knöpfe, und weitere aufwändige Widgets in die Boxen hinzufügen. Beachten Sie, dass <application>Glade</application> Widgets in das Layout packt, was viel lästige Arbeit vermeidet. Der Gebrauch von Boxen ermöglicht Fenstern, durch Anpassen der Größe, die durch Lokalisieren der Anwendung unterschiedlich großen  Beschriftungen unterzubringen.</para></sect2>
          <sect2 id="place-widgets-clipboard"> 
                 <title>Ablegen eines Widgets in der Zwischenablage</title> 
-                <para>Um ein Widget von seinem Eltern-Widget zu lösen und es in der Zwischenablage zu platzieren, wählen Sie das Widget aus und wählen Sie dann <menuchoice><guimenu>Bearbeiten</guimenu><guisubmenu>Ausschneiden</guisubmenu></menuchoice>. </para>
+                <para>Um ein Widget von seinem Eltern-Widget zu lösen und es in der Zwischenablage zu platzieren, wählen Sie das Widget aus und wählen Sie dann <menuchoice><guimenu>Bearbeiten</guimenu><guisubmenu>Ausschneiden</guisubmenu></menuchoice>.</para>
          </sect2> 
          <sect2 id="copy-widget-clipboard"> 
                 <title>Kopieren eines Widgets in die Zwischenablage</title> 

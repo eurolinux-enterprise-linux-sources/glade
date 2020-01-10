@@ -296,7 +296,18 @@
                   <varlistentry> 
                          <term>ऊच्च कोटी प्लेसमेन्ट मोड </term> 
                          <listitem> 
-                                <para>ऊच्च कोटी प्लेसमेन्ट मोड को इस्तेमाल करने के लिए , ऊच्च कोटी विज़ेट को <application>पेलेटी</application>  विन्डो मे चुनिये । जब आप ऊच्च कोटी विज़ेट को <guilabel>पेलेटी</guilabel> मे चुनते है तो विदगेट आपके कम्पयुटर पर तुरन्त ही दिख जाता है । आप विज़ेट को संपादन भी कर सकते है । ऊच्च कोटी विज़ेट को चुनने के बाद मोड , चुनाव मोड मे वापस चला जाता है ।</para>
+                                <para lang="en">
+                                  To use top level placement mode, select a
+defined top-level
+                                  widget in the
+<guilabel>Palette</guilabel> window. When you select a top-level
+                                  widget in the 
+                                  <guilabel>Palette</guilabel> window, the
+widget appears
+                                  immediately on your desktop. You can then
+edit the widget. After you select a top-level widget,
+                                  the mode returns to selection mode.
+                                </para>
                          </listitem> 
                   </varlistentry> 
                 </variablelist> 

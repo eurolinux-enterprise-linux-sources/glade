@@ -144,8 +144,7 @@
     	<varlistentry>
     		<term>Ligne de commande</term>
     		<listitem>
-			<para lang="en">To start <application>Glade</application> from a command line, type <command>glade</command>
-			and then press <keycap>Return</keycap>.</para>
+			<para>Pour lancer <application>Glade</application> à partir d'une ligne de commande, saisissez <command>glade</command>, puis appuyez sur <keycap>Entrée</keycap>.</para>
     		</listitem>
     	</varlistentry>
     </variablelist>
@@ -260,7 +259,18 @@
                   <varlistentry> 
                          <term>Mode de placement premier niveau</term> 
                          <listitem> 
-                                <para>Pour utiliser le mode de placement premier niveau, sélectionnez un widget de premier niveau dans la <application>Palette</application>. Dès cet instant, le widget apparaît immédiatement sur votre bureau. Vous pouvez alors le modifier. Après avoir sélectionné un widget de premier niveau, c'est le mode sélection qui est à nouveau activé.</para>
+                                <para lang="en">
+                                  To use top level placement mode, select a
+defined top-level
+                                  widget in the
+<guilabel>Palette</guilabel> window. When you select a top-level
+                                  widget in the 
+                                  <guilabel>Palette</guilabel> window, the
+widget appears
+                                  immediately on your desktop. You can then
+edit the widget. After you select a top-level widget,
+                                  the mode returns to selection mode.
+                                </para>
                          </listitem> 
                   </varlistentry> 
                 </variablelist> 

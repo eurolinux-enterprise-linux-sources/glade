@@ -927,32 +927,25 @@ glade_gtk_notebook_get_child_property (GladeWidgetAdaptor * adaptor,
 }
 
 void
-glade_gtk_notebook_child_action_activate (GladeWidgetAdaptor * adaptor,
-                                          GObject * container,
-                                          GObject * object,
-                                          const gchar * action_path)
+glade_gtk_notebook_child_action_activate (GladeWidgetAdaptor *adaptor,
+                                          GObject            *container,
+                                          GObject            *object,
+                                          const gchar        *action_path)
 {
   if (strcmp (action_path, "insert_page_after") == 0)
     {
       glade_gtk_box_notebook_child_insert_remove_action (adaptor, container,
-                                                         object, "pages",
-                                                         _("Insert page on %s"),
-                                                         FALSE, TRUE);
+                                                         object, FALSE, TRUE);
     }
   else if (strcmp (action_path, "insert_page_before") == 0)
     {
       glade_gtk_box_notebook_child_insert_remove_action (adaptor, container,
-                                                         object, "pages",
-                                                         _("Insert page on %s"),
-                                                         FALSE, FALSE);
+                                                         object, FALSE, FALSE);
     }
   else if (strcmp (action_path, "remove_page") == 0)
     {
       glade_gtk_box_notebook_child_insert_remove_action (adaptor, container,
-                                                         object, "pages",
-                                                         _
-                                                         ("Remove page from %s"),
-                                                         TRUE, TRUE);
+                                                         object, TRUE, TRUE);
     }
   else
     GWA_GET_CLASS (GTK_TYPE_CONTAINER)->child_action_activate (adaptor,
@@ -963,20 +956,19 @@ glade_gtk_notebook_child_action_activate (GladeWidgetAdaptor * adaptor,
 
 /* Shared with glade-gtk-box.c */
 void
-glade_gtk_box_notebook_child_insert_remove_action (GladeWidgetAdaptor * adaptor,
-                                                   GObject * container,
-                                                   GObject * object,
-                                                   const gchar * size_prop,
-                                                   const gchar * group_format,
-                                                   gboolean remove,
-                                                   gboolean after)
+glade_gtk_box_notebook_child_insert_remove_action (GladeWidgetAdaptor *adaptor,
+                                                   GObject            *container,
+                                                   GObject            *object,
+                                                   gboolean            remove,
+                                                   gboolean            after)
 {
+  gboolean is_notebook = GTK_IS_NOTEBOOK (container);
+  const gchar *size_prop = (is_notebook) ? "pages" : "size";
   GladeWidget *parent;
   GList *children, *l;
   gint child_pos, size, offset;
 
-  if (GTK_IS_NOTEBOOK (container) &&
-      g_object_get_data (object, "special-child-type"))
+  if (is_notebook && g_object_get_data (object, "special-child-type"))
     /* Its a Tab! */
     child_pos = notebook_search_tab (GTK_NOTEBOOK (container),
                                      GTK_WIDGET (object));
@@ -985,7 +977,20 @@ glade_gtk_box_notebook_child_insert_remove_action (GladeWidgetAdaptor * adaptor,
                              GTK_WIDGET (object), "position", &child_pos, NULL);
 
   parent = glade_widget_get_from_gobject (container);
-  glade_command_push_group (group_format, glade_widget_get_name (parent));
+  if (is_notebook)
+    {
+      if (remove)
+        glade_command_push_group (_("Remove page from %s"), glade_widget_get_name (parent));
+      else
+        glade_command_push_group (_("Insert page on %s"), glade_widget_get_name (parent));
+    }
+  else
+    {
+      if (remove)
+        glade_command_push_group (_("Remove placeholder from %s"), glade_widget_get_name (parent));
+      else
+        glade_command_push_group (_("Insert placeholder to %s"), glade_widget_get_name (parent));
+    }
 
   /* Make sure widgets does not get destroyed */
   children = glade_widget_adaptor_get_children (adaptor, container);

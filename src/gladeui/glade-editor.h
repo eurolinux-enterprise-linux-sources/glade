@@ -24,14 +24,14 @@ typedef struct _GladeEditorPrivate   GladeEditorPrivate;
  */
 struct _GladeEditor
 {
-  GtkVBox vbox;  /* The editor is a vbox */
+  GtkBox vbox;  /* The editor is a vbox */
 	
   GladeEditorPrivate *priv;
 };
 
 struct _GladeEditorClass
 {
-  GtkVBoxClass parent_class;
+  GtkBoxClass parent_class;
 
   void   (* glade_reserved1)   (void);
   void   (* glade_reserved2)   (void);
@@ -45,13 +45,18 @@ GType        glade_editor_get_type           (void);
 GladeEditor *glade_editor_new                (void);
 void         glade_editor_load_widget        (GladeEditor       *editor,
 					      GladeWidget       *widget);
+G_DEPRECATED
 void         glade_editor_show_info          (GladeEditor       *editor);
+G_DEPRECATED
 void         glade_editor_hide_info          (GladeEditor       *editor);
+
 void         glade_editor_show_class_field   (GladeEditor       *editor);
 void         glade_editor_hide_class_field   (GladeEditor       *editor);
 
 gboolean     glade_editor_query_dialog       (GladeWidget       *widget);
 GtkWidget   *glade_editor_dialog_for_widget  (GladeWidget       *widget);
+void         glade_editor_reset_dialog_run   (GtkWidget         *parent,
+                                              GladeWidget       *gwidget);
 
 G_END_DECLS
 

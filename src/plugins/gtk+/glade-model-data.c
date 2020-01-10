@@ -845,7 +845,9 @@ eprop_model_generate_column (GladeEditorProperty * eprop,
           GtkCellRenderer *icon_renderer = glade_cell_renderer_icon_new ();
 
           g_object_set (G_OBJECT (icon_renderer),
-                        "activatable", TRUE, "icon-name", GTK_STOCK_EDIT, NULL);
+                        "activatable", TRUE,
+                        "icon-name", "gtk-edit",
+                        NULL);
 
           gtk_tree_view_column_pack_start (column, icon_renderer, FALSE);
 
@@ -1119,14 +1121,13 @@ glade_eprop_model_data_create_input (GladeEditorProperty * eprop)
   label = gtk_label_new (string);
   g_free (string);
   gtk_label_set_use_markup (GTK_LABEL (label), TRUE);
-  gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
-  gtk_misc_set_padding (GTK_MISC (label), 2, 0);
+  gtk_widget_set_halign (label, GTK_ALIGN_START);
   gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
 
   button = gtk_button_new ();
   gtk_button_set_image (GTK_BUTTON (button),
-                        gtk_image_new_from_stock (GTK_STOCK_ADD,
-                                                  GTK_ICON_SIZE_BUTTON));
+                        gtk_image_new_from_icon_name ("list-add-symbolic",
+						      GTK_ICON_SIZE_BUTTON));
   gtk_box_pack_start (GTK_BOX (hbox), button, FALSE, FALSE, 0);
 
   g_signal_connect (G_OBJECT (button), "clicked",
@@ -1135,8 +1136,8 @@ glade_eprop_model_data_create_input (GladeEditorProperty * eprop)
 
   button = gtk_button_new ();
   gtk_button_set_image (GTK_BUTTON (button),
-                        gtk_image_new_from_stock (GTK_STOCK_REMOVE,
-                                                  GTK_ICON_SIZE_BUTTON));
+                        gtk_image_new_from_icon_name ("list-remove-symbolic",
+						      GTK_ICON_SIZE_BUTTON));
   gtk_box_pack_start (GTK_BOX (hbox), button, FALSE, FALSE, 0);
 
   g_signal_connect (G_OBJECT (button), "clicked",

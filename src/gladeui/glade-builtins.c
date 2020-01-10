@@ -146,7 +146,6 @@ compare_two_gsi (gconstpointer a, gconstpointer b)
   return strcmp (gsi1->clean_name, gsi2->clean_name);
 }
 
-
 static GArray *
 list_stock_items (gboolean include_images)
 {
@@ -160,7 +159,21 @@ list_stock_items (gboolean include_images)
   GSList *gsi_list = NULL;
   GSList *gsi_list_list = NULL;
 
+  if (gdk_display_get_default () == NULL)
+    {
+      values = g_array_sized_new (TRUE, TRUE, sizeof (GEnumValue), 1);
+
+      value.value = 0;
+      value.value_name = "dummy";
+      value.value_nick = "Dummy";
+      g_array_append_val (values, value);
+
+      return values;
+    }
+
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
   stock_list = g_slist_reverse (gtk_stock_list_ids ());
+G_GNUC_END_IGNORE_DEPRECATIONS
 
   values = g_array_sized_new (TRUE, TRUE, sizeof (GEnumValue),
                               g_slist_length (stock_list));
@@ -177,9 +190,11 @@ list_stock_items (gboolean include_images)
       for (l = stock_list; l; l = g_slist_next (l))
         {
           stock_id = l->data;
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
           if (g_str_has_prefix (stock_id, prefix) == FALSE ||
               gtk_stock_lookup (stock_id, &item) == FALSE)
             continue;
+G_GNUC_END_IGNORE_DEPRECATIONS
 
           gsi = new_from_values (item.label, stock_id, stock_enum++);
           gsi_list =
@@ -280,7 +295,11 @@ glade_standard_stock_get_type (void)
       /* Register displayable by GType, i.e. after the types been created. */
       for (i = 0; i < n_values; i++)
         {
-          if (gtk_stock_lookup (enum_values[i].value_nick, &item))
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
+          gboolean valid_item = gtk_stock_lookup (enum_values[i].value_nick, &item);
+G_GNUC_END_IGNORE_DEPRECATIONS
+
+          if (valid_item)
             {
               gchar *clean_name = clean_stock_name (item.label);
 
@@ -313,7 +332,10 @@ glade_standard_stock_image_get_type (void)
       /* Register displayable by GType, i.e. after the types been created. */
       for (i = 0; i < n_values; i++)
         {
-          if (gtk_stock_lookup (enum_values[i].value_nick, &item))
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
+          gboolean valid_item = gtk_stock_lookup (enum_values[i].value_nick, &item);
+G_GNUC_END_IGNORE_DEPRECATIONS
+          if (valid_item)
             {
               gchar *clean_name = clean_stock_name (item.label);
 
@@ -563,26 +585,4 @@ glade_standard_boolean_spec (void)
 {
   return g_param_spec_boolean ("boolean", "Boolean",
                                "A boolean value", FALSE, G_PARAM_READWRITE);
-}
-
-GType
-glade_item_appearance_get_type (void)
-{
-  static GType etype = 0;
-
-  if (etype == 0)
-    {
-      static const GEnumValue values[] = {
-        {GLADE_ITEM_ICON_AND_LABEL, "GLADE_ITEM_ICON_AND_LABEL",
-         "icon-and-label"},
-        {GLADE_ITEM_ICON_ONLY, "GLADE_ITEM_ICON_ONLY", "icon-only"},
-        {GLADE_ITEM_LABEL_ONLY, "GLADE_ITEM_LABEL_ONLY", "label-only"},
-        {0, NULL, NULL}
-      };
-
-      etype = g_enum_register_static ("GladeItemAppearance", values);
-
-    }
-
-  return etype;
 }

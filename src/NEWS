@@ -1,4 +1,244 @@
 ============
+Glade 3.20.0
+============
+
+	- Workspace layout: render frame and selection box with CSS
+	- GtkWindow: don't set the same titlebar multiple times (Ben Iofel)
+	- Fixed bug 761839: Fix 'glade' command name in user manual (Anders Jonsson)
+	- Fixed bug 536840 - Save palette small icon preference (Tristan)
+	- Fixed bug 430445 - null string default title for GtkFileChooserButton (Tristan)
+	- Integrate new properties in editor for GtkLabel, GtkTextView, GtkPopover, GtkStackSwitcher (Tristan)
+	- Fixed bug 750985 - GtkMisc property deprecations (Tristan)
+	- Fixed bug 759872 - Show popovers hidden by model buttons (Tristan)
+	- Fixed bug 751234 - Ignore tearoff-state property in the workspace (Tristan)
+	- Fixed bug 759455 - Avoid showing window decorations in Glade's workspace (Tristan)
+	- Fixed bug 759395 - Ignore ESC key press from popovers (Tristan)
+	- Fixed bug 760610: Disable scroll events on property editor widgets (Tristan)
+	- Support id-less builder files (DX hackfest)
+	- Added missing tags to the AppData file (Richard Hughes) 
+	- Fixed bug 759847 "Don't crash when popover menu children have no visible-submenu set" Руслан Ижбулатов
+	- Added support for GtkActionBar and GtkFlowBox (Matthias Clasen)
+	- Main UI frontend: Use wide paned handles (Tristan)
+	- Fixed warning about imbalanced children in GtkNotebook support (Tristan)
+	- Added support for GtkPopoverMenu and GtkModelButton (Matthias Clasen)
+	- Added support for GtkPopover bug 740104 (Matthias Clasen)
+	- Fixed bug 754131 "Avoid crashes when loading boxes with center-child children"
+	- Added <kudos> section to app data as requested by Richard Hughes.
+	- Added missing displayable values bugs 758290, 758289, 758288, 758287 (Matthias Clasen) 
+	- Deprecate GtkAction, GtkActivatable, and friends bug 757609 (Ben Iofel)
+	- Avoid GTK+ style context warnings bugs 758296, 758297, 758299, 758300 (Matthias Clasen)
+	- Drop deprecated style properties in GladeCloseButton bug 758280 (Matthias Clasen)
+	- Replace use of deprecated gdk_cursor_new (Ben Iofel)
+	- Add "Stack" to "Add parent" menu bug 754030 (Florian Richter)
+	- Fixed bug 741923 "build: Add dependency on libm for floor() and ceil()" (Philip Withnall)
+
+============
+Glade 3.19.0
+============
+
+	- Bug 732328 "New: add python3 support" (Bohuslav "Slavek" Kabrda)
+	- Added new symbolic variant of the app icon (747024 - Jakub Steiner)
+	- Bug #741165 "Previewer crashes when taking PNG screenshot"
+	- Added GtkSidebarWidget support (Matthias Clasen)
+	- Added GtkStack and GtkStackSwitcher support (738480 - Matthias Clasen)
+	- Added GtkHeaderBar support (bug 700914 - Matthias Clasen)
+	- Improved undo/redo command list handling.
+	- Added GtkBox center-widget support (bug 738473 - Matthias Clasen)
+	- Added GtkSearchBar support (bug 738493 - Matthias Clasen)
+	- Support CSD windows (Bug 700914 - Matthias Clasen)
+	- Use current gtk-mac-integration API (bug 738339 - Philip Chimento)
+	- Fixed bug 732575 "Changed the type hint on the "Edit Separately" window to 'utility'" (Tristan)
+	- Fixed bug "Missing plural form for UI string: emited %d time(s)"
+	- Avoid reading freed data in glade_project_read_requires (David Shea)
+	- Added class chooser popover to workspace. (Bug 708146 "Catalog search entry")
+	- Added GThemedIcon support.
+	- GladePreviewer: show handler information in infobar when a signal is emited.
+	- Migrated UI from stock icons to icon names.
+	- Seal needed deprecated API and replaced deprecared API.
+	- GladeWindow: only show found recent files.
+	- Added GtkLockButton support.
+
+============
+Glade 3.18.3
+============
+
+	- Fixed property editor focus lost bug with construct-only properties
+	- GladePreviewer: Fixed bug previewing templates.
+	- Fixed Bug 727914 "Logo is not shown in About-dialog"
+	- Fixed Bug 353002 "wrong cursor over widgets"
+	- Fixed bug 728377 "sensitivity of mnemonic-widget entry is not correct when loading file" (David Shea)
+	- Fixed bug 728348 "impossible to set non-integer values for scale in text attribute dialog" (David Shea)
+	- Fixed bug 726410 "Save palette appearance between sessions" (TingPing)
+
+============
+Glade 3.18.2
+============
+
+	- Added dialog at start up to advertise user survey.
+	  Fixes bug 726800 "New: UI break: add dialog to advertise user survey"
+	- Fixes bug 727992 "Editing UI and saving does not remove deleted Combo with Entry"
+	- Fixed bug 364064 "Property Editor / Common tab: width & height request checkboxes have no effect"
+
+============
+Glade 3.18.1
+============
+
+	- Fixed Bug 727014 "32 bit builds fail with -Werror=format-security"
+	- GtkDialog: disabled use-header-bar property untill Glade supports GtkHeaderBar
+	- Fixed bug in numeric property editors (Box size)
+
+============
+Glade 3.18.0
+============
+
+	- Added License property to Glade project
+	- Added realtime preview for custom CSS
+	- Added support for previewing templates
+	- glade-previewer added --slideshow option
+	- Fixed Bug 702314 "Cancelling an Add Parent action is destructive"
+	- pango attribute editor: don't write on cancel for color/font (Timm Bäder)
+	- Fixed bug 711568 "[PATCH] glade crashes upon startup" (thanks to Lubomir Rintel)
+	- Fixed Bug 712289 "Glade silently fails to open malformed ui file"
+	- Sort object dependancy before saving using a topological sorting algorithm
+	- Fixed Bug 709609 "[PATCH] Change way of sorting before writing XML output."
+	- Fixed Bug 711858 "editing glade project results in long CPU usage spikes after upgrading to 3.16 and GTK+3.10" 
+	- Fixed <requires> tag output
+	- Fixed cellrenderer model column combobox chooser.
+	- Fixed issue with numeric property editors.
+	- Restored shortcuts function in workspace.
+	- Added new jhbuild based bundling system for 64bit linux bundles. (Tristan Van Berkom)
+	- Bug 720585 - Fix order of customized property output.
+	- gladeui: fix a pair of printf security problems (Ryan Lortie)
+	- Added Registration & User Survey Dialog in Help menu
+	- Fixed bug 723819 "Correct bounds checking for design view highlight" (Chris Johns)
+	- Fixed bug #721098 "Anjuta hangs when opening project"
+	- GtkGrid: Don't save width/height at their default values (Kalev Lember)
+
+============
+Glade 3.16.0
+============
+
+	- Added AppData for gnome-software to pick up glade
+	  Fixes bug 708641 "Please include an AppData file"
+
+============
+Glade 3.15.4
+============
+
+	- Fixed bug when copying a button with custom content.
+	- Added workaround for Bug 625867 "RadioButton information lost on cut+paste, add/remove parent, etc"
+	- Fixes bug that prevented the runtime object to show the right pixbuf when copying a GtkImage.
+	- Fixed Bug 679079 "Glade changes the "homogenous" packing property of toolbar buttons to "yes""
+	- Improved pango text integer attributes editors. This should be enough to close Bug 679006
+	  "The "size" attribute for labels only accepts integer values (not strings like "larger")"
+	- Fixed bug 643923 "Should not use markup for GtkFrame's label"
+	- Fixed bug 584381 "Saving as an existing file name except the extension overwrites without confirmation."
+	- Fixed Bug 652655 "Setting entry on combobox moves the widget"
+	- Fixed Bug 706304 "Python plugin broken by over-zealous version check" Bumped pygobject version to 3.8.0
+	- Fixed regresion that prevented loading extra catalog path at init time.
+
+============
+Glade 3.15.3
+============
+
+	- Add man pages bug 703013 (Matthias Clasen)
+	- Fixed bug #700730 - Weird windows showing up when a dock is moved while editing a GtkBuilder file
+	  (Sébastien Granjoux)
+	- Double click on a toplevel border select the widget even if there is a child selected.
+	- Support document level comments present before the root element.
+	- Save glade version used to create the file in a comment.
+	- Add GtkRevealer to the Gtk+ catalog (Timm Bäder)
+	- Add GtkListBox support (Kalev Lember)
+	- Added GtkOverlay support
+	- Improved Drag&Drop support, made inspector a drag source
+	- Added GtkApplicationWindow basic support
+	- Added GtkSearchEntry icons 
+	- Fix autogen with latest gnome-common bug 706832 (Seán de Búrca)
+	- Fix a few typos bug 707173 (Christian Kirbach)
+	- Fixed Bug 703621 - Signals treeview: click on user data moves the selected row below (Miguel Azevedo)
+
+============
+Glade 3.15.2
+============
+	- Add GtkPlacesSidebar to GTK+ catalog (Federico Mena Quintero)
+	- New icon for GtkMenuButton (Paolo Borelli)
+	- GTK+ catalog version now bumped to 3.10, include new translatable enumeration values
+          and updated new versions and deprecations
+	- Added --enable-debug option and some debug flags to be set with GLADE_DEBUG environment variable
+	- Enable word wrapping in combo boxes (used to edit enumeration properties)
+	- Split up the GTK+ plugin into mini source files, each one implementing it's own widget adaptor
+	  code (instead of one huge glade-gtk.c file)
+	- Fix GtkIconFactory sources editor (was very broken)
+	- Allow setting the "id" attributes of items set in a GtkComboBoxText
+	- Avoid calling gtk_stock_list_ids() when gdk_display_get_default() is NULL, allows GIRs to
+	  build on some build machines.
+	- Avoid updating the inspector treeview if the same project is set twice (Marco Diego Aurélio Mesquita)
+	- Escape key cancels a query dialog instead of approves creation of the new widget
+	- Many minor bugs and random crasher bugs also fixed
+	- Alsmost all widget types have their own custom editors now
+
+============
+Glade 3.15.1
+============
+
+	- Much UI fixing and refactoring (Juan Pablo Ugarte)
+	- Added new --css and --screenshot options to glade-preview (Juan Pablo Ugarte)
+	- Fix main window shortcuts (bug 695866 Juan Pablo Ugarte)
+	- Implemented Project Properties dialog with Glade as a composite tempalte (Juan Pablo Ugarte)
+	- Support editing the GtkWidget:name property (useful for CSS theming)
+	- Improved project inter-widget dependancy calculation and project serialization ordering,
+	  object output ordering (and signal ordering) is now consistent and sorted.
+	- GtkButton: response-id for dialogs is now optional (allowing adding dialog buttons that
+          have no dialog response)
+	- GtkImage: Support the new "resource" property
+	- GTK+ catalog updated to cover widgets in GTK+ 3.8
+	- Now show warnings in the UI for deprecated properties and signals
+	- Now show warnings in the Inspector view if any deprecated widgets, signals
+	  or properties are used (or if anything is used which is not available in
+	  the project's target version).
+	- Optional properties are now always saved if they are enabled, allowing
+	  to explicitly set them to the default value (eg. GtkWidget:hexpand/vexpand) 
+	- Inspector search entry: Restore completions to work nicely again and filter
+	  the treeview with a search-in-text algorithm.
+	- Inspector: Add a feature to expand-all
+	- Property editor title-bar is now optional in the View menu
+	- Fixed many deprecation warnings in Glade's compile
+	- Added Glade's first 2 ever unit tests
+	- Fixed Devhelp doc search for properties (Juan Pablo Ugarte)
+	- Make Drag'n'Drop work on regular clicks without entering Drag Mode
+	  and restored old Drag/Resize functionality when SHIFT is pressed (Juan Pablo Ugarte)
+	- Improved Drag/Resize which has been rather broken for a while
+	- Added Autosave and Automatic backup of previous file features, configurable
+	  in Glade's preferences Dialog
+	- Support Composite GtkBuilder template editing (mark a toplevel GtkWidget as
+	  the "composite template" widget in the Project Properties dialog or
+	  property editor).
+	- Support editing of the project domain in the project properties dialog (Juan Pablo Ugarte)
+	- Properties in the Project Properties dialog are now undoable
+	- GladeSignalEditor: Automatically expand rows which have signal callbacks assigned when
+	  loading a widget
+	- Add options to decide what types of warnings should be presented at project save time,
+	  configurable in Glade's preferences dialog.
+	- Added new property editor components GladePropertyLabel, GladePropertyShell and
+	  GladeEditorSkeleton, allowing us to create custom property editors using Glade.
+	- Add "Grid" option to "Add parent" menu (Dmitrijs Ledkovs)
+	- Added Gladeui catalog for IDE's and embedders to design Glade frontends with Glade
+	- Added private catalog to allow the GTK+ plugin to embed editors that it provides
+	- Added new GladeEpropCheck boolean property editor, to be used in some cases for
+	  boolean properties.
+	- Added new adaptor methods GladeWidgetAdaptor->write_widget_after() and
+	  GladeWidgetAdaptor->destroy_object()
+	- Automatically generate gladeui's enum types with glib-mkenums
+	- Modified properties now show up in italic letering instead of bold, bold
+	  lettering is reserved for title labels in custom property editors.
+	- New components that now use GtkBuilder Composite Templates (and have had
+	  a basic review and rework of their UIs): GladePreferences (Glade's preferences
+	  dialog), GladeEditor (the property editor), GladeProjectProperties (the project
+	  properties dialog) and custom property editors: GladeActivatableEditor,
+	  GladeButtonEditor, GladeEntryEditor, GladeImageEditor, GladeLabelEditor, GladeWidgetEditor
+	- And... many various bugfixes and UI fixes by Juan Pablo and myself.
+
+============
 Glade 3.15.0
 ============
 

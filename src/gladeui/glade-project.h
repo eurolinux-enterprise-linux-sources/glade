@@ -13,7 +13,6 @@ G_BEGIN_DECLS
 #define GLADE_IS_PROJECT(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), GLADE_TYPE_PROJECT))
 #define GLADE_IS_PROJECT_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), GLADE_TYPE_PROJECT))
 #define GLADE_PROJECT_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS ((obj), GLADE_TYPE_PROJECT, GladeProjectClass))
-#define GLADE_TYPE_POINTER_MODE       (glade_pointer_mode_get_type())
 
 typedef struct _GladeProjectPrivate  GladeProjectPrivate;
 typedef struct _GladeProjectClass    GladeProjectClass;
@@ -47,10 +46,13 @@ typedef enum
 
 /**
  * GladeProjectModelColumns:
- * @GLADE_PROJECT_MODEL_ICON_NAME: name of the icon for the widget
- * @GLADE_PROJECT_MODEL_ICON_NAME_COLUMN_NAME: Name of the widget
- * @GLADE_PROJECT_MODEL_ICON_NAME_COLUMN_OBJECT: the GObject of the widget
- * @GLADE_PROJECT_MODEL_ICON_NAME_N_COLUMNS: Number of columns
+ * @GLADE_PROJECT_MODEL_COLUMN_ICON_NAME: name of the icon for the widget
+ * @GLADE_PROJECT_MODEL_COLUMN_NAME: Name of the widget
+ * @GLADE_PROJECT_MODEL_COLUMN_TYPE_NAME: The type name of the widget
+ * @GLADE_PROJECT_MODEL_COLUMN_OBJECT: the GObject of the widget
+ * @GLADE_PROJECT_MODEL_COLUMN_MISC: the auxilary text describing a widget's role
+ * @GLADE_PROJECT_MODEL_COLUMN_WARNING: the support warning text for this widget
+ * @GLADE_PROJECT_MODEL_N_COLUMNS: Number of columns
  *
  * The tree view columns provided by the GtkTreeModel implemented
  * by GladeProject
@@ -63,8 +65,22 @@ typedef enum
   GLADE_PROJECT_MODEL_COLUMN_TYPE_NAME,
   GLADE_PROJECT_MODEL_COLUMN_OBJECT,
   GLADE_PROJECT_MODEL_COLUMN_MISC,
+  GLADE_PROJECT_MODEL_COLUMN_WARNING,
   GLADE_PROJECT_MODEL_N_COLUMNS
 } GladeProjectModelColumns;
+
+/**
+ * GladeVerifyFlags:
+ * @GLADE_VERIFY_VERSIONS: Verify version mismatches
+ * @GLADE_VERIFY_DEPRECATIONS: Verify deprecations
+ * @GLADE_VERIFY_UNRECOGNIZED: Verify unrecognized types
+ *
+ */
+typedef enum {
+  GLADE_VERIFY_VERSIONS      = (1 << 0),
+  GLADE_VERIFY_DEPRECATIONS  = (1 << 1),
+  GLADE_VERIFY_UNRECOGNIZED  = (1 << 2)
+} GladeVerifyFlags;
 
 struct _GladeProject
 {
@@ -111,14 +127,22 @@ struct _GladeProjectClass
 };
 
 
-GType               glade_pointer_mode_get_type       (void) G_GNUC_CONST;
 GType               glade_project_get_type            (void) G_GNUC_CONST;
 
 GladeProject       *glade_project_new                 (void);
 GladeProject       *glade_project_load                (const gchar         *path);
 gboolean            glade_project_load_from_file      (GladeProject        *project, 
                                                        const gchar         *path);
-gboolean            glade_project_save                (GladeProject        *project, 
+gboolean            glade_project_save                (GladeProject        *project,
+                                                       const gchar         *path, 
+                                                       GError             **error);
+gboolean            glade_project_save_verify         (GladeProject        *project,
+                                                       const gchar         *path,
+						       GladeVerifyFlags     flags,
+                                                       GError             **error);
+gboolean            glade_project_autosave            (GladeProject        *project,
+                                                       GError             **error);
+gboolean            glade_project_backup              (GladeProject        *project,
                                                        const gchar         *path, 
                                                        GError             **error);
 void                glade_project_push_progress        (GladeProject       *project);
@@ -130,6 +154,9 @@ void                glade_project_preview              (GladeProject       *proj
 void                glade_project_properties           (GladeProject       *project);
 gchar              *glade_project_resource_fullpath    (GladeProject       *project,
                                                         const gchar        *resource);
+void                glade_project_set_resource_path    (GladeProject       *project,
+                                                        const gchar        *path);
+const gchar        *glade_project_get_resource_path    (GladeProject       *project);
 
 void                glade_project_widget_visibility_changed (GladeProject  *project,
                                                              GladeWidget   *widget,
@@ -137,6 +164,15 @@ void                glade_project_widget_visibility_changed (GladeProject  *proj
 void                glade_project_check_reordered      (GladeProject       *project,
                                                         GladeWidget        *parent,
                                                         GList              *old_order);
+
+void                glade_project_set_template         (GladeProject       *project,
+							GladeWidget        *widget);
+GladeWidget        *glade_project_get_template         (GladeProject       *project);
+
+void                glade_project_set_license          (GladeProject       *project,
+                                                        const gchar        *license);
+
+const gchar        *glade_project_get_license          (GladeProject       *project);
 
 /* Commands */
 void                glade_project_undo                 (GladeProject       *project);
@@ -205,6 +241,10 @@ GladePointerMode    glade_project_get_pointer_mode     (GladeProject       *proj
 void                glade_project_set_add_item         (GladeProject       *project,
                                                         GladeWidgetAdaptor *adaptor);
 GladeWidgetAdaptor *glade_project_get_add_item         (GladeProject       *project);
+void                glade_project_set_target_version   (GladeProject       *project,
+							const gchar        *catalog,
+							gint                major,
+							gint                minor);
 void                glade_project_get_target_version   (GladeProject       *project,
                                                         const gchar        *catalog,
                                                         gint               *major,
@@ -214,13 +254,26 @@ gchar              *glade_project_display_dependencies (GladeProject       *proj
 
 GList              *glade_project_toplevels            (GladeProject       *project);
 
+void                glade_project_set_translation_domain (GladeProject *project,
+                                                          const gchar *domain);
+const gchar        *glade_project_get_translation_domain (GladeProject *project);
+
+void                glade_project_set_css_provider_path  (GladeProject *project,
+                                                          const gchar  *path);
+
+const gchar        *glade_project_get_css_provider_path  (GladeProject *project);
+
 /* Verifications */
+gboolean            glade_project_verify               (GladeProject       *project,
+							gboolean            saving,
+							GladeVerifyFlags    flags);
 gchar              *glade_project_verify_widget_adaptor(GladeProject       *project,
                                                         GladeWidgetAdaptor *adaptor,
                                                         GladeSupportMask   *mask);
 void                glade_project_verify_property      (GladeProperty      *property);
 void                glade_project_verify_signal        (GladeWidget        *widget,
                                                         GladeSignal        *signal);
+gboolean            glade_project_writing_preview      (GladeProject       *project);
 
 /* General selection driven commands */
 void                glade_project_copy_selection       (GladeProject       *project);

@@ -1,9 +1,6 @@
-%global _changelog_trimtime %(date +%s -d "1 year ago")
-
-
 Name:           glade
-Version:        3.15.0
-Release:        5%{?dist}
+Version:        3.20.0
+Release:        1%{?dist}
 Summary:        User Interface Designer for GTK+
 
 # - /usr/bin/glade is GPLv2+
@@ -12,12 +9,11 @@ Summary:        User Interface Designer for GTK+
 #   GPLv2+ and LGPLv2+ code, so the resulting binaries are GPLv2+
 License:        GPLv2+ and LGPLv2+
 URL:            http://glade.gnome.org/
-Source0:        http://ftp.gnome.org/pub/GNOME/sources/glade/3.15/glade-%{version}.tar.xz
-Patch0:         glade-3.15.0-keywords.patch
-Patch1:         0001-Add-man-pages.patch
+Source0:        http://ftp.gnome.org/pub/GNOME/sources/glade/3.20/glade-%{version}.tar.xz
 
 BuildRequires:  chrpath
 BuildRequires:  desktop-file-utils
+BuildRequires:  docbook-style-xsl
 BuildRequires:  gettext
 BuildRequires:  gtk3-devel
 BuildRequires:  intltool
@@ -25,15 +21,10 @@ BuildRequires:  itstool
 BuildRequires:  libxml2-devel
 BuildRequires:  pygobject3-devel
 BuildRequires:  python2-devel
-BuildRequires:  docbook-style-xsl
-BuildRequires:  libxslt
-# BRs for autoreconf
-BuildRequires:  autoconf automake libtool
-BuildRequires:  intltool
-BuildRequires:  gnome-common
-BuildRequires:  yelp-tools
+BuildRequires:  /usr/bin/appstream-util
+BuildRequires:  /usr/bin/xsltproc
 
-Requires:       %{name}-libs = %{version}-%{release}
+Requires:       %{name}-libs%{?_isa} = %{version}-%{release}
 # The gtk3 version of glade was packaged under the name of 'glade3' for a
 # while. However, following upstream naming, 'glade3' package is now the gtk2
 # version and 'glade' package is the gtk3 one. The obsoletes are here to
@@ -60,7 +51,7 @@ a separate library to ease the integration of Glade into other applications.
 
 %package devel
 Summary:        Development files for %{name}
-Requires:       %{name}-libs = %{version}-%{release}
+Requires:       %{name}-libs%{?_isa} = %{version}-%{release}
 Obsoletes:      glade3-libgladeui-devel < 1:3.11.0-3
 
 %description    devel
@@ -70,12 +61,7 @@ developing applications that use Glade widget library.
 
 %prep
 %setup -q
-%patch0 -p1 -b .keywords
-%patch1 -p1 -b .man-pages
 
-aclocal
-autoconf
-automake
 
 %build
 %configure --disable-static
@@ -87,7 +73,7 @@ make %{?_smp_mflags}
 
 
 %install
-make install INSTALL="install -p" DESTDIR=$RPM_BUILD_ROOT
+%make_install
 find $RPM_BUILD_ROOT -type f -name "*.la" -delete
 
 # Remove rpaths.
@@ -98,6 +84,7 @@ chrpath --delete $RPM_BUILD_ROOT%{_libdir}/glade/modules/*.so
 
 
 %check
+appstream-util validate-relax --nonet $RPM_BUILD_ROOT%{_datadir}/appdata/glade.appdata.xml
 desktop-file-validate $RPM_BUILD_ROOT%{_datadir}/applications/glade.desktop
 
 
@@ -121,16 +108,19 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 
 
 %files -f glade.lang
-%doc AUTHORS COPYING* NEWS README
+%license COPYING*
+%doc AUTHORS NEWS README
 %{_bindir}/glade
 %{_bindir}/glade-previewer
 %{_datadir}/applications/glade.desktop
 %{_datadir}/icons/hicolor/*/apps/glade.png
-%{_mandir}/man1/glade.1.gz
-%{_mandir}/man1/glade-previewer.1.gz
+%{_datadir}/icons/hicolor/scalable/apps/glade-symbolic.svg
+%{_datadir}/appdata/glade.appdata.xml
+%{_mandir}/man1/glade.1*
+%{_mandir}/man1/glade-previewer*
 
 %files libs
-%doc COPYING*
+%license COPYING*
 %{_libdir}/girepository-1.0/Gladeui-2.0.typelib
 %dir %{_libdir}/glade/
 %dir %{_libdir}/glade/modules/
@@ -147,6 +137,10 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %doc %{_datadir}/gtk-doc/
 
 %changelog
+* Tue Mar 22 2016 Kalev Lember <klember@redhat.com> - 3.20.0-1
+- Update to 3.20.0
+- Resolves: #1386873
+
 * Fri Jan 24 2014 Daniel Mach <dmach@redhat.com> - 3.15.0-5
 - Mass rebuild 2014-01-24
 

@@ -1,60 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <legalnotice id="legalnotice">
-         <para>
-           Permission is granted to copy, distribute and/or modify this
-           document under the terms of the GNU Free Documentation
-           License (GFDL), Version 1.1 or any later version published
-           by the Free Software Foundation with no Invariant Sections,
-           no Front-Cover Texts, and no Back-Cover Texts.  You can find
-           a copy of the GFDL at this <ulink type="help" url="help:fdl">link</ulink> or in the file COPYING-DOCS
-           distributed with this manual.
-          </para>
-          <para>Tato příručka je součástí kolekce příruček GNOME, distribuovaných pod licencí GNU FDL. Pokud chcete tento dokument šířit odděleně od kolekce, musíte přiložit kopii licence dle popisu v sekci 6 dané licence.</para>
+         <para>Je povoleno kopírovat, šířit a/nebo upravovat tento dokument za podmínek GNU Free Documentation License (GFDL) ve verzi 1.1 nebo v jakékoli další verzi vydané nadací Free Software Foundation; bez neměnných oddílů, bez textů předních desek a bez textů zadních desek. Kopii licence GFDL naleznete pod tímto <ulink type="help" url="help:fdl">odkazem</ulink> nebo v souboru COPYING-DOCS dodávaném s touto příručkou.</para>
+          <para>Tato příručka je součástí sbírky příruček GNOME šířených za podmínek licence GNU FDL. Pokud chcete tento dokument šířit odděleně od sbírky, musíte přiložit kopii licence dle popisu v oddílu 6 dané licence.</para>
  
-         <para>Mnoho užívaných jmen určených k zviditelnění produktů nebo služeb jsou ochranné známky. Na místech, kde jsou tato jména v dokumentaci užita a členové Dokumentačního projektu GNOME jsou si vědomi skutečnosti, že se jedná o ochrannou známku, je takové jméno psáno velkými písmeny celé nebo s velkým písmenem na začátku.</para>
+         <para>Mnoho názvů použitých firmami k zviditelnění produktů nebo služeb jsou ochranné známky. Na místech, kde jsou tyto názvy v dokumentaci použity a členové Dokumentačního projektu GNOME jsou si vědomi skutečnosti, že se jedná o ochrannou známku, je takovýto název psán velkými písmeny celý nebo s velkým písmenem na začátku.</para>
  
-         <para>
-           DOCUMENT AND MODIFIED VERSIONS OF THE DOCUMENT ARE PROVIDED
-           UNDER  THE TERMS OF THE GNU FREE DOCUMENTATION LICENSE
-           WITH THE FURTHER UNDERSTANDING THAT:
- 
-           <orderedlist>
+         <para>DOKUMENT A JEHO UPRAVENÉ VERZE JSOU ŠÍŘENY V SOULADU SE ZNĚNÍM LICENCE GNU FREE DOCUMENTATION LICENSE S NÁSLEDUJÍCÍM USTANOVENÍM: <orderedlist>
                  <listitem>
-                   <para>DOCUMENT IS PROVIDED ON AN "AS IS" BASIS,
-                     WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED OR
-                     IMPLIED, INCLUDING, WITHOUT LIMITATION, WARRANTIES
-                     THAT THE DOCUMENT OR MODIFIED VERSION OF THE
-                     DOCUMENT IS FREE OF DEFECTS MERCHANTABLE, FIT FOR
-                     A PARTICULAR PURPOSE OR NON-INFRINGING. THE ENTIRE
-                     RISK AS TO THE QUALITY, ACCURACY, AND PERFORMANCE
-                     OF THE DOCUMENT OR MODIFIED VERSION OF THE
-                     DOCUMENT IS WITH YOU. SHOULD ANY DOCUMENT OR
-                     MODIFIED VERSION PROVE DEFECTIVE IN ANY RESPECT,
-                     YOU (NOT THE INITIAL WRITER, AUTHOR OR ANY
-                     CONTRIBUTOR) ASSUME THE COST OF ANY NECESSARY
-                     SERVICING, REPAIR OR CORRECTION. THIS DISCLAIMER
-                     OF WARRANTY CONSTITUTES AN ESSENTIAL PART OF THIS
-                     LICENSE. NO USE OF ANY DOCUMENT OR MODIFIED
-                     VERSION OF THE DOCUMENT IS AUTHORIZED HEREUNDER
-                     EXCEPT UNDER THIS DISCLAIMER; AND
-                     UNDER NO CIRCUMSTANCES AND UNDER NO LEGAL
-                     THEORY, WHETHER IN TORT (INCLUDING NEGLIGENCE),
-                     CONTRACT, OR OTHERWISE, SHALL THE AUTHOR,
-                     INITIAL WRITER, ANY CONTRIBUTOR, OR ANY
-                     DISTRIBUTOR OF THE DOCUMENT OR MODIFIED VERSION
-                     OF THE DOCUMENT, OR ANY SUPPLIER OF ANY OF SUCH
-                     PARTIES, BE LIABLE TO ANY PERSON FOR ANY
-                     DIRECT, INDIRECT, SPECIAL, INCIDENTAL, OR
-                     CONSEQUENTIAL DAMAGES OF ANY CHARACTER
-                     INCLUDING, WITHOUT LIMITATION, DAMAGES FOR LOSS
-                     OF GOODWILL, WORK STOPPAGE, COMPUTER FAILURE OR
-                     MALFUNCTION, OR ANY AND ALL OTHER DAMAGES OR
-                     LOSSES ARISING OUT OF OR RELATING TO USE OF THE
-                     DOCUMENT AND MODIFIED VERSIONS OF THE DOCUMENT,
-                     EVEN IF SUCH PARTY SHALL HAVE BEEN INFORMED OF
-                     THE POSSIBILITY OF SUCH DAMAGES.
-                   </para>
+                   <para>DOKUMENT JE POSKYTOVÁN V PODOBĚ „JAK JE“, BEZ ZÁRUKY JAKÉHOKOLIV DRUHU, NEPOSKYTUJÍ SE ANI ODVOZENÉ ZÁRUKY, ZÁRUKY, ŽE DOKUMENT, NEBO JEHO UPRAVENÁ VERZE, JE BEZCHYBNÝ, NEBO ZÁRUKY PRODEJNOSTI, VHODNOSTI PRO URČITÝ ÚČEL, NEBO NEPORUŠENOSTI. RIZIKO NEKVALITY, NEPŘESNOSTI A ŠPATNÉHO PROVEDENÍ DOKUMENTU, NEBO JEHO UPRAVENÉ VERZE, NESETE VY. POKUD JE TENTO DOKUMENT NEBO JEHO UPRAVENÁ VERZE VADNÁ V JAKÉMKOLIV SMYSLU, VY (NIKOLIV PŮVODCE, AUTOR NEBO JAKÝKOLIV PŘISPĚVATEL) PŘEBÍRÁTE ODPOVĚDNOST ZA JAKÉKOLIV NÁKLADY NA NUTNÉ ÚPRAVY, OPRAVY ČI SLUŽBY. TOTO PROHLÁŠENÍ O ZÁRUCE PŘEDSTAVUJE ZÁKLADNÍ SOUČÁST TÉTO LICENCE. BEZ TOHOTO PROHLÁŠENÍ NENÍ PODLE TÉTO DOHODY POVOLENO UŽÍVÁNÍ ANI ÚPRAVY TOHOTO DOKUMENTU; DÁLEZA ŽÁDNÝCH OKOLNOSTÍ A ŽÁDNÝCH PRÁVNÍCH PŘEDPOKLADŮ, AŤ SE JEDNÁ O PŘEČIN (VČETNĚ NEDBALOSTNÍCH), SMLOUVU NEBO JINÉ, NENÍ AUTOR, PŮVODNÍ PISATEL, KTERÝKOLIV PŘISPĚVATEL NEBO KTERÝKOLIV DISTRIBUTOR TOHOTO DOKUMENTU NEBO UPRAVENÉ VERZE DOKUMENTU NEBO KTERÝKOLIV DODAVATEL NĚKTERÉ Z TĚCHTO STRAN ODPOVĚDNÝ NĚJAKÉ OSOBĚ ZA PŘÍMÉ, NEPŘÍMÉ, SPECIÁLNÍ, NAHODILÉ NEBO NÁSLEDNÉ ŠKODY JAKÉHOKOLIV CHARAKTERU, VČETNĚ, ALE NEJEN, ZA POŠKOZENÍ ZE ZTRÁTY DOBRÉHO JMÉNA, PŘERUŠENÍ PRÁCE, PORUCHY NEBO NESPRÁVNÉ FUNKCE POČÍTAČE NEBO JINÉHO A VŠECH DALŠÍCH ŠKOD NEBO ZTRÁT VYVSTÁVAJÍCÍCH Z NEBO VZTAHUJÍCÍCH SE K POUŽÍVÁNÍ TOHOTO DOKUMENTU NEBO UPRAVENÝCH VERZÍ DOKUMENTU, I KDYŽ BY TAKOVÁTO STRANA BYLA INFORMOVANÁ O MOŽNOSTI TAKOVÉHOTO POŠKOZENÍ.</para>
                  </listitem>
-           </orderedlist>
-         </para>
+           </orderedlist></para>
    </legalnotice>

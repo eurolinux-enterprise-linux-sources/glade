@@ -136,13 +136,13 @@ enum
 static GParamSpec *properties[N_PROPERTIES];
 static guint glade_property_signals[LAST_SIGNAL] = { 0 };
 
-static GObjectClass *parent_class = NULL;
+static GObjectClass *glade_property_parent_class = NULL;
 
 /*******************************************************************************
                            GladeProperty class methods
  *******************************************************************************/
 static GladeProperty *
-glade_property_dup_impl (GladeProperty * template_prop, GladeWidget * widget)
+glade_property_dup_impl (GladeProperty *template_prop, GladeWidget *widget)
 {
   GladeProperty *property;
 
@@ -178,8 +178,8 @@ glade_property_dup_impl (GladeProperty * template_prop, GladeWidget * widget)
 }
 
 static gboolean
-glade_property_equals_value_impl (GladeProperty * property,
-                                  const GValue * value)
+glade_property_equals_value_impl (GladeProperty *property,
+                                  const GValue  *value)
 {
   return !glade_property_class_compare (property->priv->klass, property->priv->value,
                                         value);
@@ -187,9 +187,9 @@ glade_property_equals_value_impl (GladeProperty * property,
 
 
 static void
-glade_property_update_prop_refs (GladeProperty * property,
-                                 const GValue * old_value,
-                                 const GValue * new_value)
+glade_property_update_prop_refs (GladeProperty *property,
+                                 const GValue  *old_value,
+                                 const GValue  *new_value)
 {
   GladeWidget *gold, *gnew;
   GObject *old_object, *new_object;
@@ -247,7 +247,7 @@ glade_property_update_prop_refs (GladeProperty * property,
 }
 
 static gboolean
-glade_property_verify (GladeProperty * property, const GValue * value)
+glade_property_verify (GladeProperty *property, const GValue *value)
 {
   gboolean ret = FALSE;
   GladeWidget *parent;
@@ -270,12 +270,21 @@ glade_property_verify (GladeProperty * property, const GValue * value)
 }
 
 static void
-glade_property_fix_state (GladeProperty * property)
+glade_property_fix_state (GladeProperty *property)
 {
   property->priv->state = GLADE_STATE_NORMAL;
 
-  if (!glade_property_original_default (property))
-    property->priv->state = GLADE_STATE_CHANGED;
+  /* Properties are 'changed' state if they are not default, or if 
+   * they are optional and enabled, optional enabled properties
+   * are saved regardless of default value
+   */
+  if (glade_property_class_optional (property->priv->klass))
+    {
+      if (glade_property_get_enabled (property))
+	property->priv->state |= GLADE_STATE_CHANGED;
+    }
+  else if (!glade_property_original_default (property))
+    property->priv->state |= GLADE_STATE_CHANGED;
 
   if (property->priv->support_warning)
     property->priv->state |= GLADE_STATE_UNSUPPORTED;
@@ -288,35 +297,35 @@ glade_property_fix_state (GladeProperty * property)
 
 
 static gboolean
-glade_property_set_value_impl (GladeProperty * property, const GValue * value)
+glade_property_set_value_impl (GladeProperty *property, const GValue *value)
 {
   GladeProject *project = property->priv->widget ?
       glade_widget_get_project (property->priv->widget) : NULL;
   gboolean changed = FALSE;
   GValue old_value = { 0, };
+  gboolean warn_before, warn_after;
 
-#if 0
-  {
-    g_print ("***************************************************\n");
-    g_print ("Setting %s property %s on %s ..\n",
-             property->priv->klass->packing ? "packing" : "normal",
-             property->priv->klass->id,
-             property->priv->widget ? property->priv->widget->name : "unknown");
+#ifdef GLADE_ENABLE_DEBUG
+  if (glade_get_debug_flags () & GLADE_DEBUG_PROPERTIES)
+    {
+      g_print ("PROPERTY: Setting %s property %s on %s ",
+	       glade_property_class_get_is_packing (property->priv->klass) ? "packing" : "normal",
+	       glade_property_class_id (property->priv->klass),
+	       property->priv->widget ? glade_widget_get_name (property->priv->widget) : "unknown");
 
-    gchar *str1 = glade_widget_adaptor_string_from_value
-        (GLADE_WIDGET_ADAPTOR (property->priv->klass->handle),
-         property->priv->klass, property->priv->value);
-    gchar *str2 = glade_widget_adaptor_string_from_value
-        (GLADE_WIDGET_ADAPTOR (property->priv->klass->handle),
-         property->priv->klass, value);
-    g_print ("from %s to %s\n", str1, str2);
-    g_free (str1);
-    g_free (str2);
-  }
-#endif
+      gchar *str1 =
+	glade_widget_adaptor_string_from_value (glade_property_class_get_adaptor (property->priv->klass),
+						property->priv->klass, property->priv->value);
+      gchar *str2 =
+	glade_widget_adaptor_string_from_value (glade_property_class_get_adaptor (property->priv->klass),
+						property->priv->klass, value);
+      g_print ("from %s to %s\n", str1, str2);
+      g_free (str1);
+      g_free (str2);
+    }
+#endif /* GLADE_ENABLE_DEBUG */
 
-  if (!g_value_type_compatible
-      (G_VALUE_TYPE (property->priv->value), G_VALUE_TYPE (value)))
+  if (!g_value_type_compatible (G_VALUE_TYPE (property->priv->value), G_VALUE_TYPE (value)))
     {
       g_warning ("Trying to assign an incompatible value to property %s\n",
                  glade_property_class_id (property->priv->klass));
@@ -337,7 +346,6 @@ glade_property_set_value_impl (GladeProperty * property, const GValue * value)
    */
   changed = !glade_property_equals_value (property, value);
 
-
   /* Add/Remove references from widget ref stacks here
    * (before assigning the value)
    */
@@ -345,6 +353,8 @@ glade_property_set_value_impl (GladeProperty * property, const GValue * value)
       glade_property_class_is_object (property->priv->klass))
     glade_property_update_prop_refs (property, property->priv->value, value);
 
+  /* Check pre-changed warning state */
+  warn_before = glade_property_warn_usage (property);
 
   /* Make a copy of the old value */
   g_value_init (&old_value, G_VALUE_TYPE (property->priv->value));
@@ -367,6 +377,13 @@ glade_property_set_value_impl (GladeProperty * property, const GValue * value)
                      0, &old_value, property->priv->value);
 
       glade_project_verify_property (property);
+
+      /* Check post change warning state */
+      warn_after = glade_property_warn_usage (property);
+
+      /* Update owning widget's warning state if need be */
+      if (property->priv->widget != NULL && warn_before != warn_after)
+	glade_widget_verify (property->priv->widget);
     }
 
   /* Special case parentless widget properties */
@@ -389,7 +406,7 @@ glade_property_set_value_impl (GladeProperty * property, const GValue * value)
 }
 
 static void
-glade_property_get_value_impl (GladeProperty * property, GValue * value)
+glade_property_get_value_impl (GladeProperty *property, GValue *value)
 {
   GParamSpec *pspec;
 
@@ -400,70 +417,71 @@ glade_property_get_value_impl (GladeProperty * property, GValue * value)
 }
 
 static void
-glade_property_sync_impl (GladeProperty * property)
+glade_property_sync_impl (GladeProperty *property)
 {
+  GladePropertyPrivate *priv = property->priv;
+  GladePropertyClass *klass = priv->klass;
+  const GValue *value;
+  const gchar *id;
+
   /* Heh, here are the many reasons not to
    * sync a property ;-)
    */
   if (/* the class can be NULL during object,
        * construction this is just a temporary state */
-       property->priv->klass == NULL ||
-       /* optional properties that are disabled */
-       property->priv->enabled == FALSE ||
+       klass == NULL ||
        /* explicit "never sync" flag */
-       glade_property_class_get_ignore (property->priv->klass) ||
+       glade_property_class_get_ignore (klass) ||
        /* recursion guards */
-       property->priv->syncing >= property->priv->sync_tolerance ||
+       priv->syncing >= priv->sync_tolerance ||
        /* No widget owns this property yet */
-       property->priv->widget == NULL)
+       priv->widget == NULL)
     return;
+
+  id = glade_property_class_id (klass);
 
   /* Only the properties from widget->properties should affect the runtime widget.
    * (other properties may be used for convenience in the plugin).
    */
-  if ((glade_property_class_get_is_packing (property->priv->klass) &&
-       !glade_widget_get_pack_property (property->priv->widget, 
-					glade_property_class_id (property->priv->klass)))
-      || !glade_widget_get_property (property->priv->widget, 
-				     glade_property_class_id (property->priv->klass)))
+  if ((glade_property_class_get_is_packing (klass) &&
+       !glade_widget_get_pack_property (priv->widget, id))
+      || !glade_widget_get_property (priv->widget, id))
     return;
 
-  property->priv->syncing++;
+  priv->syncing++;
+
+  /* optional properties that are disabled get the default runtime value */
+  value = (priv->enabled) ? priv->value : glade_property_class_get_default (klass);
 
   /* In the case of construct_only, the widget instance must be rebuilt
    * to apply the property
    */
-  if (glade_property_class_get_construct_only (property->priv->klass) && 
-      property->priv->syncing == 1)
+  if (glade_property_class_get_construct_only (klass) && priv->syncing == 1)
     {
       /* Virtual properties can be construct only, in which
        * case they are allowed to trigger a rebuild, and in
        * the process are allowed to get "synced" after the
        * instance is rebuilt.
        */
-      if (glade_property_class_get_virtual (property->priv->klass))
-        property->priv->sync_tolerance++;
+      if (glade_property_class_get_virtual (klass))
+        priv->sync_tolerance++;
 
-      glade_widget_rebuild (property->priv->widget);
+      glade_widget_rebuild (priv->widget);
 
-      if (glade_property_class_get_virtual (property->priv->klass))
-        property->priv->sync_tolerance--;
+      if (glade_property_class_get_virtual (klass))
+        priv->sync_tolerance--;
     }
-  else if (glade_property_class_get_is_packing (property->priv->klass))
-    glade_widget_child_set_property (glade_widget_get_parent (property->priv->widget),
-                                     property->priv->widget,
-                                     glade_property_class_id (property->priv->klass), 
-				     property->priv->value);
+  else if (glade_property_class_get_is_packing (klass))
+    glade_widget_child_set_property (glade_widget_get_parent (priv->widget),
+                                     priv->widget, id, value);
   else
-    glade_widget_object_set_property (property->priv->widget,
-                                      glade_property_class_id (property->priv->klass), 
-				      property->priv->value);
+    glade_widget_object_set_property (priv->widget, id, value);
 
-  property->priv->syncing--;
+  priv->syncing--;
 }
 
 static void
-glade_property_load_impl (GladeProperty * property)
+glade_property_load_impl (GladeProperty *property)
 {
   GObject *object;
   GObjectClass *oclass;
@@ -491,9 +509,10 @@ glade_property_load_impl (GladeProperty * property)
                       GObjectClass & Object Construction
  *******************************************************************************/
 static void
-glade_property_set_real_property (GObject * object,
-                                  guint prop_id,
-                                  const GValue * value, GParamSpec * pspec)
+glade_property_set_real_property (GObject      *object,
+                                  guint         prop_id,
+                                  const GValue *value,
+                                  GParamSpec   *pspec)
 {
   GladeProperty *property = GLADE_PROPERTY (object);
 
@@ -525,9 +544,10 @@ glade_property_set_real_property (GObject * object,
 }
 
 static void
-glade_property_get_real_property (GObject * object,
-                                  guint prop_id,
-                                  GValue * value, GParamSpec * pspec)
+glade_property_get_real_property (GObject    *object,
+                                  guint       prop_id,
+                                  GValue     *value,
+                                  GParamSpec *pspec)
 {
   GladeProperty *property = GLADE_PROPERTY (object);
 
@@ -562,7 +582,7 @@ glade_property_get_real_property (GObject * object,
 }
 
 static void
-glade_property_finalize (GObject * object)
+glade_property_finalize (GObject *object)
 {
   GladeProperty *property = GLADE_PROPERTY (object);
 
@@ -580,11 +600,11 @@ glade_property_finalize (GObject * object)
   if (property->priv->insensitive_tooltip)
     g_free (property->priv->insensitive_tooltip);
 
-  G_OBJECT_CLASS (parent_class)->finalize (object);
+  G_OBJECT_CLASS (glade_property_parent_class)->finalize (object);
 }
 
 static void
-glade_property_init (GladeProperty * property)
+glade_property_init (GladeProperty *property)
 {
   property->priv = G_TYPE_INSTANCE_GET_PRIVATE (property,
 						GLADE_TYPE_PROPERTY,
@@ -603,7 +623,7 @@ glade_property_klass_init (GladePropertyKlass * prop_class)
   GObjectClass *object_class;
   g_return_if_fail (prop_class != NULL);
 
-  parent_class = g_type_class_peek_parent (prop_class);
+  glade_property_parent_class = g_type_class_peek_parent (prop_class);
   object_class = G_OBJECT_CLASS (prop_class);
 
   /* GObjectClass */
@@ -740,8 +760,9 @@ glade_property_get_type (void)
  * Returns: The newly created #GladeProperty
  */
 GladeProperty *
-glade_property_new (GladePropertyClass * klass,
-                    GladeWidget * widget, GValue * value)
+glade_property_new (GladePropertyClass *klass,
+                    GladeWidget        *widget,
+                    GValue             *value)
 {
   GladeProperty *property;
 
@@ -764,6 +785,7 @@ glade_property_new (GladePropertyClass * klass,
       g_value_init (property->priv->value, orig_def->g_type);
       g_value_copy (orig_def, property->priv->value);
     }
+
   return property;
 }
 
@@ -775,14 +797,14 @@ glade_property_new (GladePropertyClass * klass,
  * Returns: A newly duplicated property based on the new widget
  */
 GladeProperty *
-glade_property_dup (GladeProperty * template_prop, GladeWidget * widget)
+glade_property_dup (GladeProperty *template_prop, GladeWidget *widget)
 {
   g_return_val_if_fail (GLADE_IS_PROPERTY (template_prop), NULL);
   return GLADE_PROPERTY_GET_KLASS (template_prop)->dup (template_prop, widget);
 }
 
 static void
-glade_property_reset_common (GladeProperty * property, gboolean original)
+glade_property_reset_common (GladeProperty *property, gboolean original)
 {
   const GValue *value;
 
@@ -803,7 +825,7 @@ glade_property_reset_common (GladeProperty * property, gboolean original)
  * Resets this property to its default value
  */
 void
-glade_property_reset (GladeProperty * property)
+glade_property_reset (GladeProperty *property)
 {
   glade_property_reset_common (property, FALSE);
 }
@@ -815,13 +837,13 @@ glade_property_reset (GladeProperty * property)
  * Resets this property to its original default value
  */
 void
-glade_property_original_reset (GladeProperty * property)
+glade_property_original_reset (GladeProperty *property)
 {
   glade_property_reset_common (property, TRUE);
 }
 
 static gboolean
-glade_property_default_common (GladeProperty * property, gboolean orig)
+glade_property_default_common (GladeProperty *property, gboolean orig)
 {
   const GValue *value;
 
@@ -842,7 +864,7 @@ glade_property_default_common (GladeProperty * property, gboolean orig)
  * Returns: Whether this property is at its default value
  */
 gboolean
-glade_property_default (GladeProperty * property)
+glade_property_default (GladeProperty *property)
 {
   return glade_property_default_common (property, FALSE);
 }
@@ -854,7 +876,7 @@ glade_property_default (GladeProperty * property)
  * Returns: Whether this property is at its original default value
  */
 gboolean
-glade_property_original_default (GladeProperty * property)
+glade_property_original_default (GladeProperty *property)
 {
   return glade_property_default_common (property, TRUE);
 }
@@ -867,7 +889,7 @@ glade_property_original_default (GladeProperty * property)
  * Returns: Whether this property is equal to the value provided
  */
 gboolean
-glade_property_equals_value (GladeProperty * property, const GValue * value)
+glade_property_equals_value (GladeProperty *property, const GValue *value)
 {
   g_return_val_if_fail (GLADE_IS_PROPERTY (property), FALSE);
   return GLADE_PROPERTY_GET_KLASS (property)->equals_value (property, value);
@@ -881,7 +903,7 @@ glade_property_equals_value (GladeProperty * property, const GValue * value)
  * Returns: Whether this property is equal to the value provided
  */
 static gboolean
-glade_property_equals_va_list (GladeProperty * property, va_list vl)
+glade_property_equals_va_list (GladeProperty *property, va_list vl)
 {
   GValue *value;
   gboolean ret;
@@ -905,7 +927,7 @@ glade_property_equals_va_list (GladeProperty * property, va_list vl)
  * Returns: Whether this property is equal to the value provided
  */
 gboolean
-glade_property_equals (GladeProperty * property, ...)
+glade_property_equals (GladeProperty *property, ...)
 {
   va_list vl;
   gboolean ret;
@@ -929,7 +951,7 @@ glade_property_equals (GladeProperty * property, ...)
  * Returns: Whether the property was successfully set.
  */
 gboolean
-glade_property_set_value (GladeProperty * property, const GValue * value)
+glade_property_set_value (GladeProperty *property, const GValue *value)
 {
   g_return_val_if_fail (GLADE_IS_PROPERTY (property), FALSE);
   g_return_val_if_fail (value != NULL, FALSE);
@@ -944,7 +966,7 @@ glade_property_set_value (GladeProperty * property, const GValue * value)
  * Sets the property's value
  */
 gboolean
-glade_property_set_va_list (GladeProperty * property, va_list vl)
+glade_property_set_va_list (GladeProperty *property, va_list vl)
 {
   GValue *value;
   gboolean success;
@@ -969,7 +991,7 @@ glade_property_set_va_list (GladeProperty * property, va_list vl)
  * Sets the property's value (in a convenient way)
  */
 gboolean
-glade_property_set (GladeProperty * property, ...)
+glade_property_set (GladeProperty *property, ...)
 {
   va_list vl;
   gboolean success;
@@ -991,7 +1013,7 @@ glade_property_set (GladeProperty * property, ...)
  * Retrieve the property value
  */
 void
-glade_property_get_value (GladeProperty * property, GValue * value)
+glade_property_get_value (GladeProperty *property, GValue *value)
 {
   g_return_if_fail (GLADE_IS_PROPERTY (property));
   g_return_if_fail (value != NULL);
@@ -1006,7 +1028,7 @@ glade_property_get_value (GladeProperty * property, GValue * value)
  * Retrieve the default property value
  */
 void
-glade_property_get_default (GladeProperty * property, GValue * value)
+glade_property_get_default (GladeProperty *property, GValue *value)
 {
   GParamSpec *pspec;
 
@@ -1026,7 +1048,7 @@ glade_property_get_default (GladeProperty * property, GValue * value)
  * Retrieve the property value
  */
 void
-glade_property_get_va_list (GladeProperty * property, va_list vl)
+glade_property_get_va_list (GladeProperty *property, va_list vl)
 {
   g_return_if_fail (GLADE_IS_PROPERTY (property));
   glade_property_class_set_vl_from_gvalue (property->priv->klass, property->priv->value,
@@ -1041,7 +1063,7 @@ glade_property_get_va_list (GladeProperty * property, va_list vl)
  * Retrieve the property value
  */
 void
-glade_property_get (GladeProperty * property, ...)
+glade_property_get (GladeProperty *property, ...)
 {
   va_list vl;
 
@@ -1059,7 +1081,7 @@ glade_property_get (GladeProperty * property, ...)
  * Synchronize the object with this property
  */
 void
-glade_property_sync (GladeProperty * property)
+glade_property_sync (GladeProperty *property)
 {
   g_return_if_fail (GLADE_IS_PROPERTY (property));
   GLADE_PROPERTY_GET_KLASS (property)->sync (property);
@@ -1072,7 +1094,7 @@ glade_property_sync (GladeProperty * property)
  * Loads the value of @property from the coresponding object instance
  */
 void
-glade_property_load (GladeProperty * property)
+glade_property_load (GladeProperty *property)
 {
   g_return_if_fail (GLADE_IS_PROPERTY (property));
   GLADE_PROPERTY_GET_KLASS (property)->load (property);
@@ -1092,8 +1114,9 @@ glade_property_load (GladeProperty * property)
  * completely loaded
  */
 void
-glade_property_read (GladeProperty * property,
-                     GladeProject * project, GladeXmlNode * prop)
+glade_property_read (GladeProperty *property,
+                     GladeProject  *project,
+                     GladeXmlNode  *prop)
 {
   GValue *gvalue = NULL;
   gchar /* *id, *name, */  * value;
@@ -1110,6 +1133,11 @@ glade_property_read (GladeProperty * property,
   if (!(value = glade_xml_get_content (prop)))
     return;
 
+  /* If an optional property is specified in the
+   * glade file, its enabled
+   */
+  property->priv->enabled = TRUE;
+  
   if (glade_property_class_is_object (property->priv->klass))
     {
       /* we must synchronize this directly after loading this project
@@ -1121,11 +1149,6 @@ glade_property_read (GladeProperty * property,
     }
   else
     {
-      /* If an optional property is specified in the
-       * glade file, its enabled
-       */
-      property->priv->enabled = TRUE;
-
       gvalue = 
 	glade_property_class_make_gvalue_from_string (property->priv->klass, value, project);
 
@@ -1159,25 +1182,31 @@ glade_property_read (GladeProperty * property,
  * Write @property to @node
  */
 void
-glade_property_write (GladeProperty * property,
-                      GladeXmlContext * context, GladeXmlNode * node)
+glade_property_write (GladeProperty   *property,
+                      GladeXmlContext *context,
+                      GladeXmlNode    *node)
 {
   GladeXmlNode *prop_node;
   gchar *name, *value;
+  gboolean save_always;
 
   g_return_if_fail (GLADE_IS_PROPERTY (property));
   g_return_if_fail (node != NULL);
 
-  /* This code should work the same for <packing> and <widget> */
+  /* This code should work the same for <packing>, <widget> and <template> */
   if (!(glade_xml_node_verify_silent (node, GLADE_XML_TAG_PACKING) ||
-        glade_xml_node_verify_silent (node, GLADE_XML_TAG_WIDGET)))
+        glade_xml_node_verify_silent (node, GLADE_XML_TAG_WIDGET) ||
+	glade_xml_node_verify_silent (node, GLADE_XML_TAG_TEMPLATE)))
     return;
+
+  /* There can be a couple of reasons to forcefully save a property */
+  save_always = (glade_property_class_save_always (property->priv->klass) || property->priv->save_always);
+  save_always = save_always || (glade_property_class_optional (property->priv->klass) && property->priv->enabled);
 
   /* Skip properties that are default by original pspec default
    * (excepting those that specified otherwise).
    */
-  if (!(glade_property_class_save_always (property->priv->klass) || property->priv->save_always) &&
-      glade_property_original_default (property))
+  if (!save_always && glade_property_original_default (property))
     return;
 
   /* Escape our string and save with underscores */
@@ -1234,7 +1263,7 @@ glade_property_write (GladeProperty * property,
  * or #GParamSpecObject type property.
  */
 void
-glade_property_add_object (GladeProperty * property, GObject * object)
+glade_property_add_object (GladeProperty *property, GObject *object)
 {
   GList *list = NULL, *new_list = NULL;
   GParamSpec *pspec;
@@ -1277,7 +1306,7 @@ glade_property_add_object (GladeProperty * property, GObject * object)
  * or #GParamSpecObject type property.
  */
 void
-glade_property_remove_object (GladeProperty * property, GObject * object)
+glade_property_remove_object (GladeProperty *property, GObject *object)
 {
   GList *list = NULL, *new_list = NULL;
   GParamSpec *pspec;
@@ -1323,7 +1352,7 @@ glade_property_get_class (GladeProperty *property)
 
 /* Parameters for translatable properties. */
 void
-glade_property_i18n_set_comment (GladeProperty * property, const gchar * str)
+glade_property_i18n_set_comment (GladeProperty *property, const gchar *str)
 {
   g_return_if_fail (GLADE_IS_PROPERTY (property));
   if (property->priv->i18n_comment)
@@ -1341,7 +1370,7 @@ glade_property_i18n_get_comment (GladeProperty * property)
 }
 
 void
-glade_property_i18n_set_context (GladeProperty * property, const gchar * str)
+glade_property_i18n_set_context (GladeProperty *property, const gchar *str)
 {
   g_return_if_fail (GLADE_IS_PROPERTY (property));
   if (property->priv->i18n_context)
@@ -1352,15 +1381,15 @@ glade_property_i18n_set_context (GladeProperty * property, const gchar * str)
 }
 
 G_CONST_RETURN gchar *
-glade_property_i18n_get_context (GladeProperty * property)
+glade_property_i18n_get_context (GladeProperty *property)
 {
   g_return_val_if_fail (GLADE_IS_PROPERTY (property), NULL);
   return property->priv->i18n_context;
 }
 
 void
-glade_property_i18n_set_translatable (GladeProperty * property,
-                                      gboolean translatable)
+glade_property_i18n_set_translatable (GladeProperty *property,
+                                      gboolean      translatable)
 {
   g_return_if_fail (GLADE_IS_PROPERTY (property));
   property->priv->i18n_translatable = translatable;
@@ -1368,15 +1397,16 @@ glade_property_i18n_set_translatable (GladeProperty * property,
 }
 
 gboolean
-glade_property_i18n_get_translatable (GladeProperty * property)
+glade_property_i18n_get_translatable (GladeProperty *property)
 {
   g_return_val_if_fail (GLADE_IS_PROPERTY (property), FALSE);
   return property->priv->i18n_translatable;
 }
 
 void
-glade_property_set_sensitive (GladeProperty * property,
-                              gboolean sensitive, const gchar * reason)
+glade_property_set_sensitive (GladeProperty *property,
+                              gboolean       sensitive,
+                              const gchar   *reason)
 {
   g_return_if_fail (GLADE_IS_PROPERTY (property));
 
@@ -1416,17 +1446,23 @@ glade_propert_get_insensitive_tooltip (GladeProperty *property)
 }
 
 gboolean
-glade_property_get_sensitive (GladeProperty * property)
+glade_property_get_sensitive (GladeProperty *property)
 {
   g_return_val_if_fail (GLADE_IS_PROPERTY (property), FALSE);
   return property->priv->sensitive;
 }
 
 void
-glade_property_set_support_warning (GladeProperty * property,
-                                    gboolean disable, const gchar * reason)
+glade_property_set_support_warning (GladeProperty *property,
+                                    gboolean       disable,
+                                    const gchar   *reason)
 {
+  gboolean warn_before, warn_after;
+
   g_return_if_fail (GLADE_IS_PROPERTY (property));
+
+  /* Check pre-changed warning state */
+  warn_before = glade_property_warn_usage (property);
 
   if (property->priv->support_warning)
     g_free (property->priv->support_warning);
@@ -1442,6 +1478,13 @@ glade_property_set_support_warning (GladeProperty * property,
 		 property->priv->support_warning);
 
   glade_property_fix_state (property);
+
+  /* Check post-changed warning state */
+  warn_after = glade_property_warn_usage (property);
+
+  /* Update owning widget's warning state if need be */
+  if (property->priv->widget != NULL && warn_before != warn_after)
+    glade_widget_verify (property->priv->widget);
 }
 
 G_CONST_RETURN gchar *
@@ -1452,6 +1495,16 @@ glade_property_get_support_warning (GladeProperty *property)
   return property->priv->support_warning;
 }
 
+gboolean
+glade_property_warn_usage (GladeProperty *property)
+{
+  g_return_val_if_fail (GLADE_IS_PROPERTY (property), FALSE);
+
+  if (!property->priv->support_warning)
+    return FALSE;
+
+  return ((property->priv->state & GLADE_STATE_CHANGED) != 0);
+}
 
 /**
  * glade_property_set_save_always:
@@ -1465,7 +1518,7 @@ glade_property_get_support_warning (GladeProperty *property)
  * or derived widget code).
  */
 void
-glade_property_set_save_always (GladeProperty * property, gboolean setting)
+glade_property_set_save_always (GladeProperty *property, gboolean setting)
 {
   g_return_if_fail (GLADE_IS_PROPERTY (property));
 
@@ -1480,7 +1533,7 @@ glade_property_set_save_always (GladeProperty * property, gboolean setting)
  * to always be saved regardless of its default value.
  */
 gboolean
-glade_property_get_save_always (GladeProperty * property)
+glade_property_get_save_always (GladeProperty *property)
 {
   g_return_val_if_fail (GLADE_IS_PROPERTY (property), FALSE);
 
@@ -1488,15 +1541,26 @@ glade_property_get_save_always (GladeProperty * property)
 }
 
 void
-glade_property_set_enabled (GladeProperty * property, gboolean enabled)
+glade_property_set_enabled (GladeProperty *property, gboolean enabled)
 {
+  gboolean warn_before, warn_after;
+
   g_return_if_fail (GLADE_IS_PROPERTY (property));
 
+  /* Check pre-changed warning state */
+  warn_before = glade_property_warn_usage (property);
+
   property->priv->enabled = enabled;
-  if (enabled)
-    glade_property_sync (property);
+  glade_property_sync (property);
 
   glade_property_fix_state (property);
+
+  /* Check post-changed warning state */
+  warn_after = glade_property_warn_usage (property);
+
+  /* Update owning widget's warning state if need be */
+  if (property->priv->widget != NULL && warn_before != warn_after)
+    glade_widget_verify (property->priv->widget);
 
   g_object_notify_by_pspec (G_OBJECT (property), properties[PROP_ENABLED]);
 }
@@ -1518,8 +1582,8 @@ glade_property_make_string (GladeProperty *property)
 }
 
 void
-glade_property_set_widget (GladeProperty      *property,
-			   GladeWidget        *widget)
+glade_property_set_widget (GladeProperty *property,
+			   GladeWidget   *widget)
 {
   g_return_if_fail (GLADE_IS_PROPERTY (property));
 
@@ -1527,7 +1591,7 @@ glade_property_set_widget (GladeProperty      *property,
 }
 
 GladeWidget *
-glade_property_get_widget (GladeProperty      *property)
+glade_property_get_widget (GladeProperty *property)
 {
   g_return_val_if_fail (GLADE_IS_PROPERTY (property), NULL);
 
@@ -1543,7 +1607,7 @@ glade_property_inline_value (GladeProperty *property)
 }
 
 GladePropertyState
-glade_property_get_state (GladeProperty      *property)
+glade_property_get_state (GladeProperty *property)
 {
   g_return_val_if_fail (GLADE_IS_PROPERTY (property), 0);
 

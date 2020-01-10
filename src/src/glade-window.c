@@ -29,8 +29,8 @@
 #include "glade-window.h"
 #include "glade-close-button.h"
 #include "glade-resources.h"
-#include "glade-callbacks.h"
 #include "glade-preferences.h"
+#include "glade-registration.h"
 
 #include <gladeui/glade.h>
 #include <gladeui/glade-popup.h>
@@ -69,10 +69,14 @@
 #define CONFIG_KEY_SHOW_TOOLBAR     "show-toolbar"
 #define CONFIG_KEY_SHOW_TABS        "show-tabs"
 #define CONFIG_KEY_SHOW_STATUS      "show-statusbar"
+#define CONFIG_KEY_EDITOR_HEADER    "show-editor-header"
+#define CONFIG_KEY_PALETTE          "palette-appearance"
+#define CONFIG_KEY_PALETTE_SMALL    "palette-small-icons"
 
-#define GLADE_WINDOW_GET_PRIVATE(object) (G_TYPE_INSTANCE_GET_PRIVATE ((object),  \
-					  GLADE_TYPE_WINDOW,                      \
-					  GladeWindowPrivate))
+#define CONFIG_GROUP_LOAD_SAVE      "Load and Save"
+#define CONFIG_KEY_BACKUP           "backup"
+#define CONFIG_KEY_AUTOSAVE         "autosave"
+#define CONFIG_KEY_AUTOSAVE_SECONDS "autosave-seconds"
 
 enum
 {
@@ -100,63 +104,72 @@ struct _GladeWindowPrivate
 
   GtkWidget *main_vbox;
 
-  GtkWidget *notebook;
+  GtkWidget *notebook, *notebook_frame;
   GladeDesignView *active_view;
   gint num_tabs;
 
   GtkWindow *about_dialog;
   GladePreferences *preferences;
   
-  GtkWidget *palettes_notebook;         /* Cached per project palettes */
-  GtkWidget *inspectors_notebook;       /* Cached per project inspectors */
+  GtkNotebook *palettes_notebook;         /* Cached per project palettes */
+  GtkNotebook *inspectors_notebook;       /* Cached per project inspectors */
 
   GladeEditor  *editor;                 /* The editor */
 
   GtkWidget *statusbar;                 /* A pointer to the status bar. */
+  guint statusbar_context_id;           /* The context id of general messages */
   guint statusbar_menu_context_id;      /* The context id of the menu bar */
   guint statusbar_actions_context_id;   /* The context id of actions messages */
 
   GtkAccelGroup *accelgroup;
-  
-  struct
-	{
-	  GtkAction *save, *quit;
-	  GtkAction *undo, *redo, *cut, *copy, *paste, *delete;
-	  GtkAction *previous_project, *next_project;
-	  GtkAction *use_small_icons, *icons_and_labels;
-	  GtkAction *toolbar_visible, *project_tabs_visible, *statusbar_visible;
-	  GtkAction *selector;
-	} action;
 
-  GtkActionGroup *project_actions;      /* All the project actions */
-  GtkActionGroup *pointer_mode_actions;
-  GtkActionGroup *projects_list_menu_actions;   /* Projects list menu actions */
+  GtkAction *save_action, *quit_action;
+  GtkAction *undo_action, *redo_action, *cut_action, *copy_action, *paste_action, *delete_action;
+  GtkAction *previous_project_action, *next_project_action;
+  GtkAction *use_small_icons_action, *icons_and_labels_radioaction;
+  GtkAction *toolbar_visible_action, *project_tabs_visible_action, *statusbar_visible_action, *editor_header_visible_action;
+  GtkAction *selector_radioaction;
+  GtkAction *dock_palette_action, *dock_inspector_action, *dock_editor_action;
 
+  GtkActionGroup *project_actiongroup;      /* All the project actions */
+  GtkActionGroup *pointer_mode_actiongroup;
+  GtkActionGroup *project_list_actiongroup; /* Projects list menu actions */
+  GtkActionGroup *static_actiongroup;
+  GtkActionGroup *view_actiongroup;
+
+  GtkMenuShell *menubar;
   GtkMenuShell *project_menu;
   
   GtkRecentManager *recent_manager;
   GtkWidget *recent_menu;
 
+  GtkWidget *quit_menuitem;
+  GtkWidget *about_menuitem;
+  GtkWidget *properties_menuitem;
+  GtkMenuItem *help_menuitem;
+
   gchar *default_path;          /* the default path for open/save operations */
 
-  GtkToolItem *undo;            /* customized buttons for undo/redo with history */
-  GtkToolItem *redo;
+  GtkToolItem *undo_toolbutton; /* customized buttons for undo/redo with history */
+  GtkToolItem *redo_toolbutton;
 
   GtkWidget *toolbar;           /* Actions are added to the toolbar */
   gint actions_start;           /* start of action items */
 
-  GtkWidget *center_pane;
+  GtkWidget *center_paned;
   /* paned windows that tools get docked into/out of */
-  GtkWidget *left_pane;
-  GtkWidget *right_pane;
+  GtkWidget *left_paned;
+  GtkWidget *right_paned;
 
+  GtkWidget *registration;      /* Registration and user survey dialog */
+  
   GdkRectangle position;
   ToolDock docks[N_DOCKS];
 };
 
-static void check_reload_project (GladeWindow * window, GladeProject * project);
+static void check_reload_project (GladeWindow *window, GladeProject *project);
 
-G_DEFINE_TYPE (GladeWindow, glade_window, GTK_TYPE_WINDOW)
+G_DEFINE_TYPE_WITH_PRIVATE (GladeWindow, glade_window, GTK_TYPE_WINDOW)
 
 /* the following functions are taken from gedit-utils.c */
 static gchar *
@@ -404,6 +417,7 @@ add_actions (GladeWindow *window, GladeWidget *widget, GList *actions)
     {
       GladeWidgetAction *action = l->data;
       GWActionClass     *aclass = glade_widget_action_get_class (action);
+      GtkWidget         *image;
 
       if (!aclass->important || !glade_widget_action_get_visible (action))
         continue;
@@ -414,12 +428,11 @@ add_actions (GladeWindow *window, GladeWidget *widget, GList *actions)
           continue;
         }
 
-      item = gtk_tool_button_new_from_stock ((aclass->stock) ? aclass->stock : "gtk-execute");
+      image = gtk_image_new_from_icon_name ((aclass->stock) ? aclass->stock : "system-run",
+                                            GTK_ICON_SIZE_LARGE_TOOLBAR);
+      item = gtk_tool_button_new (image, NULL);
       if (aclass->label)
-	{
-	  gtk_tool_button_set_label (GTK_TOOL_BUTTON (item), aclass->label);
-	  gtk_widget_set_tooltip_text (GTK_WIDGET (item), aclass->label);
-	}
+        gtk_widget_set_tooltip_text (GTK_WIDGET (item), aclass->label);
 
       g_object_set_data (G_OBJECT (item), "glade-widget", widget);
 
@@ -439,7 +452,7 @@ add_actions (GladeWindow *window, GladeWidget *widget, GList *actions)
 
       gtk_toolbar_insert (bar, item, -1);
       gtk_tool_item_set_homogeneous (item, FALSE);
-      gtk_widget_show (GTK_WIDGET (item));
+      gtk_widget_show_all (GTK_WIDGET (item));
       n++;
     }
 
@@ -638,32 +651,91 @@ refresh_undo_redo (GladeWindow *window, GladeProject *project)
     }
 
   /* Refresh Undo */
-  gtk_action_set_sensitive (priv->action.undo, undo != NULL);
+  gtk_action_set_sensitive (priv->undo_action, undo != NULL);
 
-  change_menu_label (priv->action.undo, _("_Undo"),
+  change_menu_label (priv->undo_action, _("_Undo"),
                      undo ? glade_command_description (undo) : NULL);
 
   tooltip = g_strdup_printf (_("Undo: %s"),
                              undo ? glade_command_description (undo) : _("the last action"));
-  g_object_set (priv->action.undo, "tooltip", tooltip, NULL);
+  g_object_set (priv->undo_action, "tooltip", tooltip, NULL);
   g_free (tooltip);
 
   /* Refresh Redo */
-  gtk_action_set_sensitive (priv->action.redo, redo != NULL);
+  gtk_action_set_sensitive (priv->redo_action, redo != NULL);
 
-  change_menu_label (priv->action.redo, _("_Redo"),
+  change_menu_label (priv->redo_action, _("_Redo"),
                      redo ? glade_command_description (redo) : NULL);
 
   tooltip = g_strdup_printf (_("Redo: %s"),
                              redo ? glade_command_description (redo) : _("the last action"));
-  g_object_set (priv->action.redo, "tooltip", tooltip, NULL);
+  g_object_set (priv->redo_action, "tooltip", tooltip, NULL);
   g_free (tooltip);
 
   /* Refresh menus */
-  gtk_menu_tool_button_set_menu (GTK_MENU_TOOL_BUTTON (priv->undo),
+  gtk_menu_tool_button_set_menu (GTK_MENU_TOOL_BUTTON (priv->undo_toolbutton),
                                  glade_project_undo_items (project));
-  gtk_menu_tool_button_set_menu (GTK_MENU_TOOL_BUTTON (priv->redo),
+  gtk_menu_tool_button_set_menu (GTK_MENU_TOOL_BUTTON (priv->redo_toolbutton),
                                  glade_project_redo_items (project));
+}
+
+static void
+cancel_autosave (gpointer data)
+{
+  guint autosave_id = GPOINTER_TO_UINT (data);
+
+  g_source_remove (autosave_id);
+}
+
+static gboolean
+autosave_project (gpointer data)
+{
+  GladeProject *project = (GladeProject *)data;
+  GladeWindow *window = GLADE_WINDOW (glade_app_get_window ());
+  gchar *display_name;
+
+  display_name = glade_project_get_name (project);
+
+  if (glade_project_autosave (project, NULL))
+    glade_util_flash_message (window->priv->statusbar,
+			      window->priv->statusbar_actions_context_id,
+			      _("Autosaving '%s'"), display_name);
+  else
+    /* This is problematic, should we be more intrusive and popup a dialog ? */
+    glade_util_flash_message (window->priv->statusbar,
+			      window->priv->statusbar_actions_context_id,
+			      _("Error autosaving '%s'"), display_name);
+
+  g_free (display_name);
+
+  /* This will remove the source id */
+  g_object_set_data (G_OBJECT (project), "glade-autosave-id", NULL);
+  return FALSE;
+}
+
+static void
+project_queue_autosave (GladeWindow  *window,
+			GladeProject *project)
+{
+  if (glade_project_get_path (project) != NULL &&
+      glade_project_get_modified (project) &&
+      glade_preferences_autosave (window->priv->preferences))
+    {
+      guint autosave_id =
+	g_timeout_add_seconds (glade_preferences_autosave_seconds (window->priv->preferences),
+			       autosave_project, project);
+
+      g_object_set_data_full (G_OBJECT (project), "glade-autosave-id",
+			      GUINT_TO_POINTER (autosave_id), cancel_autosave);
+    }
+  else
+      g_object_set_data (G_OBJECT (project), "glade-autosave-id", NULL);
+}
+
+static void
+project_cancel_autosave (GladeProject *project)
+{
+  g_object_set_data (G_OBJECT (project), "glade-autosave-id", NULL);
 }
 
 static void
@@ -673,9 +745,11 @@ project_changed_cb (GladeProject *project,
                     GladeWindow  *window)
 {
   GladeProject *active_project = get_active_project (window);
-  
+
   if (project == active_project)
     refresh_undo_redo (window, project);
+
+  project_queue_autosave (window, project);
 }
 
 static void
@@ -720,17 +794,17 @@ refresh_next_prev_project_sensitivity (GladeWindow *window)
                                                 GTK_WIDGET (view));
       g_return_if_fail (view_number >= 0);
 
-      gtk_action_set_sensitive (priv->action.previous_project, view_number != 0);
+      gtk_action_set_sensitive (priv->previous_project_action, view_number != 0);
 
-      gtk_action_set_sensitive (priv->action.next_project,
+      gtk_action_set_sensitive (priv->next_project_action,
                                 view_number <
                                 gtk_notebook_get_n_pages (GTK_NOTEBOOK
                                                           (priv->notebook)) - 1);
     }
   else
     {
-      gtk_action_set_sensitive (priv->action.previous_project, FALSE);
-      gtk_action_set_sensitive (priv->action.next_project, FALSE);
+      gtk_action_set_sensitive (priv->previous_project_action, FALSE);
+      gtk_action_set_sensitive (priv->next_project_action, FALSE);
     }
 }
 
@@ -761,15 +835,15 @@ project_notify_handler_cb (GladeProject *project,
     {
       refresh_notebook_tab_for_project (window, project);
 
-      gtk_action_set_sensitive (priv->action.save, !glade_project_get_readonly (project));
+      gtk_action_set_sensitive (priv->save_action, !glade_project_get_readonly (project));
     }
   else if (strcmp (spec->name, "has-selection") == 0 && (project == active_project))
     {
-      gtk_action_set_sensitive (priv->action.cut,
+      gtk_action_set_sensitive (priv->cut_action,
                                 glade_project_get_has_selection (project));
-      gtk_action_set_sensitive (priv->action.copy,
+      gtk_action_set_sensitive (priv->copy_action,
                                 glade_project_get_has_selection (project));
-      gtk_action_set_sensitive (priv->action.delete,
+      gtk_action_set_sensitive (priv->delete_action,
                                 glade_project_get_has_selection (project));
     }
 }
@@ -781,7 +855,7 @@ clipboard_notify_handler_cb (GladeClipboard *clipboard,
 {
   if (strcmp (spec->name, "has-selection") == 0)
     {
-      gtk_action_set_sensitive (window->priv->action.paste,
+      gtk_action_set_sensitive (window->priv->paste_action,
                                 glade_clipboard_get_has_selection (clipboard));
     }
 }
@@ -797,7 +871,7 @@ on_pointer_mode_changed (GladeProject *project,
   
   if (!active_project)
     {
-      gtk_action_group_set_sensitive (priv->pointer_mode_actions, FALSE);
+      gtk_action_group_set_sensitive (priv->pointer_mode_actiongroup, FALSE);
       return;
     }
   else if (active_project != project)
@@ -806,8 +880,8 @@ on_pointer_mode_changed (GladeProject *project,
   mode = glade_project_get_pointer_mode (project);
   if (mode == GLADE_POINTER_ADD_WIDGET) return;
 
-  gtk_action_group_set_sensitive (priv->pointer_mode_actions, TRUE);
-  gtk_radio_action_set_current_value (GTK_RADIO_ACTION (priv->action.selector),
+  gtk_action_group_set_sensitive (priv->pointer_mode_actiongroup, TRUE);
+  gtk_radio_action_set_current_value (GTK_RADIO_ACTION (priv->selector_radioaction),
                                       mode);
 }
 
@@ -817,36 +891,56 @@ set_sensitivity_according_to_project (GladeWindow  *window,
 {
   GladeWindowPrivate *priv = window->priv;
 
-  gtk_action_set_sensitive (priv->action.save, !glade_project_get_readonly (project));
+  gtk_action_set_sensitive (priv->save_action, !glade_project_get_readonly (project));
 
-  gtk_action_set_sensitive (priv->action.cut, glade_project_get_has_selection (project));
+  gtk_action_set_sensitive (priv->cut_action, glade_project_get_has_selection (project));
 
-  gtk_action_set_sensitive (priv->action.copy, glade_project_get_has_selection (project));
+  gtk_action_set_sensitive (priv->copy_action, glade_project_get_has_selection (project));
 
-  gtk_action_set_sensitive (priv->action.paste,
+  gtk_action_set_sensitive (priv->paste_action,
                             glade_clipboard_get_has_selection
                             (glade_app_get_clipboard ()));
 
-  gtk_action_set_sensitive (priv->action.delete, glade_project_get_has_selection (project));
+  gtk_action_set_sensitive (priv->delete_action, glade_project_get_has_selection (project));
 
   refresh_next_prev_project_sensitivity (window);
+}
+
+static gchar *
+get_uri_from_project_path (const gchar *path)
+{
+  GError *error = NULL;
+  gchar *uri = NULL;
+  
+  if (g_path_is_absolute (path))
+    uri = g_filename_to_uri (path, NULL, &error);
+  else
+    {
+      gchar *cwd = g_get_current_dir ();
+      gchar *fullpath = g_build_filename (cwd, path, NULL);
+      uri = g_filename_to_uri (fullpath, NULL, &error);
+      g_free (cwd);
+      g_free (fullpath);
+    }
+    
+  if (error)
+    {
+      g_warning ("Could not convert local path \"%s\" to a uri: %s", path, error->message);
+      g_error_free (error);
+    }
+
+  return uri;
 }
 
 static void
 recent_add (GladeWindow *window, const gchar *path)
 {
+  gchar *uri = get_uri_from_project_path (path);
   GtkRecentData *recent_data;
-  gchar *uri;
-  GError *error = NULL;
 
-  uri = g_filename_to_uri (path, NULL, &error);
-  if (error)
-    {
-      g_warning ("Could not convert local path \"%s\" to a uri: %s", path, error->message);
-      g_error_free (error);
-      return;
-    }
-
+  if (!uri)
+    return;
+  
   recent_data = g_slice_new (GtkRecentData);
 
   recent_data->display_name = NULL;
@@ -862,22 +956,15 @@ recent_add (GladeWindow *window, const gchar *path)
   g_free (uri);
   g_free (recent_data->app_exec);
   g_slice_free (GtkRecentData, recent_data);
-
 }
 
 static void
 recent_remove (GladeWindow * window, const gchar * path)
 {
-  gchar *uri;
-  GError *error = NULL;
+  gchar *uri = get_uri_from_project_path (path);
 
-  uri = g_filename_to_uri (path, NULL, &error);
-  if (error)
-    {
-      g_warning ("Could not convert local path \"%s\" to a uri: %s", path, error->message);
-      g_error_free (error);
-      return;
-    }
+  if (!uri)
+    return;
 
   gtk_recent_manager_remove_item (window->priv->recent_manager, uri, NULL);
 
@@ -933,22 +1020,26 @@ refresh_projects_list_menu (GladeWindow *window)
   gint n, i;
 
   /* Remove all current actions */
-  actions = gtk_action_group_list_actions (priv->projects_list_menu_actions);
+  actions = gtk_action_group_list_actions (priv->project_list_actiongroup);
   for (l = actions; l != NULL; l = l->next)
     {
       GtkAction *action = l->data;
       GSList *p, *proxies = gtk_action_get_proxies (action);
+      GSList *proxies_copy;
 
       /* Remove MenuItems */
-      for (p = proxies; p; p = g_slist_next (p))
-        if (GTK_IS_MENU_ITEM (p->data)) gtk_widget_destroy (p->data);
+      proxies_copy = g_slist_copy (proxies);
+      for (p = proxies_copy; p; p = g_slist_next (p))
+        if (GTK_IS_MENU_ITEM (p->data))
+	  gtk_widget_destroy (p->data);
+      g_slist_free (proxies_copy);
 
       g_signal_handlers_disconnect_by_func (action,
                                             G_CALLBACK (projects_list_menu_activate_cb),
                                             window);
       gtk_accel_group_disconnect (priv->accelgroup,
                                   gtk_action_get_accel_closure (action));
-      gtk_action_group_remove_action (priv->projects_list_menu_actions, action);
+      gtk_action_group_remove_action (priv->project_list_actiongroup, action);
     }
   g_list_free (actions);
 
@@ -999,7 +1090,7 @@ refresh_projects_list_menu (GladeWindow *window)
       gtk_radio_action_set_group (action, group);
       group = gtk_radio_action_get_group (action);
 
-      gtk_action_group_add_action_with_accel (priv->projects_list_menu_actions,
+      gtk_action_group_add_action_with_accel (priv->project_list_actiongroup,
                                               GTK_ACTION (action), accel);
       gtk_accel_group_connect_by_path (priv->accelgroup,
                                        gtk_action_get_accel_path (GTK_ACTION (action)),
@@ -1026,7 +1117,7 @@ refresh_projects_list_menu (GladeWindow *window)
     }
 }
 
-void
+static void
 on_open_action_activate (GtkAction *action, GladeWindow *window)
 {
   GtkWidget *filechooser;
@@ -1073,11 +1164,59 @@ check_loading_project_for_save (GladeProject *project)
   return FALSE;
 }
 
+static gboolean
+do_save (GladeWindow *window, GladeProject *project, const gchar *path)
+{
+  GError *error = NULL;
+  GladeVerifyFlags verify_flags = 0;
+  gchar *display_path = g_strdup (path);
+
+  if (glade_preferences_backup (window->priv->preferences) &&
+      !glade_project_backup (project, path, NULL))
+    {
+      if (!glade_util_ui_message (GTK_WIDGET (window),
+				  GLADE_UI_ARE_YOU_SURE, NULL,
+				  _("Failed to backup existing file, continue saving?")))
+	{
+	  g_free (display_path);
+	  return FALSE;
+	}
+    }
+
+  if (glade_preferences_warn_versioning (window->priv->preferences))
+    verify_flags |= GLADE_VERIFY_VERSIONS;
+  if (glade_preferences_warn_deprecations (window->priv->preferences))
+    verify_flags |= GLADE_VERIFY_DEPRECATIONS;
+  if (glade_preferences_warn_unrecognized (window->priv->preferences))
+    verify_flags |= GLADE_VERIFY_UNRECOGNIZED;
+
+  if (!glade_project_save_verify (project, path, verify_flags, &error))
+    {
+      if (error)
+        {
+	  /* Reset path so future saves will prompt the file chooser */
+	  glade_project_reset_path (project);
+
+          glade_util_ui_message (GTK_WIDGET (window), GLADE_UI_ERROR, NULL,
+                                 _("Failed to save %s: %s"),
+                                 display_path, error->message);
+          g_error_free (error);
+        }
+      g_free (display_path);
+      return FALSE;
+    }
+
+  /* Cancel any queued autosave when explicitly saving */
+  project_cancel_autosave (project);
+
+  g_free (display_path);
+  return TRUE;
+}
+
 static void
 save (GladeWindow *window, GladeProject *project, const gchar *path)
 {
-  GError *error = NULL;
-  gchar *display_name, *display_path = g_strdup (path);
+  gchar *display_name;
   time_t mtime;
   GtkWidget *dialog;
   GtkWidget *button;
@@ -1109,8 +1248,8 @@ save (GladeWindow *window, GladeProject *project, const gchar *path)
 
 	  button = gtk_button_new_with_mnemonic (_("_Save Anyway"));
 	  gtk_button_set_image (GTK_BUTTON (button),
-				gtk_image_new_from_stock (GTK_STOCK_SAVE,
-							  GTK_ICON_SIZE_BUTTON));
+				gtk_image_new_from_icon_name ("document-save",
+                                                              GTK_ICON_SIZE_BUTTON));
 	  gtk_widget_show (button);
 
 	  gtk_dialog_add_action_widget (GTK_DIALOG (dialog), button,
@@ -1126,31 +1265,15 @@ save (GladeWindow *window, GladeProject *project, const gchar *path)
 	  gtk_widget_destroy (dialog);
 
 	  if (response == GTK_RESPONSE_REJECT)
-	    {
-	      g_free (display_path);
-	      return;
-	    }
+	    return;
 	}
     }
 
   /* Interestingly; we cannot use `path' after glade_project_reset_path
    * because we are getting called with glade_project_get_path (project) as an argument.
    */
-  if (!glade_project_save (project, path, &error))
-    {
-      /* Reset path so future saves will prompt the file chooser */
-      glade_project_reset_path (project);
-
-      if (error)
-        {
-          glade_util_ui_message (GTK_WIDGET (window), GLADE_UI_ERROR, NULL,
-                                 _("Failed to save %s: %s"),
-                                 display_path, error->message);
-          g_error_free (error);
-        }
-      g_free (display_path);
-      return;
-    }
+  if (!do_save (window, project, path))
+    return;
 
   /* Get display_name here, it could have changed with "Save As..." */
   display_name = glade_project_get_name (project);
@@ -1167,8 +1290,16 @@ save (GladeWindow *window, GladeProject *project, const gchar *path)
                             window->priv->statusbar_actions_context_id,
                             _("Project '%s' saved"), display_name);
 
-  g_free (display_path);
   g_free (display_name);
+}
+
+static gboolean
+path_has_extension (const gchar *path)
+{
+  gchar *basename = g_path_get_basename (path);
+  gboolean retval = g_utf8_strrchr (basename, -1, '.') != NULL;
+  g_free (basename);
+  return retval;
 }
 
 static void
@@ -1178,7 +1309,7 @@ save_as (GladeWindow *window)
   GtkWidget *filechooser;
   GtkWidget *dialog;
   gchar *path = NULL;
-  gchar *real_path, *ch, *project_name;
+  gchar *project_name;
 
   project = glade_design_view_get_project (window->priv->active_view);
 
@@ -1213,31 +1344,47 @@ save_as (GladeWindow *window)
       g_free (project_name);
     }
 
-  if (gtk_dialog_run (GTK_DIALOG (filechooser)) == GTK_RESPONSE_OK)
-    path = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (filechooser));
+  while (gtk_dialog_run (GTK_DIALOG (filechooser)) == GTK_RESPONSE_OK)
+    {
+      path = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (filechooser));
+
+      /* Check if selected filename has an extension or not */
+      if (!path_has_extension (path))
+        {
+          gchar *real_path = g_strconcat (path, ".glade", NULL);
+
+          g_free (path);
+          path = real_path;
+
+          /* We added .glade extension!,
+           * check if file exist to avoid overwriting a file without asking
+           */
+          if (g_file_test (path, G_FILE_TEST_EXISTS))
+            {
+              /* Set existing filename and let filechooser ask about overwriting */
+              gtk_file_chooser_set_filename (GTK_FILE_CHOOSER (filechooser), path);
+              g_free (path);
+              path = NULL;
+              continue;
+            }
+        }
+      break;
+    }
 
   gtk_widget_destroy (filechooser);
 
   if (!path)
     return;
 
-  ch = strrchr (path, '.');
-  if (!ch || strchr (ch, G_DIR_SEPARATOR))
-    real_path = g_strconcat (path, ".glade", NULL);
-  else
-    real_path = g_strdup (path);
-
-  g_free (path);
-
   /* checks if selected path is actually writable */
-  if (glade_util_file_is_writeable (real_path) == FALSE)
+  if (glade_util_file_is_writeable (path) == FALSE)
     {
       dialog = gtk_message_dialog_new (GTK_WINDOW (window),
                                        GTK_DIALOG_MODAL,
                                        GTK_MESSAGE_ERROR,
                                        GTK_BUTTONS_OK,
                                        _("Could not save the file %s"),
-                                       real_path);
+                                       path);
 
       gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG (dialog),
 						_("You do not have the permissions "
@@ -1249,12 +1396,12 @@ save_as (GladeWindow *window)
                                 G_CALLBACK (gtk_widget_destroy), dialog);
 
       gtk_widget_show (dialog);
-      g_free (real_path);
+      g_free (path);
       return;
     }
 
   /* checks if another open project is using selected path */
-  if ((another_project = glade_app_get_project_by_path (real_path)) != NULL)
+  if ((another_project = glade_app_get_project_by_path (path)) != NULL)
     {
       if (project != another_project)
         {
@@ -1263,20 +1410,20 @@ save_as (GladeWindow *window)
                                  GLADE_UI_ERROR, NULL,
                                  _
                                  ("Could not save file %s. Another project with that path is open."),
-                                 real_path);
+                                 path);
 
-          g_free (real_path);
+          g_free (path);
           return;
         }
 
     }
 
-  save (window, project, real_path);
+  save (window, project, path);
 
-  g_free (real_path);
+  g_free (path);
 }
 
-void
+static void
 on_save_action_activate (GtkAction *action, GladeWindow *window)
 {
   GladeProject *project;
@@ -1301,7 +1448,7 @@ on_save_action_activate (GtkAction *action, GladeWindow *window)
   save_as (window);
 }
 
-void
+static void
 on_save_as_action_activate (GtkAction *action, GladeWindow *window)
 {
   save_as (window);
@@ -1314,7 +1461,6 @@ confirm_close_project (GladeWindow *window, GladeProject *project)
   gboolean close = FALSE;
   gchar *msg, *project_name = NULL;
   gint ret;
-  GError *error = NULL;
 
   project_name = glade_project_get_name (project);
 
@@ -1331,8 +1477,8 @@ confirm_close_project (GladeWindow *window, GladeProject *project)
 
   gtk_dialog_add_buttons (GTK_DIALOG (dialog),
                           _("Close _without Saving"), GTK_RESPONSE_NO,
-                          GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-                          GTK_STOCK_SAVE, GTK_RESPONSE_YES, NULL);
+                          _("_Cancel"), GTK_RESPONSE_CANCEL,
+                          _("_Save"), GTK_RESPONSE_YES, NULL);
 
   gtk_dialog_set_alternative_button_order (GTK_DIALOG (dialog),
                                            GTK_RESPONSE_YES,
@@ -1351,17 +1497,7 @@ confirm_close_project (GladeWindow *window, GladeProject *project)
          */
         if (glade_project_get_path (project) != NULL)
           {
-            if ((close = glade_project_save
-                 (project, glade_project_get_path (project), &error)) == FALSE)
-              {
-
-                glade_util_ui_message
-                    (GTK_WIDGET (window), GLADE_UI_ERROR, NULL,
-                     _("Failed to save %s to %s: %s"),
-                     project_name, glade_project_get_path (project),
-                     error->message);
-                g_error_free (error);
-              }
+            close = do_save (window, project, glade_project_get_path (project));
           }
         else
           {
@@ -1424,12 +1560,37 @@ confirm_close_project (GladeWindow *window, GladeProject *project)
 }
 
 static void
+glade_window_notebook_set_show_tabs (GladeWindow *window, gboolean show)
+{
+  GladeWindowPrivate *priv = window->priv;
+  GList *projects = glade_app_get_projects ();
+    
+  if (projects == NULL || g_list_next (projects) == NULL)
+    show = FALSE;
+
+  gtk_notebook_set_show_tabs (GTK_NOTEBOOK (priv->notebook), show);
+  gtk_frame_set_shadow_type (GTK_FRAME (priv->notebook_frame),
+                             show ? GTK_SHADOW_NONE : GTK_SHADOW_IN);
+}
+
+static void
+glade_window_notebook_tabs_update (GladeWindow *window)
+{
+  GtkToggleAction *tabs = GTK_TOGGLE_ACTION (window->priv->project_tabs_visible_action);
+  glade_window_notebook_set_show_tabs (window, gtk_toggle_action_get_active (tabs));
+}
+
+static void
 do_close (GladeWindow *window, GladeProject *project)
 {
+  GladeWindowPrivate *priv = window->priv;
   GladeDesignView *view;
   gint n;
 
   view = glade_design_view_get_from_project (project);
+
+  /* Cancel any queued autosave activity */
+  project_cancel_autosave (project);
 
   if (glade_project_is_loading (project))
     {
@@ -1437,17 +1598,22 @@ do_close (GladeWindow *window, GladeProject *project)
       return;
     }
 
-  n = gtk_notebook_page_num (GTK_NOTEBOOK (window->priv->notebook),
+  n = gtk_notebook_page_num (GTK_NOTEBOOK (priv->notebook),
                              GTK_WIDGET (view));
 
   g_object_ref (view);
 
-  gtk_notebook_remove_page (GTK_NOTEBOOK (window->priv->notebook), n);
+  gtk_notebook_remove_page (GTK_NOTEBOOK (priv->notebook), n);
 
   g_object_unref (view);
+
+  glade_window_notebook_tabs_update (window);
+
+  if (!glade_app_get_projects ())
+    gtk_widget_hide (priv->center_paned);
 }
 
-void
+static void
 on_close_action_activate (GtkAction *action, GladeWindow *window)
 {
   GladeDesignView *view;
@@ -1470,7 +1636,7 @@ on_close_action_activate (GtkAction *action, GladeWindow *window)
   do_close (window, project);
 }
 
-void
+static void
 on_copy_action_activate (GtkAction *action, GladeWindow *window)
 {
   GladeProject *project;
@@ -1483,7 +1649,7 @@ on_copy_action_activate (GtkAction *action, GladeWindow *window)
   glade_project_copy_selection (project);
 }
 
-void
+static void
 on_cut_action_activate (GtkAction *action, GladeWindow *window)
 {
   GladeProject *project;
@@ -1496,7 +1662,7 @@ on_cut_action_activate (GtkAction *action, GladeWindow *window)
   glade_project_command_cut (project);
 }
 
-void
+static void
 on_paste_action_activate (GtkAction *action, GladeWindow *window)
 {
   GtkWidget *placeholder;
@@ -1514,7 +1680,7 @@ on_paste_action_activate (GtkAction *action, GladeWindow *window)
   glade_project_command_paste (project, placeholder ? GLADE_PLACEHOLDER (placeholder) : NULL);
 }
 
-void
+static void
 on_delete_action_activate (GtkAction *action, GladeWindow *window)
 {
   GladeProject *project;
@@ -1527,7 +1693,7 @@ on_delete_action_activate (GtkAction *action, GladeWindow *window)
   glade_project_command_delete (project);
 }
 
-void
+static void
 on_properties_action_activate (GtkAction *action, GladeWindow *window)
 {
   GladeProject *project;
@@ -1540,7 +1706,7 @@ on_properties_action_activate (GtkAction *action, GladeWindow *window)
   glade_project_properties (project);
 }
 
-void
+static void
 on_undo_action_activate (GtkAction *action, GladeWindow *window)
 {
   GladeProject *active_project = get_active_project (window);
@@ -1554,7 +1720,7 @@ on_undo_action_activate (GtkAction *action, GladeWindow *window)
   glade_project_undo (active_project);
 }
 
-void
+static void
 on_redo_action_activate (GtkAction *action, GladeWindow *window)
 {
   GladeProject *active_project = get_active_project (window);
@@ -1578,7 +1744,7 @@ doc_search_cb (GladeEditor *editor,
   glade_util_search_devhelp (book, page, search);
 }
 
-void
+static void
 on_notebook_switch_page (GtkNotebook *notebook,
                          GtkWidget *page,
                          guint page_num,
@@ -1606,17 +1772,13 @@ on_notebook_switch_page (GtkNotebook *notebook,
   set_sensitivity_according_to_project (window, project);
 
   /* switch to the project's inspector/palette */
-  gtk_notebook_set_current_page (GTK_NOTEBOOK
-                                 (priv->inspectors_notebook), page_num);
-  gtk_notebook_set_current_page (GTK_NOTEBOOK
-                                 (priv->palettes_notebook), page_num);
-
+  gtk_notebook_set_current_page (priv->inspectors_notebook, page_num);
+  gtk_notebook_set_current_page (priv->palettes_notebook, page_num);
 
   /* activate the corresponding item in the project menu */
   action_name = g_strdup_printf ("Tab_%d", page_num);
-  action =
-      gtk_action_group_get_action (priv->projects_list_menu_actions,
-                                   action_name);
+  action = gtk_action_group_get_action (priv->project_list_actiongroup,
+                                        action_name);
 
   /* sometimes the action doesn't exist yet, and the proper action
    * is set active during the documents list menu creation
@@ -1649,7 +1811,7 @@ set_widget_sensitive_on_load (GladeProject *project, GtkWidget *widget)
   gtk_widget_set_sensitive (widget, TRUE);
 }
 
-void
+static void
 on_notebook_tab_added (GtkNotebook *notebook,
                        GladeDesignView *view,
                        guint page_num,
@@ -1695,15 +1857,12 @@ on_notebook_tab_added (GtkNotebook *notebook,
   glade_palette_set_project (GLADE_PALETTE (palette), project);
 
   glade_palette_set_use_small_item_icons (GLADE_PALETTE (palette),
-					  gtk_toggle_action_get_active (GTK_TOGGLE_ACTION (priv->action.use_small_icons)));
+					  gtk_toggle_action_get_active (GTK_TOGGLE_ACTION (priv->use_small_icons_action)));
 
   glade_palette_set_item_appearance (GLADE_PALETTE (palette),
-				     gtk_radio_action_get_current_value (GTK_RADIO_ACTION (priv->action.icons_and_labels)));
+				     gtk_radio_action_get_current_value (GTK_RADIO_ACTION (priv->icons_and_labels_radioaction)));
 
-  gtk_notebook_append_page (GTK_NOTEBOOK (window->priv->palettes_notebook),
-                            palette, NULL);
-
-  glade_design_view_set_drag_source (view, glade_palette_get_tool_palette (GLADE_PALETTE (palette)));
+  gtk_notebook_append_page (window->priv->palettes_notebook, palette, NULL);
   
   if (GPOINTER_TO_INT
       (g_object_get_data (G_OBJECT (view), "view-added-while-loading")))
@@ -1725,46 +1884,37 @@ on_notebook_tab_added (GtkNotebook *notebook,
   refresh_title (window);
 
   if (window->priv->num_tabs > 0)
-    gtk_action_group_set_sensitive (window->priv->project_actions, TRUE);
+    gtk_action_group_set_sensitive (window->priv->project_actiongroup, TRUE);
 
 }
 
-void
+static void
 on_notebook_tab_removed (GtkNotebook     *notebook,
                          GladeDesignView *view,
                          guint            page_num, 
                          GladeWindow     *window)
 {
+  GladeWindowPrivate *priv = window->priv;
   GladeProject *project;
 
-  --window->priv->num_tabs;
+  --priv->num_tabs;
 
-  if (window->priv->num_tabs == 0)
+  if (priv->num_tabs == 0)
     {
-      gtk_widget_hide (GTK_WIDGET (window->priv->editor));
-      window->priv->active_view = NULL;
+      gtk_widget_hide (GTK_WIDGET (priv->editor));
+      priv->active_view = NULL;
     }
 
   project = glade_design_view_get_project (view);
 
-  g_signal_handlers_disconnect_by_func (G_OBJECT (project),
-                                        G_CALLBACK (project_notify_handler_cb),
-                                        window);
-  g_signal_handlers_disconnect_by_func (G_OBJECT (project),
-                                        G_CALLBACK (project_selection_changed_cb), 
-                                        window);
-  g_signal_handlers_disconnect_by_func (G_OBJECT (project),
-                                        G_CALLBACK (project_targets_changed_cb),
-                                        window);
-  g_signal_handlers_disconnect_by_func (G_OBJECT (project),
-                                        G_CALLBACK (project_changed_cb),
-                                        window);
-  g_signal_handlers_disconnect_by_func (G_OBJECT (project),
-                                        G_CALLBACK (on_pointer_mode_changed),
-                                        window);
+  g_signal_handlers_disconnect_by_func (project, project_notify_handler_cb, window);
+  g_signal_handlers_disconnect_by_func (project, project_selection_changed_cb, window);
+  g_signal_handlers_disconnect_by_func (project, project_targets_changed_cb, window);
+  g_signal_handlers_disconnect_by_func (project, project_changed_cb, window);
+  g_signal_handlers_disconnect_by_func (project, on_pointer_mode_changed, window);
 
-  gtk_notebook_remove_page (GTK_NOTEBOOK (window->priv->inspectors_notebook), page_num);
-  gtk_notebook_remove_page (GTK_NOTEBOOK (window->priv->palettes_notebook), page_num);
+  gtk_notebook_remove_page (priv->inspectors_notebook, page_num);
+  gtk_notebook_remove_page (priv->palettes_notebook, page_num);
 
   clean_actions (window);
 
@@ -1780,16 +1930,16 @@ on_notebook_tab_removed (GtkNotebook     *notebook,
 
   refresh_title (window);
 
-  if (window->priv->active_view)
+  if (priv->active_view)
     set_sensitivity_according_to_project (window,
                                           glade_design_view_get_project
-                                          (window->priv->active_view));
+                                          (priv->active_view));
   else
-    gtk_action_group_set_sensitive (window->priv->project_actions, FALSE);
+    gtk_action_group_set_sensitive (priv->project_actiongroup, FALSE);
 
 }
 
-void
+static void
 on_open_recent_action_item_activated (GtkRecentChooser *chooser,
                                       GladeWindow *window)
 {
@@ -1813,7 +1963,7 @@ on_open_recent_action_item_activated (GtkRecentChooser *chooser,
   g_free (path);
 }
 
-void
+static void
 on_palette_appearance_radioaction_changed (GtkRadioAction *action,
                                            GtkRadioAction *current,
                                            GladeWindow    *window)
@@ -1827,12 +1977,12 @@ on_palette_appearance_radioaction_changed (GtkRadioAction *action,
   for (l = children; l; l = l->next)
     {
       if (GLADE_IS_PALETTE (l->data))
-		glade_palette_set_item_appearance (GLADE_PALETTE (l->data), value);
+        glade_palette_set_item_appearance (GLADE_PALETTE (l->data), value);
     }
   g_list_free (children);
 }
 
-void
+static void
 on_use_small_icons_action_toggled (GtkAction *action, GladeWindow *window)
 {
   GList *children, *l;
@@ -1900,7 +2050,7 @@ properties_dock_update_title_from_editor (GtkWidget *toplevel, GladeEditor *edit
   g_free (class_field);
 }
 
-void
+static void
 on_dock_action_toggled (GtkAction *action, GladeWindow *window)
 {
   GladeWindowPrivate *priv = window->priv;
@@ -1982,7 +2132,7 @@ on_dock_action_toggled (GtkAction *action, GladeWindow *window)
     }
 }
 
-void
+static void
 on_toolbar_visible_action_toggled (GtkAction *action, GladeWindow *window)
 {
   if (gtk_toggle_action_get_active (GTK_TOGGLE_ACTION (action)))
@@ -1991,7 +2141,7 @@ on_toolbar_visible_action_toggled (GtkAction *action, GladeWindow *window)
     gtk_widget_hide (window->priv->toolbar);
 }
 
-void
+static void
 on_statusbar_visible_action_toggled (GtkAction *action, GladeWindow *window)
 {
   if (gtk_toggle_action_get_active (GTK_TOGGLE_ACTION (action)))
@@ -2000,16 +2150,25 @@ on_statusbar_visible_action_toggled (GtkAction *action, GladeWindow *window)
     gtk_widget_hide (window->priv->statusbar);
 }
 
-void
+static void
 on_project_tabs_visible_action_toggled (GtkAction *action, GladeWindow *window)
 {
   if (gtk_toggle_action_get_active (GTK_TOGGLE_ACTION (action)))
-    gtk_notebook_set_show_tabs (GTK_NOTEBOOK (window->priv->notebook), TRUE);
+    glade_window_notebook_set_show_tabs (window, TRUE);
   else
-    gtk_notebook_set_show_tabs (GTK_NOTEBOOK (window->priv->notebook), FALSE);
+    glade_window_notebook_set_show_tabs (window, FALSE);
 }
 
-void
+static void
+on_editor_header_visible_action_toggled (GtkAction *action, GladeWindow *window)
+{
+  if (gtk_toggle_action_get_active (GTK_TOGGLE_ACTION (action)))
+    glade_editor_show_class_field (window->priv->editor);
+  else
+    glade_editor_hide_class_field (window->priv->editor);
+}
+
+static void
 on_reference_action_activate (GtkAction *action, GladeWindow *window)
 {
   if (glade_util_have_devhelp ())
@@ -2022,10 +2181,17 @@ on_reference_action_activate (GtkAction *action, GladeWindow *window)
   glade_util_url_show (URL_DEVELOPER_MANUAL);
 }
 
-void
+static void
+on_preferences_action_activate (GtkAction   *action,
+				GladeWindow *window)
+{
+  gtk_widget_show (GTK_WIDGET (window->priv->preferences));
+}
+
+static void
 on_about_action_activate (GtkAction *action, GladeWindow *window)
 {
-  GladeWindowPrivate *priv = GLADE_WINDOW_GET_PRIVATE (window);
+  GladeWindowPrivate *priv = window->priv;
   
   gtk_about_dialog_set_version (GTK_ABOUT_DIALOG (priv->about_dialog), PACKAGE_VERSION);
   
@@ -2090,7 +2256,7 @@ menu_item_disconnect (GtkWidget *item, GladeWindow *window)
     }
 }
 
-void
+static void
 on_actiongroup_connect_proxy (GtkActionGroup *action_group,
                               GtkAction *action,
                               GtkWidget *proxy,
@@ -2099,7 +2265,7 @@ on_actiongroup_connect_proxy (GtkActionGroup *action_group,
   menu_item_connect (proxy, action, window);
 }
 
-void
+static void
 on_actiongroup_disconnect_proxy (GtkActionGroup *action_group,
                                  GtkAction *action,
                                  GtkWidget *proxy,
@@ -2108,7 +2274,7 @@ on_actiongroup_disconnect_proxy (GtkActionGroup *action_group,
   menu_item_disconnect (proxy, window);
 }
 
-void
+static void
 on_recent_menu_insert (GtkMenuShell *menu_shell,
                        GtkWidget    *child,
                        gint          position,
@@ -2117,7 +2283,7 @@ on_recent_menu_insert (GtkMenuShell *menu_shell,
   menu_item_connect (child, NULL, window);
 }
 
-void
+static void
 on_recent_menu_remove (GtkContainer *container,
                        GtkWidget *widget,
                        GladeWindow *window)
@@ -2223,13 +2389,13 @@ drag_data_received (GtkWidget *widget,
 static gboolean
 delete_event (GtkWindow *w, GdkEvent *event, GladeWindow *window)
 {
-  gtk_action_activate (window->priv->action.quit);
+  gtk_action_activate (window->priv->quit_action);
 
   /* return TRUE to stop other handlers */
   return TRUE;
 }
 
-void
+static void
 on_selector_radioaction_changed (GtkRadioAction *action,
                                  GtkRadioAction *current,
                                  GladeWindow *window) 
@@ -2314,8 +2480,7 @@ create_notebook_tab (GladeWindow *window,
                     G_CALLBACK (tab_close_button_clicked_cb), project);
 
   label = gtk_label_new ("");
-  gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
-  gtk_misc_set_padding (GTK_MISC (label), 0, 0);
+  gtk_widget_set_halign (label, GTK_ALIGN_START);
   gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
 
   progress = gtk_progress_bar_new ();
@@ -2355,6 +2520,7 @@ create_notebook_tab (GladeWindow *window,
 static void
 add_project (GladeWindow *window, GladeProject *project, gboolean for_file)
 {
+  GladeWindowPrivate *priv = window->priv;
   GtkWidget *view, *label;
 
   g_return_if_fail (GLADE_IS_PROJECT (project));
@@ -2372,13 +2538,22 @@ add_project (GladeWindow *window, GladeProject *project, gboolean for_file)
   /* Custom notebook tab label (will be refreshed later) */
   label = create_notebook_tab (window, project, for_file);
 
-  gtk_notebook_append_page (GTK_NOTEBOOK (window->priv->notebook),
-                            GTK_WIDGET (view), label);
-  gtk_notebook_set_current_page (GTK_NOTEBOOK (window->priv->notebook), -1);
+  gtk_notebook_append_page (GTK_NOTEBOOK (priv->notebook), GTK_WIDGET (view), label);
+  gtk_notebook_set_current_page (GTK_NOTEBOOK (priv->notebook), -1);
 
   refresh_notebook_tab_for_project (window, project);
 
-  gtk_widget_show (GTK_WIDGET (window->priv->editor));
+  glade_window_notebook_tabs_update (window);
+
+  gtk_widget_show (priv->center_paned);
+  gtk_widget_show (GTK_WIDGET (priv->editor));
+}
+
+static void
+on_registration_action_activate (GtkAction   *action,
+                                 GladeWindow *window)
+{
+  gtk_window_present (GTK_WINDOW (window->priv->registration));
 }
 
 void
@@ -2474,12 +2649,11 @@ check_reload_project (GladeWindow *window, GladeProject *project)
 
   button = gtk_button_new_with_mnemonic (_("_Reload"));
   gtk_button_set_image (GTK_BUTTON (button),
-                        gtk_image_new_from_stock (GTK_STOCK_REFRESH,
-                                                  GTK_ICON_SIZE_BUTTON));
+                        gtk_image_new_from_icon_name ("view-refresh",
+                                                      GTK_ICON_SIZE_BUTTON));
   gtk_widget_show (button);
 
-  gtk_dialog_add_button (GTK_DIALOG (dialog), GTK_STOCK_CANCEL,
-                         GTK_RESPONSE_REJECT);
+  gtk_dialog_add_button (GTK_DIALOG (dialog), _("_Cancel"), GTK_RESPONSE_REJECT);
   gtk_dialog_add_action_widget (GTK_DIALOG (dialog), button,
                                 GTK_RESPONSE_ACCEPT);
   gtk_dialog_set_alternative_button_order (GTK_DIALOG (dialog),
@@ -2543,11 +2717,8 @@ glade_window_dispose (GObject *object)
 {
   GladeWindow *window = GLADE_WINDOW (object);
 
-  if (window->priv->app)
-    {
-      g_object_unref (window->priv->app);
-      window->priv->app = NULL;
-    }
+  g_clear_object (&window->priv->app);
+  g_clear_object (&window->priv->registration);
 
   G_OBJECT_CLASS (glade_window_parent_class)->dispose (object);
 }
@@ -2648,6 +2819,7 @@ key_file_set_window_position (GKeyFile *config,
 static void
 save_windows_config (GladeWindow *window, GKeyFile *config)
 {
+  GladeWindowPrivate *priv = window->priv;
   guint i;
   GdkWindow *gdk_window;
   gboolean maximized;
@@ -2662,25 +2834,30 @@ save_windows_config (GladeWindow *window, GKeyFile *config)
   gdk_window = gtk_widget_get_window (GTK_WIDGET (window));
   maximized = gdk_window_get_state (gdk_window) & GDK_WINDOW_STATE_MAXIMIZED;
 
-  key_file_set_window_position (config, &window->priv->position,
+  key_file_set_window_position (config, &priv->position,
                                 "main", FALSE, FALSE, maximized);
 
   g_key_file_set_boolean (config,
                           CONFIG_GROUP_WINDOWS,
                           CONFIG_KEY_SHOW_TOOLBAR,
-                          gtk_widget_get_visible (window->priv->toolbar));
+                          gtk_widget_get_visible (priv->toolbar));
 
   g_key_file_set_boolean (config,
                           CONFIG_GROUP_WINDOWS,
                           CONFIG_KEY_SHOW_STATUS,
-                          gtk_widget_get_visible (window->priv->statusbar));
+                          gtk_widget_get_visible (priv->statusbar));
 
-  g_key_file_set_boolean (config,
-                          CONFIG_GROUP_WINDOWS,
-                          CONFIG_KEY_SHOW_TABS,
-                          gtk_notebook_get_show_tabs (GTK_NOTEBOOK
-                                                      (window->priv->
-                                                       notebook)));
+  g_key_file_set_boolean (config, CONFIG_GROUP_WINDOWS, CONFIG_KEY_SHOW_TABS,
+                          gtk_toggle_action_get_active (GTK_TOGGLE_ACTION (priv->project_tabs_visible_action)));
+
+  g_key_file_set_boolean (config, CONFIG_GROUP_WINDOWS, CONFIG_KEY_EDITOR_HEADER,
+                          gtk_toggle_action_get_active (GTK_TOGGLE_ACTION (priv->editor_header_visible_action)));
+
+  g_key_file_set_integer (config, CONFIG_GROUP_WINDOWS, CONFIG_KEY_PALETTE,
+                          gtk_radio_action_get_current_value (GTK_RADIO_ACTION (priv->icons_and_labels_radioaction)));
+
+  g_key_file_set_boolean (config, CONFIG_GROUP_WINDOWS, CONFIG_KEY_PALETTE_SMALL,
+                          gtk_toggle_action_get_active (GTK_TOGGLE_ACTION (priv->use_small_icons_action)));
 }
 
 static void
@@ -2698,11 +2875,11 @@ glade_window_config_save (GladeWindow * window)
   save_windows_config (window, config);
 
   /* Save main window paned positions */
-  save_paned_position (config, window->priv->center_pane, "center_pane");
-  save_paned_position (config, window->priv->left_pane, "left_pane");
-  save_paned_position (config, window->priv->right_pane, "right_pane");
+  save_paned_position (config, window->priv->center_paned, "center_pane");
+  save_paned_position (config, window->priv->left_paned, "left_pane");
+  save_paned_position (config, window->priv->right_paned, "right_pane");
 
-  glade_preferences_config_save (window->priv->preferences, config);
+  glade_preferences_save (window->priv->preferences, config);
 
   glade_app_config_save ();
 }
@@ -2789,9 +2966,9 @@ fix_paned_positions_idle (GladeWindow *window)
    */
   GKeyFile *config = glade_app_get_config ();
 
-  load_paned_position (config, window->priv->left_pane, "left_pane", 200);
-  load_paned_position (config, window->priv->center_pane, "center_pane", 400);
-  load_paned_position (config, window->priv->right_pane, "right_pane", 220);
+  load_paned_position (config, window->priv->left_paned, "left_pane", 200);
+  load_paned_position (config, window->priv->center_paned, "center_pane", 400);
+  load_paned_position (config, window->priv->right_paned, "right_pane", 220);
 
   return FALSE;
 }
@@ -2809,7 +2986,7 @@ glade_window_set_initial_size (GladeWindow *window, GKeyFile *config)
   if (maximized)
     {
       gtk_window_maximize (GTK_WINDOW (window));
-      g_idle_add ((GSourceFunc) fix_paned_positions_idle, window);
+      g_timeout_add (200, (GSourceFunc) fix_paned_positions_idle, window);
     }
 
   if (position.width <= 0 || position.height <= 0)
@@ -2829,7 +3006,8 @@ static void
 glade_window_config_load (GladeWindow *window)
 {
   GKeyFile *config = glade_app_get_config ();
-  gboolean show_toolbar, show_tabs, show_status;
+  gboolean show_toolbar, show_tabs, show_status, show_header, small_icons;
+  gint palette_appearance;
   GladeWindowPrivate *priv = window->priv;
   GError *error = NULL;
 
@@ -2864,6 +3042,33 @@ glade_window_config_load (GladeWindow *window)
       error = (g_error_free (error), NULL);
     }
 
+  if ((show_header =
+       g_key_file_get_boolean (config, CONFIG_GROUP_WINDOWS,
+                               CONFIG_KEY_EDITOR_HEADER, &error)) == FALSE &&
+      error != NULL)
+    {
+      show_header = TRUE;
+      error = (g_error_free (error), NULL);
+    }
+
+  if ((palette_appearance =
+       g_key_file_get_integer (config, CONFIG_GROUP_WINDOWS,
+                               CONFIG_KEY_PALETTE, &error)) == 0 &&
+      error != NULL)
+    {
+      palette_appearance = 1; /* Default to icons */
+      error = (g_error_free (error), NULL);
+    }
+
+  if ((small_icons =
+       g_key_file_get_boolean (config, CONFIG_GROUP_WINDOWS,
+                               CONFIG_KEY_PALETTE_SMALL, &error)) == FALSE &&
+      error != NULL)
+    {
+      small_icons = FALSE;
+      error = (g_error_free (error), NULL);
+    }
+
   if (show_toolbar)
     gtk_widget_show (priv->toolbar);
   else
@@ -2874,20 +3079,27 @@ glade_window_config_load (GladeWindow *window)
   else
     gtk_widget_hide (priv->statusbar);
 
-  gtk_notebook_set_show_tabs (GTK_NOTEBOOK (priv->notebook), show_tabs);
+  if (show_header)
+    glade_editor_show_class_field (priv->editor);
+  else
+    glade_editor_hide_class_field (priv->editor);
 
-  gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (priv->action.toolbar_visible), show_toolbar);
+  gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (priv->toolbar_visible_action), show_toolbar);
 
-  gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (priv->action.project_tabs_visible), show_tabs);
+  gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (priv->project_tabs_visible_action), show_tabs);
 
-  gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (priv->action.statusbar_visible), show_tabs);
+  gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (priv->statusbar_visible_action), show_status);
+
+  gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (priv->editor_header_visible_action), show_header);
+
+  gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (priv->use_small_icons_action), small_icons);
+
+  gtk_radio_action_set_current_value (GTK_RADIO_ACTION (priv->icons_and_labels_radioaction), palette_appearance);
 
   /* Paned positions */
-  load_paned_position (config, window->priv->left_pane, "left_pane", 200);
-  load_paned_position (config, window->priv->center_pane, "center_pane", 400);
-  load_paned_position (config, window->priv->right_pane, "right_pane", 220);
-
-  glade_preferences_config_load (window->priv->preferences, config);
+  load_paned_position (config, window->priv->left_paned, "left_pane", 200);
+  load_paned_position (config, window->priv->center_paned, "center_pane", 400);
+  load_paned_position (config, window->priv->right_paned, "right_pane", 220);
 }
 
 static void
@@ -2936,7 +3148,7 @@ setup_dock (ToolDock *dock,
   dock->maximized = FALSE;
 }
 
-void
+static void
 on_quit_action_activate (GtkAction *action, GladeWindow *window)
 {
   GList *list, *projects;
@@ -2977,12 +3189,26 @@ glade_window_init (GladeWindow *window)
 {
   GladeWindowPrivate *priv;
 
-  window->priv = priv = GLADE_WINDOW_GET_PRIVATE (window);
+  window->priv = priv = glade_window_get_instance_private (window);
 
   priv->default_path = NULL;
 
+  /* Init preferences first, this has to be done before anything initializes
+   * the real GladeApp, so that catalog paths are loaded correctly before we
+   * continue.
+   *
+   * This should be fixed so that dynamic addition of catalogs at runtime
+   * is supported.
+   */
+  priv->preferences = (GladePreferences *)glade_preferences_new ();
+  glade_preferences_load (window->priv->preferences, glade_app_get_config ());
+  
   /* We need this for the icons to be available */
   glade_init ();
+
+  gtk_widget_init_template (GTK_WIDGET (window));
+
+  priv->registration = glade_registration_new ();
 }
 
 static void
@@ -2998,115 +3224,36 @@ on_editor_class_field_notify (GObject     *gobject,
                                               GLADE_EDITOR (gobject));
 }
 
-#define GET_OBJECT(b,c,o) c(gtk_builder_get_object(b,o)) /*;g_warn_if_fail(gtk_builder_get_object(b,o))*/
-
 static void
 glade_window_constructed (GObject *object)
 {
-  GladeWindowPrivate *priv = GLADE_WINDOW_GET_PRIVATE (object);
-  GtkBuilder *builder;  
-  GladeWindow *window;
-  GError *error = NULL;
-  GtkWidget *vbox;
-  GtkActionGroup *group;
+  GladeWindow *window = GLADE_WINDOW (object);
+  GladeWindowPrivate *priv = window->priv;
 
   /* Chain up... */
   G_OBJECT_CLASS (glade_window_parent_class)->constructed (object);
-  
-  /* Build UI */
-  builder = gtk_builder_new ();
-  if (gtk_builder_add_from_resource (builder, "/org/gnome/glade/glade.glade", &error) == 0)
-    {
-      g_warning ("gtk_builder_add_from_resource() failed %s", (error) ? error->message : "");
-      return;
-    }
-  
-  window = GLADE_WINDOW (object);
-
-  priv->projects_list_menu_actions = GET_OBJECT (builder, GTK_ACTION_GROUP, "project_list_actiongroup");
-  g_object_ref_sink (priv->projects_list_menu_actions);
 
   /* recent files */
   priv->recent_manager = gtk_recent_manager_get_default ();
-    {
-      GtkRecentFilter *filter = gtk_recent_filter_new ();
-      gtk_recent_filter_add_application (filter, g_get_application_name ());
-      gtk_recent_chooser_set_filter (GET_OBJECT (builder, GTK_RECENT_CHOOSER, "open_recent_action"),
-                                     filter);
-    }
-
-  /* Init preferences */
-  priv->preferences = glade_preferences_new (builder);
   
-  /* Fetch pointers */
-  vbox = GET_OBJECT (builder, GTK_WIDGET, "main_box");
-  priv->about_dialog   = GET_OBJECT (builder, GTK_WINDOW, "about_dialog");
-
-  priv->center_pane = GET_OBJECT (builder, GTK_WIDGET, "center_paned");
-  priv->left_pane = GET_OBJECT (builder, GTK_WIDGET, "left_paned");
-  priv->right_pane = GET_OBJECT (builder, GTK_WIDGET, "right_paned");
-
-  priv->notebook = GET_OBJECT (builder, GTK_WIDGET, "notebook");
-  priv->palettes_notebook = GET_OBJECT (builder, GTK_WIDGET, "palettes_notebook");
-  priv->inspectors_notebook = GET_OBJECT (builder, GTK_WIDGET, "inspectors_notebook");
-  priv->editor = GET_OBJECT (builder, GLADE_EDITOR, "editor");
-  glade_editor_hide_class_field (priv->editor);
-  priv->statusbar = GET_OBJECT (builder, GTK_WIDGET, "statusbar");
-  priv->toolbar = GET_OBJECT (builder, GTK_WIDGET, "toolbar");
-  priv->project_menu = GET_OBJECT (builder, GTK_MENU_SHELL, "project_menu");
-
-  priv->undo = GET_OBJECT (builder, GTK_TOOL_ITEM, "undo_toolbutton");
-  priv->redo = GET_OBJECT (builder, GTK_TOOL_ITEM, "redo_toolbutton");
-
-  priv->accelgroup = GTK_ACCEL_GROUP (gtk_builder_get_object (builder, "accelgroup"));
   gtk_window_add_accel_group (GTK_WINDOW (window), priv->accelgroup);
 
   /* Action groups */
-  priv->project_actions = GET_OBJECT (builder, GTK_ACTION_GROUP, "project_actiongroup");
-  action_group_setup_callbacks (priv->project_actions, priv->accelgroup, window);
-  g_object_ref_sink (priv->project_actions);
+  action_group_setup_callbacks (priv->project_actiongroup, priv->accelgroup, window);
+  action_group_setup_callbacks (priv->pointer_mode_actiongroup, priv->accelgroup, window);
+  action_group_setup_callbacks (priv->static_actiongroup, priv->accelgroup, window);
+  action_group_setup_callbacks (priv->view_actiongroup, priv->accelgroup, window);
 
-  priv->pointer_mode_actions = GET_OBJECT (builder, GTK_ACTION_GROUP, "pointer_mode_actiongroup");
-  action_group_setup_callbacks (priv->pointer_mode_actions, priv->accelgroup, window);
-  g_object_ref_sink (priv->pointer_mode_actions);
-  
-  group = GET_OBJECT (builder, GTK_ACTION_GROUP, "static_actiongroup");
-  action_group_setup_callbacks (group, priv->accelgroup, window);
-  g_object_ref_sink (group);
-  
-  group = GET_OBJECT (builder, GTK_ACTION_GROUP, "view_actiongroup");
-  action_group_setup_callbacks (group, priv->accelgroup, window);
-  g_object_ref_sink (group);
-
-  /* Actions */
-  priv->action.save = GET_OBJECT (builder, GTK_ACTION, "save_action");
-  priv->action.quit = GET_OBJECT (builder, GTK_ACTION, "quit_action");
-  priv->action.undo = GET_OBJECT (builder, GTK_ACTION, "undo_action");
-  priv->action.redo = GET_OBJECT (builder, GTK_ACTION, "redo_action");
-  priv->action.cut = GET_OBJECT (builder, GTK_ACTION, "cut_action");
-  priv->action.copy = GET_OBJECT (builder, GTK_ACTION, "copy_action");
-  priv->action.paste = GET_OBJECT (builder, GTK_ACTION, "paste_action");
-  priv->action.delete = GET_OBJECT (builder, GTK_ACTION, "delete_action");
-  priv->action.previous_project = GET_OBJECT (builder, GTK_ACTION, "previous_project_action");
-  priv->action.next_project = GET_OBJECT (builder, GTK_ACTION, "next_project_action");
-  priv->action.use_small_icons = GET_OBJECT (builder, GTK_ACTION, "use_small_icons_action");
-  priv->action.icons_and_labels = GET_OBJECT (builder, GTK_ACTION, "icons_and_labels_radioaction");
-  priv->action.toolbar_visible = GET_OBJECT (builder, GTK_ACTION, "toolbar_visible_action");
-  priv->action.project_tabs_visible = GET_OBJECT (builder, GTK_ACTION, "project_tabs_visible_action");
-  priv->action.statusbar_visible = GET_OBJECT (builder, GTK_ACTION, "statusbar_visible_action");
-  priv->action.selector = GET_OBJECT (builder, GTK_ACTION, "selector_radioaction");
-  
-  gtk_container_add (GTK_CONTAINER (window), vbox);
-  
   /* Setup Docks */
-  setup_dock (&priv->docks[DOCK_PALETTE], priv->palettes_notebook, 200, 540,
-              _("Palette"), "palette", priv->left_pane, TRUE);
-  setup_dock (&priv->docks[DOCK_INSPECTOR], priv->inspectors_notebook, 300, 540,
-              _("Inspector"), "inspector", priv->right_pane, TRUE);
+  setup_dock (&priv->docks[DOCK_PALETTE], GTK_WIDGET (priv->palettes_notebook), 200, 540,
+              _("Palette"), "palette", priv->left_paned, TRUE);
+  setup_dock (&priv->docks[DOCK_INSPECTOR], GTK_WIDGET (priv->inspectors_notebook), 300, 540,
+              _("Inspector"), "inspector", priv->right_paned, TRUE);
   setup_dock (&priv->docks[DOCK_EDITOR], GTK_WIDGET (priv->editor), 500, 700,
-              _("Properties"), "properties", priv->right_pane, FALSE);
+              _("Properties"), "properties", priv->right_paned, FALSE);
 
   /* status bar */
+  priv->statusbar_context_id = gtk_statusbar_get_context_id (GTK_STATUSBAR (priv->statusbar), "general");
   priv->statusbar_menu_context_id = gtk_statusbar_get_context_id (GTK_STATUSBAR (priv->statusbar), "menu");
   priv->statusbar_actions_context_id = gtk_statusbar_get_context_id (GTK_STATUSBAR (priv->statusbar), "actions");
 
@@ -3126,8 +3273,6 @@ glade_window_constructed (GObject *object)
   g_signal_connect (G_OBJECT (window), "key-press-event",
                     G_CALLBACK (glade_utils_hijack_key_press), window);
 
-  gtk_builder_connect_signals (builder, window);
-
   g_signal_connect (priv->editor, "notify::class-field",
                     G_CALLBACK (on_editor_class_field_notify), window);
 
@@ -3139,50 +3284,44 @@ glade_window_constructed (GObject *object)
   /* Create GladeApp singleton, this will load all catalogs */
   priv->app = glade_app_new ();
   glade_app_set_window (GTK_WIDGET (window));
-
+  
   /* Clipboard signals */
   g_signal_connect (G_OBJECT (glade_app_get_clipboard ()),
                     "notify::has-selection",
                     G_CALLBACK (clipboard_notify_handler_cb), window);
   
 #ifdef MAC_INTEGRATION
-	{
-	  /* Fix up the menubar for MacOSX Quartz builds */
-	  GtkWidget *menubar = GET_OBJECT (builder, GTK_WIDGET, "menubar");
-	  GtkOSXApplication *theApp = g_object_new(GTK_TYPE_OSX_APPLICATION, NULL);
-          GtkWidget *sep, *widget;
+  {
+    /* Fix up the menubar for MacOSX Quartz builds */
+    GtkosxApplication *theApp = gtkosx_application_get ();
+    GtkWidget *sep;
 
-	  gtk_widget_hide (menubar);
-	  gtk_osxapplication_set_menu_bar(theApp, GTK_MENU_SHELL(menubar));
-	  widget = GET_OBJECT (builder, GTK_WIDGET, "quit_menuitem");
-	  gtk_widget_hide (widget);
-	  widget = GET_OBJECT (builder, GTK_WIDGET, "about_menuitem");
-	  gtk_osxapplication_insert_app_menu_item (theApp, widget, 0);
-	  sep = gtk_separator_menu_item_new();
-	  g_object_ref(sep);
-	  gtk_osxapplication_insert_app_menu_item (theApp, sep, 1);
+    gtk_widget_hide (priv->menubar);
+    gtkosx_application_set_menu_bar (theApp, priv->menubar);
+    gtk_widget_hide (priv->quit_menuitem);
+    gtkosx_application_insert_app_menu_item (theApp, priv->about_menuitem, 0);
+    sep = gtk_separator_menu_item_new();
+    g_object_ref(sep);
+    gtkosx_application_insert_app_menu_item (theApp, sep, 1);
 
-	  widget = GET_OBJECT (builder, GTK_WIDGET, "properties_menuitem");
-	  gtk_osxapplication_insert_app_menu_item  (theApp, widget, 2);
-	  sep = gtk_separator_menu_item_new();
-	  g_object_ref(sep);
-	  gtk_osxapplication_insert_app_menu_item (theApp, sep, 3);
+    gtkosx_application_insert_app_menu_item (theApp, priv->properties_menuitem,
+                                             2);
+    sep = gtk_separator_menu_item_new();
+    g_object_ref(sep);
+    gtkosx_application_insert_app_menu_item (theApp, sep, 3);
 
-	  widget = GET_OBJECT (builder, GTK_WIDGET, "help_menuitem");
-	  gtk_osxapplication_set_help_menu(theApp, GTK_MENU_ITEM(widget));
+    gtkosx_application_set_help_menu (theApp, priv->help_menuitem);
 
-	  g_signal_connect(theApp, "NSApplicationWillTerminate",
-	                   G_CALLBACK(on_quit_action_activate), window);
+    g_signal_connect(theApp, "NSApplicationWillTerminate",
+                     G_CALLBACK(on_quit_action_activate), window);
 
-	  gtk_osxapplication_ready(theApp);
-	}
+    gtkosx_application_ready (theApp);
+  }
 #endif
 
-  show_dock_first_time (window, DOCK_PALETTE, GET_OBJECT (builder, GTK_ACTION, "dock_palette_action"));
-  show_dock_first_time (window, DOCK_INSPECTOR, GET_OBJECT (builder, GTK_ACTION, "dock_inspector_action"));
-  show_dock_first_time (window, DOCK_EDITOR, GET_OBJECT (builder, GTK_ACTION, "dock_editor_action"));
-
-  g_object_unref (builder);
+  show_dock_first_time (window, DOCK_PALETTE, priv->dock_palette_action);
+  show_dock_first_time (window, DOCK_INSPECTOR, priv->dock_inspector_action);
+  show_dock_first_time (window, DOCK_EDITOR, priv->dock_editor_action);
 }
 
 static void
@@ -3203,6 +3342,37 @@ glade_window_class_init (GladeWindowClass *klass)
 
   provider = gtk_css_provider_new ();
   gtk_css_provider_load_from_data (provider,
+                                   "@binding-set DisableBindings {\n"
+                                   "  unbind \"<Control>s\";\n"
+                                   "  unbind \"<Control>p\";\n"
+                                   "  unbind \"<Control>w\";\n"
+                                   "  unbind \"<Control>z\";\n"
+                                   "  unbind \"<Control><shift>z\";\n"
+                                   "  unbind \"<Control>x\";\n"
+                                   "  unbind \"<Control>c\";\n"
+                                   "  unbind \"<Control>v\";\n"
+                                   "  unbind \"Delete\";\n"
+                                   "  unbind \"<Control>Page_Up\";\n"
+                                   "  unbind \"<Control>Page_Down\";\n"
+                                   "  unbind \"<Control>Next\";\n"
+                                   "  unbind \"<Control>n\";\n"
+                                   "  unbind \"<Control>o\";\n"
+                                   "  unbind \"<Control>q\";\n"
+                                   "  unbind \"F1\";\n"
+                                   "  unbind \"<Alt>0\";\n"
+                                   "  unbind \"<Alt>1\";\n"
+                                   "  unbind \"<Alt>2\";\n"
+                                   "  unbind \"<Alt>3\";\n"
+                                   "  unbind \"<Alt>4\";\n"
+                                   "  unbind \"<Alt>5\";\n"
+                                   "  unbind \"<Alt>6\";\n"
+                                   "  unbind \"<Alt>7\";\n"
+                                   "  unbind \"<Alt>8\";\n"
+                                   "  unbind \"<Alt>9\";\n"
+                                   "}\n"
+                                   "GladeDesignView * {\n"
+                                   "  -gtk-key-bindings: DisableBindings;\n"
+                                   "}\n"
                                    "GtkProgressBar#glade-tab-label-progress {\n"
                                    "   -GtkProgressBar-min-horizontal-bar-width : 1;\n"
                                    "   -GtkProgressBar-min-horizontal-bar-height : 1;\n"
@@ -3215,7 +3385,91 @@ glade_window_class_init (GladeWindowClass *klass)
                                              GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
   g_object_unref (provider);
 
-  g_type_class_add_private (klass, sizeof (GladeWindowPrivate));
+  gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/glade/glade.glade");
+
+  /* Internal children */
+  gtk_widget_class_bind_template_child_private (widget_class, GladeWindow, project_list_actiongroup);
+  gtk_widget_class_bind_template_child_private (widget_class, GladeWindow, about_dialog);
+  gtk_widget_class_bind_template_child_private (widget_class, GladeWindow, center_paned);
+  gtk_widget_class_bind_template_child_private (widget_class, GladeWindow, left_paned);
+  gtk_widget_class_bind_template_child_private (widget_class, GladeWindow, right_paned);
+  gtk_widget_class_bind_template_child_private (widget_class, GladeWindow, notebook);
+  gtk_widget_class_bind_template_child_private (widget_class, GladeWindow, notebook_frame);
+  gtk_widget_class_bind_template_child_private (widget_class, GladeWindow, palettes_notebook);
+  gtk_widget_class_bind_template_child_private (widget_class, GladeWindow, inspectors_notebook);
+  gtk_widget_class_bind_template_child_private (widget_class, GladeWindow, editor);
+  gtk_widget_class_bind_template_child_private (widget_class, GladeWindow, statusbar);
+  gtk_widget_class_bind_template_child_private (widget_class, GladeWindow, toolbar);
+  gtk_widget_class_bind_template_child_private (widget_class, GladeWindow, project_menu);
+  gtk_widget_class_bind_template_child_private (widget_class, GladeWindow, undo_toolbutton);
+  gtk_widget_class_bind_template_child_private (widget_class, GladeWindow, redo_toolbutton);
+  gtk_widget_class_bind_template_child_private (widget_class, GladeWindow, accelgroup);
+  gtk_widget_class_bind_template_child_private (widget_class, GladeWindow, project_actiongroup);
+  gtk_widget_class_bind_template_child_private (widget_class, GladeWindow, pointer_mode_actiongroup);
+  gtk_widget_class_bind_template_child_private (widget_class, GladeWindow, static_actiongroup);
+  gtk_widget_class_bind_template_child_private (widget_class, GladeWindow, view_actiongroup);
+  gtk_widget_class_bind_template_child_private (widget_class, GladeWindow, menubar);
+  gtk_widget_class_bind_template_child_private (widget_class, GladeWindow, quit_menuitem);
+  gtk_widget_class_bind_template_child_private (widget_class, GladeWindow, properties_menuitem);
+  gtk_widget_class_bind_template_child_private (widget_class, GladeWindow, about_menuitem);
+  gtk_widget_class_bind_template_child_private (widget_class, GladeWindow, help_menuitem);
+
+  /* Actions */
+  gtk_widget_class_bind_template_child_private (widget_class, GladeWindow, save_action);
+  gtk_widget_class_bind_template_child_private (widget_class, GladeWindow, quit_action);
+  gtk_widget_class_bind_template_child_private (widget_class, GladeWindow, undo_action);
+  gtk_widget_class_bind_template_child_private (widget_class, GladeWindow, redo_action);
+  gtk_widget_class_bind_template_child_private (widget_class, GladeWindow, cut_action);
+  gtk_widget_class_bind_template_child_private (widget_class, GladeWindow, copy_action);
+  gtk_widget_class_bind_template_child_private (widget_class, GladeWindow, paste_action);
+  gtk_widget_class_bind_template_child_private (widget_class, GladeWindow, delete_action);
+  gtk_widget_class_bind_template_child_private (widget_class, GladeWindow, previous_project_action);
+  gtk_widget_class_bind_template_child_private (widget_class, GladeWindow, next_project_action);
+  gtk_widget_class_bind_template_child_private (widget_class, GladeWindow, use_small_icons_action);
+  gtk_widget_class_bind_template_child_private (widget_class, GladeWindow, icons_and_labels_radioaction);
+  gtk_widget_class_bind_template_child_private (widget_class, GladeWindow, toolbar_visible_action);
+  gtk_widget_class_bind_template_child_private (widget_class, GladeWindow, project_tabs_visible_action);
+  gtk_widget_class_bind_template_child_private (widget_class, GladeWindow, statusbar_visible_action);
+  gtk_widget_class_bind_template_child_private (widget_class, GladeWindow, editor_header_visible_action);
+  gtk_widget_class_bind_template_child_private (widget_class, GladeWindow, selector_radioaction);
+  gtk_widget_class_bind_template_child_private (widget_class, GladeWindow, dock_palette_action);
+  gtk_widget_class_bind_template_child_private (widget_class, GladeWindow, dock_inspector_action);
+  gtk_widget_class_bind_template_child_private (widget_class, GladeWindow, dock_editor_action);
+
+  /* Callbacks */
+  gtk_widget_class_bind_template_callback (widget_class, on_open_action_activate);
+  gtk_widget_class_bind_template_callback (widget_class, on_save_action_activate);
+  gtk_widget_class_bind_template_callback (widget_class, on_save_as_action_activate);
+  gtk_widget_class_bind_template_callback (widget_class, on_close_action_activate);
+  gtk_widget_class_bind_template_callback (widget_class, on_copy_action_activate);
+  gtk_widget_class_bind_template_callback (widget_class, on_cut_action_activate);
+  gtk_widget_class_bind_template_callback (widget_class, on_paste_action_activate);
+  gtk_widget_class_bind_template_callback (widget_class, on_delete_action_activate);
+  gtk_widget_class_bind_template_callback (widget_class, on_properties_action_activate);
+  gtk_widget_class_bind_template_callback (widget_class, on_undo_action_activate);
+  gtk_widget_class_bind_template_callback (widget_class, on_redo_action_activate);
+  gtk_widget_class_bind_template_callback (widget_class, on_quit_action_activate);
+  gtk_widget_class_bind_template_callback (widget_class, on_about_action_activate);
+  gtk_widget_class_bind_template_callback (widget_class, on_reference_action_activate);
+  gtk_widget_class_bind_template_callback (widget_class, on_preferences_action_activate);
+  gtk_widget_class_bind_template_callback (widget_class, on_registration_action_activate);
+
+  gtk_widget_class_bind_template_callback (widget_class, on_open_recent_action_item_activated);
+  gtk_widget_class_bind_template_callback (widget_class, on_use_small_icons_action_toggled);
+  gtk_widget_class_bind_template_callback (widget_class, on_dock_action_toggled);
+  gtk_widget_class_bind_template_callback (widget_class, on_toolbar_visible_action_toggled);
+  gtk_widget_class_bind_template_callback (widget_class, on_statusbar_visible_action_toggled);
+  gtk_widget_class_bind_template_callback (widget_class, on_project_tabs_visible_action_toggled);
+  gtk_widget_class_bind_template_callback (widget_class, on_editor_header_visible_action_toggled);
+  gtk_widget_class_bind_template_callback (widget_class, on_palette_appearance_radioaction_changed);
+  gtk_widget_class_bind_template_callback (widget_class, on_selector_radioaction_changed);
+  gtk_widget_class_bind_template_callback (widget_class, on_actiongroup_connect_proxy);
+  gtk_widget_class_bind_template_callback (widget_class, on_actiongroup_disconnect_proxy);
+  gtk_widget_class_bind_template_callback (widget_class, on_notebook_switch_page);
+  gtk_widget_class_bind_template_callback (widget_class, on_notebook_tab_added);
+  gtk_widget_class_bind_template_callback (widget_class, on_notebook_tab_removed);
+  gtk_widget_class_bind_template_callback (widget_class, on_recent_menu_insert);
+  gtk_widget_class_bind_template_callback (widget_class, on_recent_menu_remove);
 }
 
 
@@ -3231,11 +3485,59 @@ glade_window_check_devhelp (GladeWindow *window)
   g_return_if_fail (GLADE_IS_WINDOW (window));
 
   if (glade_util_have_devhelp ())
+    g_signal_connect (glade_app_get (), "doc-search", G_CALLBACK (doc_search_cb), window);
+}
+
+void
+glade_window_registration_notify_user (GladeWindow *window)
+{
+  gboolean skip_reminder, completed;
+  GladeWindowPrivate *priv;
+
+  g_return_if_fail (GLADE_IS_WINDOW (window));
+  priv = window->priv;
+
+  g_object_get (priv->registration,
+                "completed", &completed,
+                "skip-reminder", &skip_reminder,
+                NULL);
+  
+  if (!completed && !skip_reminder)
     {
-      glade_editor_show_info (window->priv->editor);
+      GtkWidget *dialog, *check;
 
-      g_signal_connect (glade_app_get (), "doc-search",
-                        G_CALLBACK (doc_search_cb), window);
+      dialog = gtk_message_dialog_new (GTK_WINDOW (glade_app_get_window ()),
+                                       GTK_DIALOG_DESTROY_WITH_PARENT,
+                                       GTK_MESSAGE_QUESTION,
+                                       GTK_BUTTONS_YES_NO,
+                                       "%s",
+                                       /* translators: Primary message of a dialog used to notify the user about the survey */
+                                       _("We are conducting a user survey\n would you like to take it now?"));
 
+      gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG (dialog), "%s",
+                                                /* translators: Secondary text of a dialog used to notify the user about the survey */
+                                                _("If not, you can always find it in the Help menu."));
+
+      check = gtk_check_button_new_with_mnemonic (_("_Do not show this dialog again"));
+      gtk_box_pack_end (GTK_BOX (gtk_dialog_get_content_area (GTK_DIALOG (dialog))),
+                        check, FALSE, FALSE, 0);
+      gtk_widget_set_halign (check, GTK_ALIGN_START);
+      gtk_widget_set_margin_start (check, 6);
+      gtk_widget_show (check);
+
+      if (gtk_dialog_run (GTK_DIALOG (dialog)) == GTK_RESPONSE_YES)
+          gtk_window_present (GTK_WINDOW (priv->registration));
+      
+      if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (check)))
+        {
+          g_object_set (priv->registration, "skip-reminder", TRUE, NULL);
+          glade_app_config_save ();
+        }
+
+      gtk_widget_destroy (dialog);
     }
+  else if (!completed)
+    glade_util_flash_message (priv->statusbar, priv->statusbar_context_id, "%s",
+                              /* translators: Text to show in the statusbar if the user did not completed the survey and choose not to show the notification dialog again */
+                              _("Go to Help -> Registration & User Survey and complete our survey!"));
 }

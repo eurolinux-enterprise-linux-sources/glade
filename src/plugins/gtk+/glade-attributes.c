@@ -207,6 +207,7 @@ static gboolean
 append_empty_row (GtkListStore *store, PangoAttrType type)
 {
   const gchar *name = NULL;
+  guint spin_digits = 0;
   GtkListStore *model = get_enum_model_for_combo (type);
   GtkTreeIter iter;
   AttrEditType edit_type = EDIT_INVALID;
@@ -293,6 +294,7 @@ append_empty_row (GtkListStore *store, PangoAttrType type)
       case PANGO_ATTR_SCALE:
         edit_type = EDIT_SPIN;
         name = C_ ("textattr", "Scale");
+        spin_digits = 3;
         break;
 
       case PANGO_ATTR_FONT_DESC:
@@ -327,6 +329,7 @@ append_empty_row (GtkListStore *store, PangoAttrType type)
                           COLUMN_TEXT_STYLE, PANGO_STYLE_ITALIC,
                           COLUMN_TEXT_FG, "Grey",
                           COLUMN_COMBO_MODEL, model,
+                          COLUMN_SPIN_DIGITS, spin_digits,
                           ACTIVATE_COLUMN_FROM_TYPE (edit_type), TRUE, -1);
       return TRUE;
     }
@@ -724,30 +727,30 @@ value_icon_activate (GtkCellRendererToggle *cell_renderer,
         if (text && gdk_rgba_parse (&color, text))
           gtk_color_chooser_set_rgba (GTK_COLOR_CHOOSER (dialog), &color);
 
-        gtk_dialog_run (GTK_DIALOG (dialog));
+        if (gtk_dialog_run (GTK_DIALOG (dialog)) == GTK_RESPONSE_OK)
+          {
+            gtk_color_chooser_get_rgba (GTK_COLOR_CHOOSER (dialog), &color);
+            /* Use GdkColor string format */
+            if (((guint8)(color.red * 0xFF)) * 0x101 == (guint16)(color.red * 0xFFFF) &&
+                ((guint8)(color.green * 0xFF)) * 0x101 == (guint16)(color.green * 0xFFFF) &&
+                ((guint8)(color.blue * 0xFF)) * 0x101 == (guint16)(color.blue * 0xFFFF))
+              new_text = g_strdup_printf ("#%02X%02X%02X",
+                                          (guint8)(color.red * 0xFF),
+                                          (guint8)(color.green * 0xFF),
+                                          (guint8)(color.blue * 0xFF));
+            else
+              new_text = g_strdup_printf ("#%04X%04X%04X",
+                                          (guint16)(color.red * 0xFFFF),
+                                          (guint16)(color.green * 0xFFFF),
+                                          (guint16)(color.blue * 0xFFFF));
 
-        gtk_color_chooser_get_rgba (GTK_COLOR_CHOOSER (dialog), &color);
-        
-        /* Use GdkColor string format */
-        if (((guint8)(color.red * 0xFF)) * 0x101 == (guint16)(color.red * 0xFFFF) &&
-            ((guint8)(color.green * 0xFF)) * 0x101 == (guint16)(color.green * 0xFFFF) &&
-            ((guint8)(color.blue * 0xFF)) * 0x101 == (guint16)(color.blue * 0xFFFF))
-          new_text = g_strdup_printf ("#%02X%02X%02X",
-                                      (guint8)(color.red * 0xFF),
-                                      (guint8)(color.green * 0xFF),
-                                      (guint8)(color.blue * 0xFF));
-        else
-          new_text = g_strdup_printf ("#%04X%04X%04X",
-                                      (guint16)(color.red * 0xFFFF),
-                                      (guint16)(color.green * 0xFFFF),
-                                      (guint16)(color.blue * 0xFFFF));
-
-        gtk_list_store_set (GTK_LIST_STORE (eprop_attrs->model), &iter,
-                            COLUMN_TEXT, new_text,
-                            COLUMN_NAME_WEIGHT, PANGO_WEIGHT_BOLD,
-                            COLUMN_TEXT_STYLE, PANGO_STYLE_NORMAL,
-                            COLUMN_TEXT_FG, "Black", -1);
-        g_free (new_text);
+            gtk_list_store_set (GTK_LIST_STORE (eprop_attrs->model), &iter,
+                                COLUMN_TEXT, new_text,
+                                COLUMN_NAME_WEIGHT, PANGO_WEIGHT_BOLD,
+                                COLUMN_TEXT_STYLE, PANGO_STYLE_NORMAL,
+                                COLUMN_TEXT_FG, "Black", -1);
+            g_free (new_text);
+          }
 
         gtk_widget_destroy (dialog);
         break;
@@ -760,17 +763,18 @@ value_icon_activate (GtkCellRendererToggle *cell_renderer,
         if (text)
           gtk_font_chooser_set_font (GTK_FONT_CHOOSER (dialog), text);
 
-        gtk_dialog_run (GTK_DIALOG (dialog));
+        if (gtk_dialog_run (GTK_DIALOG (dialog)) == GTK_RESPONSE_OK)
+          {
+            new_text = gtk_font_chooser_get_font (GTK_FONT_CHOOSER (dialog));
 
-        new_text = gtk_font_chooser_get_font (GTK_FONT_CHOOSER (dialog));
+            gtk_list_store_set (GTK_LIST_STORE (eprop_attrs->model), &iter,
+                                COLUMN_TEXT, new_text,
+                                COLUMN_NAME_WEIGHT, PANGO_WEIGHT_BOLD,
+                                COLUMN_TEXT_STYLE, PANGO_STYLE_NORMAL,
+                                COLUMN_TEXT_FG, "Black", -1);
+            g_free (new_text);
 
-        gtk_list_store_set (GTK_LIST_STORE (eprop_attrs->model), &iter,
-                            COLUMN_TEXT, new_text,
-                            COLUMN_NAME_WEIGHT, PANGO_WEIGHT_BOLD,
-                            COLUMN_TEXT_STYLE, PANGO_STYLE_NORMAL,
-                            COLUMN_TEXT_FG, "Black", -1);
-        g_free (new_text);
-
+          }
         gtk_widget_destroy (dialog);
         break;
 
@@ -820,7 +824,7 @@ value_combo_spin_edited (GtkCellRendererText *cell,
   gtk_tree_model_get (eprop_attrs->model, &iter, COLUMN_TYPE, &type, -1);
 
   /* Reset the column */
-  if (new_text && strcmp (new_text, _("None")) == 0)
+  if (new_text && (*new_text == '\0' || strcmp (new_text, _("None")) == 0))
     {
       gtk_list_store_set (GTK_LIST_STORE (eprop_attrs->model), &iter,
                           COLUMN_TEXT, _("<Enter Value>"),
@@ -837,6 +841,15 @@ value_combo_spin_edited (GtkCellRendererText *cell,
 
   sync_object (eprop_attrs, FALSE);
 
+}
+
+static void
+value_combo_spin_editing_started (GtkCellRenderer *cell,
+                                  GtkCellEditable *editable,
+                                  const gchar     *path)
+{
+  if (GTK_IS_SPIN_BUTTON (editable))
+    gtk_spin_button_set_numeric (GTK_SPIN_BUTTON (editable), TRUE);
 }
 
 static GtkWidget *
@@ -912,7 +925,7 @@ glade_eprop_attrs_view (GladeEditorProperty *eprop)
 
   /* Icon renderer */
   renderer = glade_cell_renderer_icon_new ();
-  g_object_set (G_OBJECT (renderer), "icon-name", GTK_STOCK_EDIT, NULL);
+  g_object_set (G_OBJECT (renderer), "icon-name", "gtk-edit", NULL);
   gtk_tree_view_column_pack_start (column, renderer, FALSE);
   gtk_tree_view_column_set_attributes (column, renderer,
                                        "activatable", COLUMN_BUTTON_ACTIVE,
@@ -953,6 +966,8 @@ glade_eprop_attrs_view (GladeEditorProperty *eprop)
                                        "digits", COLUMN_SPIN_DIGITS, NULL);
   g_signal_connect (G_OBJECT (renderer), "edited",
                     G_CALLBACK (value_combo_spin_edited), eprop);
+  g_signal_connect (G_OBJECT (renderer), "editing-started",
+                    G_CALLBACK (value_combo_spin_editing_started), NULL);
 
   gtk_tree_view_column_set_expand (GTK_TREE_VIEW_COLUMN (column), TRUE);
   gtk_tree_view_append_column (GTK_TREE_VIEW (view_widget), column);
@@ -1043,9 +1058,9 @@ glade_eprop_attrs_show_dialog (GtkWidget *dialog_button,
                                         GTK_WINDOW (parent),
                                         GTK_DIALOG_MODAL |
                                         GTK_DIALOG_DESTROY_WITH_PARENT,
-                                        GTK_STOCK_CLEAR, GLADE_RESPONSE_CLEAR,
-                                        GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-                                        GTK_STOCK_OK, GTK_RESPONSE_OK, NULL);
+                                        _("C_lear"), GLADE_RESPONSE_CLEAR,
+                                        _("_Cancel"), GTK_RESPONSE_CANCEL,
+                                        _("_OK"), GTK_RESPONSE_OK, NULL);
 
   vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 6);
   gtk_widget_show (vbox);
@@ -1131,7 +1146,8 @@ glade_eprop_attrs_create_input (GladeEditorProperty *eprop)
 
   hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
 
-  button = gtk_button_new_from_stock (GTK_STOCK_EDIT);
+  button = gtk_button_new_with_label (_("Edit Attributes"));
+  gtk_widget_set_hexpand (button, TRUE);
   gtk_widget_show (button);
   gtk_box_pack_start (GTK_BOX (hbox), button, TRUE, TRUE, 0);
 

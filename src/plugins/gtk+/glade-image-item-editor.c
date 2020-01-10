@@ -35,8 +35,7 @@ static void glade_image_item_editor_grab_focus (GtkWidget * widget);
 
 static GladeEditableIface *parent_editable_iface;
 
-G_DEFINE_TYPE_WITH_CODE (GladeImageItemEditor, glade_image_item_editor,
-                         GTK_TYPE_VBOX,
+G_DEFINE_TYPE_WITH_CODE (GladeImageItemEditor, glade_image_item_editor, GTK_TYPE_BOX,
                          G_IMPLEMENT_INTERFACE (GLADE_TYPE_EDITABLE,
                                                 glade_image_item_editor_editable_init));
 
@@ -54,13 +53,17 @@ glade_image_item_editor_class_init (GladeImageItemEditorClass * klass)
 static void
 glade_image_item_editor_init (GladeImageItemEditor * self)
 {
+  gtk_orientable_set_orientation (GTK_ORIENTABLE (self),
+				  GTK_ORIENTATION_VERTICAL);
 }
 
 static GladeWidget *
 get_image_widget (GladeWidget * widget)
 {
   GtkWidget *image;
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
   image = gtk_image_menu_item_get_image (GTK_IMAGE_MENU_ITEM (glade_widget_get_object (widget)));
+G_GNUC_END_IGNORE_DEPRECATIONS
   return image ? glade_widget_get_from_gobject (image) : NULL;
 }
 

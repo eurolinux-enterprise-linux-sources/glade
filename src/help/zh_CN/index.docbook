@@ -18,19 +18,9 @@
     <abstract role="description"><para>Glade 是 GTK+ 应用程序的一个图形界面设计器。</para>
     </abstract>
 
-    <copyright lang="en"> 
-      <year>2006</year> 
-      <holder>Vincent Geddes</holder> 
-    </copyright>
-    <copyright lang="en"> 
-      <year>2004</year>
-      <year>2003</year>
-      <holder>Sun Microsystems</holder> 
-    </copyright> 
-    <copyright lang="en"> 
-      <year>2002</year><year>2000</year> 
-      <holder>Michael Vance</holder> 
-    </copyright> 
+    <copyright><year>2006</year> <holder>Vincent Geddes</holder></copyright>
+    <copyright><year>2004</year> <year>2003</year> <holder>Sun Microsystems</holder></copyright> 
+    <copyright><year>2002</year><year>2000</year> <holder>Michael Vance</holder></copyright> 
 
     <publisher> 
       <publishername>GNOME 文档项目</publishername> 
@@ -39,28 +29,9 @@
    <include xmlns="http://www.w3.org/2001/XInclude" href="legal.xml"/>
 
     <authorgroup> 
-      <author role="maintainer" lang="en"> 
-	<firstname>Vincent</firstname> 
-	<surname>Geddes</surname> 
-	<affiliation> 
-	  <orgname>GNOME Documentation Project</orgname>
-	  <address><email>vincent.geddes@gmail.com</email></address>
-	</affiliation>
-      </author> 
-      <author lang="en"> 
-        <firstname>Sun</firstname> 
-        <surname>GNOME Documentation Team</surname> 
-        <affiliation> 
-          <orgname>Sun Microsystems</orgname> 
-        </affiliation> 
-       </author> 
-       <author lang="en"> 
-         <firstname>Michael</firstname> 
-         <surname>Vance</surname> 
-         <affiliation> 
-           <orgname>GNOME Documentation Project</orgname> 
-           </affiliation> 
-       </author> 
+      <author role="maintainer"><firstname>Vincent</firstname> <surname>Geddes</surname> <affiliation> <orgname>GNOME 文档项目</orgname> <address><email>vincent.geddes@gmail.com</email></address> </affiliation></author> 
+      <author><firstname>Sun</firstname> <surname>GNOME 文档团队</surname> <affiliation> <orgname>Sun Microsystems</orgname> </affiliation></author> 
+       <author><firstname>Michael</firstname> <surname>Vance</surname> <affiliation> <orgname>GNOME 文档项目</orgname> </affiliation></author> 
     </authorgroup>
 
 
@@ -78,68 +49,57 @@
 <!-- When the desktop release version changes to V3.x, the revision number of the manual changes -->
 <!-- to V3.0, and so on. -->  
     <revhistory>
-        <revision lang="en"> 
-		<revnumber>Glade Manual 3.0</revnumber> 
-		<date>5 December 2006</date>
-		<revdescription> 
-	  		<para role="author" lang="en">Vincent Geddes</para>
-	  		<para role="publisher" lang="en">GNOME Documentation Project</para>
-		</revdescription> 
-        </revision>
-        <revision lang="en"> 
-                <revnumber>Glade Manual 2.1;</revnumber> 
-                <date>17 June 2004</date> 
-                <revdescription> 
-                        <para role="author" lang="en">Sun GNOME Documentation Team</para>
-                        <para role="publisher" lang="en">GNOME Documentation Project</para>
-                </revdescription> 
-        </revision>
-        <revision lang="en"> 
-                <revnumber>Glade User Manual 2.0</revnumber> 
-                <date>25 February 2004</date> 
-                <revdescription> 
-                        <para role="author" lang="en">Sun GNOME Documentation Team</para>
-                        <para role="publisher" lang="en">GNOME Documentation Project</para>
-                </revdescription> 
-        </revision>             
-        <revision lang="en"> 
-                <revnumber>Glade User Manual 1.2</revnumber> 
-                <date>10 Feb 2004</date> 
-                <revdescription> 
-                        <para role="author" lang="en">Sun GNOME Documentation Team</para>
-                        <para role="publisher" lang="en">GNOME Documentation Project</para>
-                </revdescription> 
-        </revision>  
-        <revision lang="en"> 
-                <revnumber>Glade User Manual 1.1</revnumber> 
-                <date>30 Mar 2002</date> 
-                <revdescription> 
-                        <para role="author" lang="en"> Michael Vance</para>
-                        <para role="publisher" lang="en">GNOME Documentation Project</para>
-                </revdescription> 
-        </revision> 
-        <revision lang="en"> 
-                <revnumber>Glade User Manual 1.0</revnumber> 
-                <date>11 May 2000</date> 
-                <revdescription> 
-                        <para role="author" lang="en">Michael Vance</para>
-                        <para role="publisher" lang="en">GNOME Documentation Project</para>
-                </revdescription> 
-        </revision> 
+        <revision><revnumber>Glade 手册 3.0</revnumber> <date>2006年12月5日</date> <revdescription> 
+	  		<para role="author">Vincent Geddes</para>
+	  		<para role="publisher">GNOME 文档项目</para>
+		</revdescription></revision>
+        <revision><revnumber>Glade手册 2.1;</revnumber> <date>2004年6月17日</date> <revdescription> 
+                        <para role="author">Sun GNOME 文档团队</para>
+                        <para role="publisher">GNOME 文档项目</para>
+                </revdescription></revision>
+        <revision><revnumber>Glade 用户手册 2.0</revnumber> <date>2004年2月25日</date> <revdescription> 
+                        <para role="author">Sun GNOME 文档团队</para>
+                        <para role="publisher">GNOME 文档项目</para>
+                </revdescription></revision>             
+        <revision><revnumber>Glade 用户手册1.2</revnumber> <date>2004年2月10日</date> <revdescription> 
+                        <para role="author">Sun GNOME 文档团队</para>
+                        <para role="publisher">GNOME 文档项目</para>
+                </revdescription></revision>  
+        <revision><revnumber>Glade用户手册1.1</revnumber> <date>2002年3月30日</date> <revdescription> 
+                        <para role="author">Michael Vance</para>
+                        <para role="publisher">GNOME 文档项目</para>
+                </revdescription></revision> 
+        <revision><revnumber>Glade 用户手册 1.0</revnumber> <date>2000年5月11日</date> <revdescription> 
+                        <para role="author">Michael Vance</para>
+                        <para role="publisher">GNOME 文档项目</para>
+                </revdescription></revision> 
     </revhistory> 
 
     <releaseinfo>本手册描述了 3.1.0 版的 Glade。</releaseinfo> 
     <legalnotice> 
       <title>反馈</title> 
-      <para lang="en">To report a bug or make a suggestion regarding the Glade application or
-      this manual, follow the directions in the <ulink url="help:gnome-feedback" type="help">GNOME Feedback Page</ulink>.
-      </para>
+      <para>要报告一个错误或者给 Glade 程序及本手册提建议，请查看 <ulink url="ghelp:gnome-feedback" type="help">GNOME 反馈页面</ulink> 上的说明。</para>
 <!-- Translators may also add here feedback address for translations -->
     </legalnotice> 
+  
+    <othercredit class="translator">
+      <personname>
+        <firstname>YunQiang Su</firstname>
+      </personname>
+      <email>wzssyqa@gmail.com</email>
+    </othercredit>
+    <copyright>
+      
+        <year>2009</year>
+      
+        <year>2011</year>
+      
+      <holder>YunQiang Su</holder>
+    </copyright>
   </articleinfo> 
 
-    <indexterm lang="en"><primary>glade</primary></indexterm>
-    <indexterm lang="en"><primary>user interface designer</primary></indexterm>
+    <indexterm><primary>glade</primary></indexterm>
+    <indexterm><primary>用户界面设计器</primary></indexterm>
 
 
 <!-- ============= Document Body ============================= -->
@@ -167,17 +127,14 @@
     	<varlistentry>
     		<term><guimenu>应用程序</guimenu> 菜单</term>
     		<listitem>
-    		<para lang="en">Choose 
-    		<menuchoice>
-    		<guisubmenu>Programming</guisubmenu>
-    		<guimenuitem>Glade Interface Designer</guimenuitem>
-    		</menuchoice>. </para>
+    		<para>选择 <menuchoice><guisubmenu>编程</guisubmenu><guimenuitem>Glade 界面设计大师</guimenuitem></menuchoice>。</para>
     		</listitem>
     	</varlistentry>
     	<varlistentry>
     		<term>命令行</term>
     		<listitem>
-    		<para>要从命令行启动 <application>Glade</application>，输入如下命名然后按 <keycap>Return</keycap>：<command>glade-3</command></para>	 
+			<para lang="en">To start <application>Glade</application> from a command line, type <command>glade</command>
+			and then press <keycap>Return</keycap>.</para>
     		</listitem>
     	</varlistentry>
     </variablelist>
@@ -190,10 +147,7 @@
         <figure id="main-window-fig"> 
           <title><application>Glade</application> 窗口</title> 
             <screenshot> 
-              <mediaobject lang="en">
-                <imageobject><imagedata fileref="figures/main-window.png" format="PNG"/></imageobject>
-                <textobject><phrase>Shows the<application>Glade</application> window.</phrase></textobject> 
-              </mediaobject> 
+              <mediaobject><imageobject><imagedata fileref="figures/main-window.png" format="PNG"/></imageobject> <textobject><phrase>显示 <application>Glade</application> 窗口。</phrase></textobject></mediaobject> 
             </screenshot> 
         </figure>
         
@@ -262,7 +216,7 @@
 		<itemizedlist> 
 		  <listitem><para>将改动保存到已有的工程文件，选择 <menuchoice><guimenu>文件</guimenu><guimenuitem>保存</guimenuitem></menuchoice></para>
 		  </listitem>
-		  <listitem><para lang="en">To save a new project file or to save an existing project file under a new filename, choose <menuchoice> <guimenu>File</guimenu> <guimenuitem>Save As</guimenuitem> </menuchoice>. Enter a name for the project file in the <guilabel>Save As</guilabel> dialog, then click <guibutton>Save</guibutton>. </para>
+		  <listitem><para>保存新工程文件或者将已有的工程文件保存为新的文件名，选择 <menuchoice><guimenu>文件</guimenu><guimenuitem>另存为</guimenuitem></menuchoice>。在 <guilabel>另存为</guilabel>对话框中输入工程文件名，然后点击 <guibutton>保存</guibutton>。</para>
 		  </listitem>
 		</itemizedlist>
 	 </sect2>
@@ -321,50 +275,19 @@
 <para>创建了所有需要的 boxes 之后，可以向 boxes 中添加特定的控件如 labels, buttons 以及更多的复杂的控件。注意，<application>Glade</application> 打包控件到布局中，这减少了很多乏味的工作。使用 boxes 允许在本地化时窗口调整大小以容纳不同的语言的不同大小的标签。</para></sect2>
          <sect2 id="place-widgets-clipboard"> 
                 <title>放置一个控件到剪切板</title> 
-                <para lang="en">
-                  To remove a widget from a parent and place the widget on
-the clipboard,
-                  select the widget then choose 
-                  <menuchoice> 
-                         <guimenu>Edit</guimenu> 
-                         <guisubmenu>Cut</guisubmenu> 
-                  </menuchoice>. 
-                </para>
+                <para>要把一个控件从其父控件删除并放到剪贴板中，请选择这个控件，然后选择  <menuchoice><guimenu>编辑</guimenu><guisubmenu>剪切</guisubmenu></menuchoice>。</para>
          </sect2> 
          <sect2 id="copy-widget-clipboard"> 
                 <title>复制一个控件到剪切板</title> 
-                <para lang="en">
-                  To copy a widget to the clipboard, select the widget then
-choose 
-                  <menuchoice> 
-                         <guimenu>Edit</guimenu> 
-                         <guisubmenu>Copy</guisubmenu> 
-                  </menuchoice>. The original widget remains attached to
-the parent. 
-                </para>
+                <para>复制控件到剪切板，选择  <menuchoice><guimenu>编辑</guimenu><guisubmenu>复制</guisubmenu></menuchoice>。原来的控件仍然附着在父控件上。</para>
          </sect2> 
          <sect2 id="paste-widget-clipboard"> 
                 <title>从剪切板粘贴控件到您的工程</title> 
-                <para lang="en">
-                  To paste a widget that exists on the clipboard into your
-project,
-                  choose 
-                  <menuchoice> 
-                         <guimenu>Edit</guimenu> 
-                         <guisubmenu>Paste</guisubmenu> 
-                  </menuchoice>.</para><para>在 <application>Glade</application> 中，每个控件都必须有一个独特的名字。如果您剪切了一个控件，然后又将其粘贴到您的工程中，这个控件和其子控件将保持它们原来的名字。如果是复制控件，或多次粘贴同一控件到您的工程中，<application>Glade</application>将为复制的控件产生新名字。</para>
+                <para>从剪切板粘贴控件到您的工程，选择 <menuchoice><guimenu>编辑</guimenu><guisubmenu>粘贴</guisubmenu></menuchoice></para><para>在 <application>Glade</application> 中，每个控件都必须有一个独特的名字。如果您剪切了一个控件，然后又将其粘贴到您的工程中，这个控件和其子控件将保持它们原来的名字。如果是复制控件，或多次粘贴同一控件到您的工程中，<application>Glade</application>将为复制的控件产生新名字。</para>
          </sect2> 
          <sect2 id="delete-widget"> 
                 <title>删除控件</title> 
-                <para lang="en">To delete a widget from the parent without
-                  moving the widget to the clipboard, 
-                                select the widget then 
-                                choose 
-                                <menuchoice> 
-                                  <guimenu>Edit</guimenu> 
-                                  <guisubmenu>Delete</guisubmenu> 
-                                </menuchoice>. 
-                         </para>
+                <para>要直接从父控件中删除一个控件，而不把它移动到剪切板，选中这个控件，然后选择 <menuchoice><guimenu>E编辑</guimenu><guisubmenu>删除</guisubmenu></menuchoice>。</para>
                  
          </sect2> 
          
@@ -383,12 +306,7 @@ project,
 
     <para>关于 Glade 的另外一个好的消息源是 Glade <ulink url="http://lists.ximian.com/mailman/listinfo/glade-users" type="http">用户</ulink> 和 <ulink url="http://lists.ximian.com/mailman/listinfo/glade-devel" type="http">开发者</ulink> 邮件列表。除了订阅，你可能也行浏览列表归档，可以通过相同的链接访问。</para>
 
-    <para lang="en"> This program is distributed under the terms of the GNU
-      General Public license as published by the Free Software
-      Foundation; either version 2 of the License, or (at your option)
-      any later version. A copy of this license can be found at this
-      <ulink url="help:gpl" type="help">link</ulink>, or in the file
-      COPYING included with the source code of this program. </para>
+    <para>本程序是在自由软件基金会发布的通用公共许可证下发布的，或者是第二版，或者(由您的选择)更新的版本。可以从 <ulink url="ghelp:gpl" type="help">link</ulink> 找到这个许可证的一个副本，也可以从本程序的源代码的 COPYING 文件中找到。</para>
   </sect1> 
 
 </article>

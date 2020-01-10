@@ -18,19 +18,9 @@
     <abstract role="description"><para>Glade är en användargränssnittsbyggare för GTK+-program.</para>
     </abstract>
 
-    <copyright lang="en"> 
-      <year>2006</year> 
-      <holder>Vincent Geddes</holder> 
-    </copyright>
-    <copyright lang="en"> 
-      <year>2004</year>
-      <year>2003</year>
-      <holder>Sun Microsystems</holder> 
-    </copyright> 
-    <copyright lang="en"> 
-      <year>2002</year><year>2000</year> 
-      <holder>Michael Vance</holder> 
-    </copyright> 
+    <copyright><year>2006</year> <holder>Vincent Geddes</holder></copyright>
+    <copyright><year>2004</year> <year>2003</year> <holder>Sun Microsystems</holder></copyright> 
+    <copyright><year>2002</year><year>2000</year> <holder>Michael Vance</holder></copyright> 
 
     <publisher> 
       <publishername>Dokumentationsprojekt för GNOME</publishername> 
@@ -39,28 +29,9 @@
    <include xmlns="http://www.w3.org/2001/XInclude" href="legal.xml"/>
 
     <authorgroup> 
-      <author role="maintainer" lang="en"> 
-	<firstname>Vincent</firstname> 
-	<surname>Geddes</surname> 
-	<affiliation> 
-	  <orgname>GNOME Documentation Project</orgname>
-	  <address><email>vincent.geddes@gmail.com</email></address>
-	</affiliation>
-      </author> 
-      <author lang="en"> 
-        <firstname>Sun</firstname> 
-        <surname>GNOME Documentation Team</surname> 
-        <affiliation> 
-          <orgname>Sun Microsystems</orgname> 
-        </affiliation> 
-       </author> 
-       <author lang="en"> 
-         <firstname>Michael</firstname> 
-         <surname>Vance</surname> 
-         <affiliation> 
-           <orgname>GNOME Documentation Project</orgname> 
-           </affiliation> 
-       </author> 
+      <author role="maintainer"><firstname>Vincent</firstname> <surname>Geddes</surname> <affiliation> <orgname>Dokumentationsprojektet för GNOME</orgname> <address><email>vincent.geddes@gmail.com</email></address> </affiliation></author> 
+      <author><firstname>Sun</firstname> <surname>Dokumentationsgruppen för GNOME</surname> <affiliation> <orgname>Sun Microsystems</orgname> </affiliation></author> 
+       <author><firstname>Michael</firstname> <surname>Vance</surname> <affiliation> <orgname>Dokumentationsprojektet för GNOME</orgname> </affiliation></author> 
     </authorgroup>
 
 
@@ -78,68 +49,68 @@
 <!-- When the desktop release version changes to V3.x, the revision number of the manual changes -->
 <!-- to V3.0, and so on. -->  
     <revhistory>
-        <revision lang="en"> 
-		<revnumber>Glade Manual 3.0</revnumber> 
-		<date>5 December 2006</date>
-		<revdescription> 
-	  		<para role="author" lang="en">Vincent Geddes</para>
-	  		<para role="publisher" lang="en">GNOME Documentation Project</para>
-		</revdescription> 
-        </revision>
-        <revision lang="en"> 
-                <revnumber>Glade Manual 2.1;</revnumber> 
-                <date>17 June 2004</date> 
-                <revdescription> 
-                        <para role="author" lang="en">Sun GNOME Documentation Team</para>
-                        <para role="publisher" lang="en">GNOME Documentation Project</para>
-                </revdescription> 
-        </revision>
-        <revision lang="en"> 
-                <revnumber>Glade User Manual 2.0</revnumber> 
-                <date>25 February 2004</date> 
-                <revdescription> 
-                        <para role="author" lang="en">Sun GNOME Documentation Team</para>
-                        <para role="publisher" lang="en">GNOME Documentation Project</para>
-                </revdescription> 
-        </revision>             
-        <revision lang="en"> 
-                <revnumber>Glade User Manual 1.2</revnumber> 
-                <date>10 Feb 2004</date> 
-                <revdescription> 
-                        <para role="author" lang="en">Sun GNOME Documentation Team</para>
-                        <para role="publisher" lang="en">GNOME Documentation Project</para>
-                </revdescription> 
-        </revision>  
-        <revision lang="en"> 
-                <revnumber>Glade User Manual 1.1</revnumber> 
-                <date>30 Mar 2002</date> 
-                <revdescription> 
-                        <para role="author" lang="en"> Michael Vance</para>
-                        <para role="publisher" lang="en">GNOME Documentation Project</para>
-                </revdescription> 
-        </revision> 
-        <revision lang="en"> 
-                <revnumber>Glade User Manual 1.0</revnumber> 
-                <date>11 May 2000</date> 
-                <revdescription> 
-                        <para role="author" lang="en">Michael Vance</para>
-                        <para role="publisher" lang="en">GNOME Documentation Project</para>
-                </revdescription> 
-        </revision> 
+        <revision><revnumber>Glade Handbok 3.0</revnumber> <date>5 december 2006</date> <revdescription> 
+	  		<para role="author">Vincent Geddes</para>
+	  		<para role="publisher">Dokumentationsprojekt för GNOME</para>
+		</revdescription></revision>
+        <revision><revnumber>Glade Handbok 2.1;</revnumber> <date>17 juni 2004</date> <revdescription> 
+                        <para role="author">Suns GNOME-dokumentationsteam</para>
+                        <para role="publisher">Dokumentationsprojekt för GNOME</para>
+                </revdescription></revision>
+        <revision><revnumber>Glade Användarhandbok 2.0</revnumber> <date>25 februari 2004</date> <revdescription> 
+                        <para role="author">Suns GNOME-dokumentationsteam</para>
+                        <para role="publisher">Dokumentationsprojekt för GNOME</para>
+                </revdescription></revision>             
+        <revision><revnumber>Glade Användarhandbok 1.2</revnumber> <date>10 feb 2004</date> <revdescription> 
+                        <para role="author">Suns GNOME-dokumentationsteam</para>
+                        <para role="publisher">Dokumentationsprojekt för GNOME</para>
+                </revdescription></revision>  
+        <revision><revnumber>Glade Användarhandbok 1.1</revnumber> <date>30 mar 2002</date> <revdescription> 
+                        <para role="author">Michael Vance</para>
+                        <para role="publisher">Dokumentationsprojekt för GNOME</para>
+                </revdescription></revision> 
+        <revision><revnumber>Glade Användarhandbok 1.0</revnumber> <date>11 maj 2000</date> <revdescription> 
+                        <para role="author">Michael Vance</para>
+                        <para role="publisher">Dokumentationsprojekt för GNOME</para>
+                </revdescription></revision> 
     </revhistory> 
 
     <releaseinfo>Den här handboken beskriver version 3.1.0 av Glade.</releaseinfo> 
     <legalnotice> 
       <title>Återkoppling</title> 
-      <para lang="en">To report a bug or make a suggestion regarding the Glade application or
-      this manual, follow the directions in the <ulink url="help:gnome-feedback" type="help">GNOME Feedback Page</ulink>.
-      </para>
+      <para>För att rapportera ett fel eller framföra ett förslag angående programmet Glade eller denna handbok, följ instruktionerna på <ulink url="help:gnome-feedback" type="help">GNOME:s återkopplingssida</ulink>.</para>
 <!-- Translators may also add here feedback address for translations -->
     </legalnotice> 
+  
+    <othercredit class="translator">
+      <personname>
+        <firstname>Daniel Nylander</firstname>
+      </personname>
+      <email>po@danielnylander.se</email>
+    </othercredit>
+    <copyright>
+      
+        <year>2006</year>
+      
+      <holder>Daniel Nylander</holder>
+    </copyright>
+  
+    <othercredit class="translator">
+      <personname>
+        <firstname>Sebastian Rasmussen</firstname>
+      </personname>
+      <email>sebras@gmail.com</email>
+    </othercredit>
+    <copyright>
+      
+        <year>2016</year>
+      
+      <holder>Sebastian Rasmussen</holder>
+    </copyright>
   </articleinfo> 
 
-    <indexterm lang="en"><primary>glade</primary></indexterm>
-    <indexterm lang="en"><primary>user interface designer</primary></indexterm>
+    <indexterm><primary>glade</primary></indexterm>
+    <indexterm><primary>användargränssnittsbyggare</primary></indexterm>
 
 
 <!-- ============= Document Body ============================= -->
@@ -151,15 +122,9 @@
 
     <para>Gränssnittsbyggaren <application>Glade</application> låter dig skapa och redigera användargränssnitt för <application>GTK+</application>-program.</para>
 
-    <para lang="en">The GTK+ library provides an extensive collection of user interface building blocks
-    such as text boxes, dialog labels, numeric entries, check boxes, and menus. These
-    building blocks are called <emphasis>widgets</emphasis>. You can use Glade to place widgets in a GUI. Glade allows you
-    to modify the layout and properties of these widgets. You can also use Glade to add connections between
-    widgets and application source code.</para>
+    <para>Biblioteket GTK+ tillhandahåller en omfattande samling av byggblock för användargränssnitt så som textrutor, dialogetiketter, numeriska inmatningsfält, kryssrutor och menyer. Dessa byggblock kallas <emphasis>komponenter</emphasis>. Du kan använda Glade för att placera komponenter i ett GUI. Glade låter dig modifiera layouten och egenskaper för dessa komponenter. Du kan också använda Glade för att lägga till anslutningar mellan komponenter och programkällkod.</para>
 
-    <para lang="en">The user interfaces designed in Glade are stored in an XML format, enabling easy integration 
-    with external tools. You can use the <application>libglade</application> library to dynamically create
-    GUIs from the XML description.</para>
+    <para>Användargränssnitt som designats i Glade sparas i ett XML-format, vilket möjliggör enkel integration med externa verktyg. Du kan använda biblioteket <application>libglade</application> för att dynamiskt skapa GUI:n från XML-beskrivningen.</para>
 
   </sect1>
 
@@ -173,17 +138,13 @@
     	<varlistentry>
     		<term><guimenu>Program</guimenu>-menyn</term>
     		<listitem>
-    		<para lang="en">Choose 
-    		<menuchoice>
-    		<guisubmenu>Programming</guisubmenu>
-    		<guimenuitem>Glade Interface Designer</guimenuitem>
-    		</menuchoice>. </para>
+    		<para>Välj <menuchoice> <guisubmenu>Programmering</guisubmenu> <guimenuitem>Gränssnittsbyggaren Glade</guimenuitem> </menuchoice>.</para>
     		</listitem>
     	</varlistentry>
     	<varlistentry>
     		<term>Kommandorad</term>
     		<listitem>
-    		<para>För att starta <application>Glade</application> från kommandoraden, ange följande kommando och tryck sedan på <keycap>Return</keycap>: <command>glade-3</command></para>	 
+			<para>För att starta <application>Glade</application> från kommandoraden, skriv <command>glade</command> och tryck sedan på <keycap>Retur</keycap>.</para>
     		</listitem>
     	</varlistentry>
     </variablelist>
@@ -196,10 +157,7 @@
         <figure id="main-window-fig"> 
           <title><application>Glade</application>-fönstret</title> 
             <screenshot> 
-              <mediaobject lang="en">
-                <imageobject><imagedata fileref="figures/main-window.png" format="PNG"/></imageobject>
-                <textobject><phrase>Shows the<application>Glade</application> window.</phrase></textobject> 
-              </mediaobject> 
+              <mediaobject><imageobject><imagedata fileref="figures/main-window.png" format="PNG"/></imageobject> <textobject><phrase>Visar <application>Glade</application>-fönstret.</phrase></textobject></mediaobject> 
             </screenshot> 
         </figure>
         
@@ -211,9 +169,9 @@
             <para>Menyerna på menyraden innehåller alla de kommandon som du behöver för att arbeta med filer i <application>Glade</application>.</para>
             </listitem>
           </varlistentry>
-          <varlistentry> <term>Verktygsrad</term>
+          <varlistentry> <term>Verktygsfält</term>
             <listitem>
-            <para>Verktygsraden innehåller ett mindre antal kommandon som du kan komma åt från menyraden.</para>
+            <para>Verktygsfältet innehåller ett mindre antal kommandon som du kan komma åt från menyraden.</para>
             </listitem>
           </varlistentry>
           <varlistentry> <term>Designrutan</term>
@@ -223,22 +181,22 @@
           </varlistentry>
           <varlistentry> <term>Palett</term>
             <listitem>
-            <para>Paletten innehåller widgetar som kan användas för att bygga ett användargränssnitt.</para>
+            <para>Paletten innehåller komponenter som kan användas för att bygga ett användargränssnitt.</para>
             </listitem>
           </varlistentry>
           <varlistentry> <term>Inspekteraren</term>
             <listitem>
-            <para>Inspekteraren visar information om widgetarna i ett projekt.</para>
+            <para>Inspekteraren visar information om komponenterna i ett projekt.</para>
             </listitem>
           </varlistentry>
           <varlistentry> <term>Egenskapsredigerare</term>
             <listitem>
-            <para>Egenskapsredigeraren används för att manipulera egenskaperna för widgetar, såväl som att lägga till kopplingar till källkod.</para>
+            <para>Egenskapsredigeraren används för att manipulera egenskaperna för komponenter, såväl som att lägga till kopplingar till källkod.</para>
             </listitem>
           </varlistentry>
           <varlistentry> <term>Statusrad</term>
             <listitem>
-            <para lang="en">The statusbar displays information about current <application>Glade</application> activity and contextual information about the menu items.</para>
+            <para>Statusraden visar information om aktuell <application>Glade</application>-aktivitet och kontextinformation om menyobjekten.</para>
             </listitem>
           </varlistentry>
         </variablelist>
@@ -268,7 +226,7 @@
 		<itemizedlist> 
 		  <listitem><para>För att spara ändringar till en befintlig projektfil, välj <menuchoice><guimenu>Arkiv</guimenu><guimenuitem>Spara</guimenuitem></menuchoice>.</para>
 		  </listitem>
-		  <listitem><para lang="en">To save a new project file or to save an existing project file under a new filename, choose <menuchoice> <guimenu>File</guimenu> <guimenuitem>Save As</guimenuitem> </menuchoice>. Enter a name for the project file in the <guilabel>Save As</guilabel> dialog, then click <guibutton>Save</guibutton>. </para>
+		  <listitem><para>För att spara en ny projektfil eller för att spara en befintlig projektfil under ett nytt namn, välj <menuchoice> <guimenu>Arkiv</guimenu> <guimenuitem>Spara som</guimenuitem> </menuchoice>. Ange ett namn för projektfilen i dialogen <guilabel>Spara som</guilabel> och klicka sedan på <guibutton>Spara</guibutton>.</para>
 		  </listitem>
 		</itemizedlist>
 	 </sect2>
@@ -276,76 +234,39 @@
 
 
   <sect1 id="working-with-widgets"> 
-         <title>Arbeta med widgetar</title>
+         <title>Arbeta med komponenter</title>
          <sect2 id="select-widgets-palette">
-                <title>Välja widgetar från palettfönstret</title>
-                <para>Du kan arbeta med widgetarna i <guilabel>Palett</guilabel>-fönstret på följande sätt:</para>
+                <title>Välja komponenter från palettfönstret</title>
+                <para>Du kan arbeta med komponenterna i <guilabel>Palett</guilabel>-fönstret på följande sätt:</para>
                 <variablelist> 
                   <varlistentry> 
-                         <term lang="en">Selection mode</term> 
+                         <term>Markeringsläge</term> 
                          <listitem>
-                                <para lang="en">
-                                  To use selection mode,
- click on the 
-                                  <guilabel>Selector</guilabel> arrow. The
-pointer changes to an
-                                  arrow to indicate that selection mode is
-active. In this mode, you use the mouse to select widgets in your project.
-You can then use the <guilabel>Properties</guilabel> window to edit the
-properties of the widgets.</para>
-<para lang="en">You can also use the widget context menu to select a widget.
-Right-click on a widget to open the widget context menu.</para><para lang="en">You
-can add multiple widgets of a specific type from the
-<guilabel>Palette</guilabel> to your project by holding down the
-<keycap>Control</keycap> key when you select a widget. You need to click on
-the <guilabel>Selector</guilabel> arrow or another widget in the
-<guilabel>Palette</guilabel> to return to normal mode.</para>
+                                <para>För att använda markeringsläge, klicka på <guilabel>Väljar</guilabel>-pilen. Markören ändras till en pil för att indikera att markeringsläget är aktivt. I detta läge använder du musen för att markera komponenter i ditt projekt. Du kan sedan använda fönstret <guilabel>Egenskaper&gt;</guilabel> för att redigera komponenternas egenskaper.</para>
+<para>Du kan också använda komponentens snabbvalsmeny för att markera en komponent. Högerklicka på en komponent för att öppna komponentens snabbvalsmeny.</para><para>Du kan lägga till flera komponenter av en viss typ från <guilabel>Palett</guilabel> till ditt projekt genom att hålla ner <keycap>Ctrl</keycap>-tangenten när du markerar en komponent. Du måste klicka på <guilabel>Väljar</guilabel>-pilen eller en annan komponent i <guilabel>Palett</guilabel> för att återgå till normalläge.</para>
                          </listitem> 
                   </varlistentry> 
                 </variablelist> 
                 <variablelist> 
                   <varlistentry> 
-                         <term lang="en">Widget placement mode</term> 
+                         <term>Komponentplaceringsläge</term> 
                          <listitem> 
-                                <para lang="en">
-                                  To use widget placement mode, select a
-widget in the 
-                                  <guilabel>Palette</guilabel> window. When
-you select most widgets, the
-                                  pointer changes to a pointer-plus-cross.
-You can then place the widget inside containers,
-                                  top-level  widgets, and so on. After you
-place a widget, the mode returns to
-                                  selection mode.</para>
+                                <para>För att använda komponentplaceringsläge, markera en komponent i fönstret <guilabel>Palett</guilabel>. När du markerar de flesta komponenter ändras markören till en markör-plus-kors. Du kan sedan placera komponenten inuti behållare, toppnivåkomponenter och så vidare. Efter att du placerat en komponent återgår läget till markeringsläge.</para>
                          </listitem> 
                   </varlistentry> 
                 </variablelist> 
                 <variablelist> 
                   <varlistentry> 
-                         <term lang="en">Top-level placement mode</term> 
+                         <term>Toppnivåplaceringsläge</term> 
                          <listitem> 
-                                <para lang="en">
-                                  To use top level placement mode, select a
-defined top-level
-                                  widget in the
-<application>Palette</application> window. When you select a top-level
-                                  widget in the 
-                                  <guilabel>Palette</guilabel> window, the
-widget appears
-                                  immediately on your desktop. You can then
-edit the widget. After you select a top-level widget,
-                                  the mode returns to selection mode.
-                                </para>
+                                <para>För att använda toppnivåplaceringsläge, markera en definierad toppnivåkomponent i fönstret <application>Palett</application>. När du markerar en toppnivåkomponent i fönstret <guilabel>Palett</guilabel> visas komponenten omedelbart på ditt skrivbord. Du kan sedan redigera komponenten. Efter att du markerat en toppnivåkomponent återgår läget till markeringsläge.</para>
                          </listitem> 
                   </varlistentry> 
                 </variablelist> 
          </sect2>
 <sect2 id="organize-widgets">
-<title>Organisera widgetar i ditt projekt</title>
-<para lang="en">You use widget containers, or boxes, to layout and organize widgets
-in your project window. You can choose the following widget containers from
-the <guilabel>Palette</guilabel> window:
-</para>
+<title>Organisera komponenter i ditt projekt</title>
+<para>Du kan använda komponentbehållare, eller rutor, för att bestämma layout och organisera komponenter i ditt projektfönster. Du kan välja följande komponentbehållare från fönstret <guilabel>Palett</guilabel>:</para>
 <itemizedlist>
 <listitem><para>Horisontell ruta</para>
 </listitem><listitem><para>Vertikal ruta</para></listitem>
@@ -355,85 +276,34 @@ the <guilabel>Palette</guilabel> window:
 <listitem><para>Vertikal knappruta</para></listitem>
 <listitem><para>Horisontella paneler</para></listitem>
 <listitem><para>Vertikala paneler</para></listitem>
-<listitem><para lang="en">Notebook</para></listitem>
+<listitem><para>Flikhäfte</para></listitem>
 <listitem><para>Ram</para></listitem>
 <listitem><para>Rullbart fönster</para></listitem>
-<listitem><para lang="en">Viewport</para></listitem>
+<listitem><para>Vy</para></listitem>
 </itemizedlist>
-<para lang="en">
-You can  nest boxes  to create complex layout structures. When you create
-horizontal and vertical boxes, <application>Glade</application> asks you
-how many rows or columns to create initially, though rows and columns can
-easily be added or deleted later. 
-</para>
-<para lang="en">
-When you have created all the boxes you require, you can add specific
-widgets like labels, buttons, and more complicated widgets into the boxes.
-Notice that <application>Glade</application> packs widgets into the layout
-which eliminates a lot of tedious work. The use of boxes enables windows to
-change size to accommodate different size labels in different languages
-when the application is localized.</para></sect2>
+<para>Du kan nästla rutor för att skapa komplexa layoutstrukturer. När du skapar horisontella och vertikala rutor frågar <application>Glade</application> dig hur många rader eller kolumner som ska skapas initialt, även om rader och kolumner lätt kan läggas till eller tas bort senare.</para>
+<para>När du har skapat alla rutor du behöver, kan du lägga till specifika komponenter så som etiketter, knappar och mer komplicerade komponenter i rutorna. Notera att <application>Glade</application> packar ihop komponenter i layouten vilket eliminerar en hel del långtråkigt arbete. Användandet av rutor möjliggör att fönster ändrar storlek för att anpassas till olika stora etiketter på olika språk när programmet översätts.</para></sect2>
          <sect2 id="place-widgets-clipboard"> 
-                <title>Placera en widget i urklipp</title> 
-                <para lang="en">
-                  To remove a widget from a parent and place the widget on
-the clipboard,
-                  select the widget then choose 
-                  <menuchoice> 
-                         <guimenu>Edit</guimenu> 
-                         <guisubmenu>Cut</guisubmenu> 
-                  </menuchoice>. 
-                </para>
+                <title>Placera en komponent i urklipp</title> 
+                <para>För att ta bort en komponent från en förälder och placera komponenten i urklipp, markera komponenten och välj sedan <menuchoice> <guimenu>Redigera</guimenu> <guisubmenu>Klipp ut</guisubmenu> </menuchoice>.</para>
          </sect2> 
          <sect2 id="copy-widget-clipboard"> 
-                <title>Kopiera en widget till urklipp</title> 
-                <para lang="en">
-                  To copy a widget to the clipboard, select the widget then
-choose 
-                  <menuchoice> 
-                         <guimenu>Edit</guimenu> 
-                         <guisubmenu>Copy</guisubmenu> 
-                  </menuchoice>. The original widget remains attached to
-the parent. 
-                </para>
+                <title>Kopiera en komponent till urklipp</title> 
+                <para>För att kopiera en komponent till urklipp, markera komponenten och välj sedan <menuchoice> <guimenu>Redigera</guimenu> <guisubmenu>Kopiera</guisubmenu> </menuchoice>. Originalkomponenten förblir knuten till föräldern.</para>
          </sect2> 
          <sect2 id="paste-widget-clipboard"> 
-                <title>Klistra in en widget från urklipp in i ditt projekt</title> 
-                <para lang="en">
-                  To paste a widget that exists on the clipboard into your
-project,
-                  choose 
-                  <menuchoice> 
-                         <guimenu>Edit</guimenu> 
-                         <guisubmenu>Paste</guisubmenu> 
-                  </menuchoice>.</para><para lang="en">All widgets must have a unique
-name within <application>Glade</application>. If you cut a widget, and then
-paste the widget into your project, then the widget and all of the children
-of the widget keep their original names. If you copy a widget, or paste the
-widget multiple times into your project, then
-<application>Glade</application> generates new names for the widget
-copies.</para>
+                <title>Klistra in en komponent från urklipp in i ditt projekt</title> 
+                <para>För att klistra in en komponent som existerar i urklipp i ditt projekt, välj <menuchoice> <guimenu>Redigera</guimenu> <guisubmenu>Klistra in</guisubmenu> </menuchoice>.</para><para>Alla komponenter måste ha ett unikt namn inom <application>Glade</application>. Om du klipper ut en komponent och sedan klistrar in komponenten i ditt projekt så kommer komponenten och alla dess barn att behålla sina originalnamn. Om du kopierar en komponent, eller klistrar in komponenten flera gånger i ditt projekt, då kommer <application>Glade</application> att generera nya namn för komponentkopiorna.</para>
          </sect2> 
          <sect2 id="delete-widget"> 
-                <title>Ta bort en widget</title> 
-                <para lang="en">To delete a widget from the parent without
-                  moving the widget to the clipboard, 
-                                select the widget then 
-                                choose 
-                                <menuchoice> 
-                                  <guimenu>Edit</guimenu> 
-                                  <guisubmenu>Delete</guisubmenu> 
-                                </menuchoice>. 
-                         </para>
+                <title>Ta bort en komponent</title> 
+                <para>För att ta bort en komponent från föräldern utan att flytta komponenten till urklipp, markera komponenten och välj sedan <menuchoice> <guimenu>Redigera</guimenu> <guisubmenu>Ta bort</guisubmenu> </menuchoice>.</para>
                  
          </sect2> 
          
          <sect2 id="edit-widget"> 
-                <title>Ändra en egenskap för en widget</title> 
-                <para lang="en">The property editor is used to edit the properties of a selected widget.
-                      To change a property of a widget, select the widget and then enter an appropriate value
-                      in one of the Property window's property fields.
-                </para>
+                <title>Ändra en egenskap för en komponent</title> 
+                <para>Egenskapsredigerare används för att redigera egenskaperna för en markerad komponent. För att ändra en egenskap för en komponent, markera komponenten och ange sedan ett lämpligt värde i ett av egenskapsfälten i Egenskapsfönstret.</para>
                 
                 
          </sect2> 
@@ -441,30 +311,12 @@ copies.</para>
   
 <sect1 id="about"> 
     <title>Om Glade</title> 
-    <para lang="en"> Glade is maintained by the Glade developers and GNOME community volunteers.
-      To find more information about Glade, please visit the 
-      <ulink url="http://glade.gnome.org" type="http">Glade 
-      Web site</ulink>.</para>
-    <para lang="en">
-      To report a bug or make a suggestion regarding this application or
-      this manual, you can submit them using 
-      <ulink url="http://bugzilla.gnome.org/enter_bug.cgi?product=glade3" type="http">bugzilla</ulink>.
-    </para>
+    <para>Glade underhålls av Glade-utvecklarna och frivilliga i GNOME-gemenskapen. För att hitta mer information om Glade, besök <ulink url="http://glade.gnome.org" type="http">Glades webbplats</ulink>.</para>
+    <para>För att rapportera ett fel eller framföra ett förslag angående detta program eller denna manual kan du skicka in dem via <ulink url="http://bugzilla.gnome.org/enter_bug.cgi?product=glade3" type="http">bugzilla</ulink>.</para>
 
-    <para lang="en">
-      Another excellent source of information are the Glade 
-      <ulink url="http://lists.ximian.com/mailman/listinfo/glade-users" type="http">user</ulink> and 
-      <ulink url="http://lists.ximian.com/mailman/listinfo/glade-devel" type="http">developer</ulink> mailing lists.  In addition to 
-      subscribing, you might also want to browse the list archives, available
-      via these same links.
-    </para>
+    <para>En annan utmärkt källa till information är Glades sändlistor för <ulink url="http://lists.ximian.com/mailman/listinfo/glade-users" type="http">användare</ulink> och <ulink url="http://lists.ximian.com/mailman/listinfo/glade-devel" type="http">utvecklare</ulink>. Förutom att prenumerera kanske du också vill bläddra genom listarkiven, som finns tillgängliga via samma länkar.</para>
 
-    <para lang="en"> This program is distributed under the terms of the GNU
-      General Public license as published by the Free Software
-      Foundation; either version 2 of the License, or (at your option)
-      any later version. A copy of this license can be found at this
-      <ulink url="help:gpl" type="help">link</ulink>, or in the file
-      COPYING included with the source code of this program. </para>
+    <para>Det här programmet distribueras under villkoren för GNU General Public License så som publicerats av Free Software Foundation; antingen version 2 av licensen, eller (om du så vill) någon senare version. En kopia av den här licensen kan hittas på <ulink url="help:gpl" type="help">länk</ulink>, eller i filen COPYING som inkluderats i källkoden för det här programmet.</para>
   </sect1> 
 
 </article>

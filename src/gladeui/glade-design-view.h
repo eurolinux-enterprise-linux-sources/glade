@@ -45,14 +45,14 @@ typedef struct _GladeDesignViewClass    GladeDesignViewClass;
 
 struct _GladeDesignView
 {
-  GtkVBox parent_instance;
+  GtkBox parent_instance;
 
   GladeDesignViewPrivate *priv;
 };
 
 struct _GladeDesignViewClass
 {
-  GtkVBoxClass parent_class;
+  GtkBoxClass parent_class;
 
   void   (* glade_reserved1)   (void);
   void   (* glade_reserved2)   (void);
@@ -68,9 +68,6 @@ GtkWidget         *glade_design_view_new              (GladeProject *project);
 GladeProject      *glade_design_view_get_project      (GladeDesignView *view);
 
 GladeDesignView   *glade_design_view_get_from_project (GladeProject *project);
-
-void               glade_design_view_set_drag_source  (GladeDesignView *view,
-                                                       GtkToolPalette  *source);
 
 G_END_DECLS
 

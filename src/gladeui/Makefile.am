@@ -1,4 +1,5 @@
 ## Previewer
+include $(top_srcdir)/glade-rules.mk
 
 bin_PROGRAMS = glade-previewer
 lib_LTLIBRARIES = libgladeui-2.la
@@ -10,6 +11,7 @@ glade_previewer_CPPFLAGS = \
 	$(GTK_CFLAGS)      \
 	$(GTK_MAC_CFLAGS)  \
 	$(WARN_CFLAGS)     \
+	$(GLADE_DEBUG_FLAGS) \
 	$(AM_CPPFLAGS)
 
 glade_previewer_CFLAGS =   \
@@ -20,7 +22,9 @@ glade_previewer_LDFLAGS = $(AM_LDFLAGS)
 glade_previewer_LDADD = libgladeui-2.la $(GTK_MAC_LIBS)
 
 glade_previewer_SOURCES = \
-	glade-previewer.c
+	glade-previewer.c \
+	glade-preview-window.c \
+	glade-preview-template.c
 
 if NATIVE_WIN32
 glade_previewer_LDADD += glade-win32-res.o
@@ -43,53 +47,89 @@ common_defines = \
 	-DGLADE_BINDIR="\"$(bindir)\""\
 	-DGLADE_LIBDIR="\"$(libdir)\""
 
-BUILT_SOURCES = glade-marshallers.c glade-marshallers.h
+BUILT_SOURCES = \
+	glade-marshallers.c \
+	glade-marshallers.h \
+	gladeui-resources.c \
+	gladeui-resources.h \
+	gladeui-enum-types.c \
+	gladeui-enum-types.h
 
-EXTRA_DIST = glade-marshallers.list gladeui.rc.in icon-naming-spec.c glade-previewer.rc.in
+
+UI_FILES = 				\
+	glade-design-layout.css		\
+	glade-editor.ui			\
+	glade-project-properties.ui	\
+	glade-adaptor-chooser.ui	\
+	glade-property-label.ui
+
+GRAPHICS_FILES = \
+	atk.png
+
+
+EXTRA_DIST = 			\
+	$(UI_FILES)		\
+	$(GRAPHICS_FILES)	\
+	glade-marshallers.list 	\
+	gladeui.rc.in 		\
+	icon-naming-spec.c 	\
+	glade-previewer.rc.in 	\
+	gladeui-resources.gresource.xml \
+	gladeui-enum-types.c.template	\
+	gladeui-enum-types.h.template
+
 
 # The glade core library
 libgladeui_2_la_SOURCES = \
-	glade-debug.c \
-	glade-object-stub.c \
-	glade-xml-utils.c \
-	glade-catalog.c \
-	glade-widget-adaptor.c \
-	glade-widget.c \
-	glade-property-class.c \
-	glade-property.c \
-	glade-signal-class.c \
-	glade-signal.c \
-	glade-widget-action.c \
-	glade-editable.c \
-	glade-editor-table.c \
-	glade-editor-property.c \
-	glade-editor.c \
+	$(BUILT_SOURCES)	\
+	glade-accumulators.c \
+	glade-app.c \
 	glade-base-editor.c \
-	glade-signal-editor.c \
-	glade-palette.c \
-	glade-inspector.c \
+	glade-adaptor-chooser.c \
+	glade-builtins.c \
+	glade-catalog.c \
+	glade-cell-renderer-icon.c \
+	glade-clipboard.c \
+	glade-command.c \
+	glade-cursor.c \
+	glade-debug.c \
 	glade-design-layout.c \
 	glade-design-view.c \
+	glade-displayable-values.c \
+	glade-editable.c \
+	glade-editor.c \
+	glade-editor-property.c \
+	glade-editor-skeleton.c \
+	glade-editor-table.c \
 	glade-id-allocator.c \
 	glade-id-allocator.h \
-	glade-project.c \
-	glade-cursor.c \
-	glade-placeholder.c \
+	glade-object-stub.c \
+	glade-inspector.c \
+	glade-name-context.c \
 	glade-named-icon-chooser-dialog.c \
 	glade-named-icon-chooser-dialog.h \
+	glade-palette.c \
+	glade-placeholder.c \
 	glade-popup.c \
-	glade-utils.c \
-	glade-command.c \
-	glade-marshallers.c \
-	glade-accumulators.c \
-	glade-builtins.c \
-	glade-app.c \
-	glade-clipboard.c \
-	glade-name-context.c \
-	glade-displayable-values.c \
+	glade-preview.c	\
+	glade-project.c \
+	glade-project-properties.c \
+	glade-property.c \
+	glade-property-class.c \
+	glade-property-label.c \
+	glade-property-shell.c \
+	glade-signal.c \
+	glade-signal-class.c \
+	glade-signal-editor.c \
 	glade-signal-model.c \
-	glade-cell-renderer-icon.c \
-	glade-preview.c
+	glade-tsort.c \
+	glade-utils.c \
+	glade-widget.c \
+	glade-widget-action.c \
+	glade-widget-adaptor.c \
+	glade-xml-utils.c \
+	glade-drag.c \
+	glade-dnd.c
 
 libgladeui_2_la_CPPFLAGS =  \
 	$(common_defines)   \
@@ -99,60 +139,72 @@ libgladeui_2_la_CPPFLAGS =  \
 	$(GTK_MAC_BUNDLE_FLAG) \
 	$(GTK_MAC_CFLAGS)  \
 	$(WARN_CFLAGS)      \
+	$(GLADE_DEBUG_FLAGS) \
 	$(AM_CPPFLAGS)
 
 libgladeui_2_la_CFLAGS =    \
 	$(AM_CFLAGS)
 
 libgladeui_2_la_LDFLAGS = -version-info $(GLADE_CURRENT):$(GLADE_REVISION):$(GLADE_AGE) $(AM_LDFLAGS)
-libgladeui_2_la_LIBADD = $(GTK_LIBS) $(GTK_MAC_LIBS)
-
+libgladeui_2_la_LIBADD = $(GTK_LIBS) $(GTK_MAC_LIBS) $(LIBM)
 
 libgladeuiincludedir=$(includedir)/libgladeui-2.0/gladeui
 libgladeuiinclude_HEADERS = \
 	glade.h \
-	glade-debug.h \
-	glade-project.h \
-	glade-inspector.h \
-	glade-placeholder.h \
-	glade-editor.h \
-	glade-editor-property.h \
-	glade-signal-editor.h \
-	glade-palette.h \
-	glade-design-view.h \
-	glade-widget.h \
-	glade-widget-adaptor.h \
-	glade-property.h \
-	glade-property-class.h \
-	glade-utils.h \
+	glade-app.h \
+	glade-base-editor.h \
+	glade-builtins.h \
+	glade-catalog.h \
+	glade-cell-renderer-icon.h \
 	glade-clipboard.h \
 	glade-command.h \
-	glade-app.h \
-	glade-builtins.h \
-	glade-base-editor.h \
-	glade-xml-utils.h \
-	glade-signal.h \
-	glade-signal-class.h \
-	glade-catalog.h \
-	glade-widget-action.h \
-	glade-name-context.h \
+	glade-cursor.h \
+	glade-debug.h \
+	glade-design-view.h \
 	glade-displayable-values.h \
 	glade-editable.h \
+	glade-editor.h \
+	glade-editor-property.h \
+	glade-editor-skeleton.h \
 	glade-editor-table.h \
-	glade-cell-renderer-icon.h \
-	glade-cursor.h \
-	glade-signal-model.h
+	glade-inspector.h \
+	glade-name-context.h \
+	glade-palette.h \
+	glade-placeholder.h \
+	glade-project.h \
+	glade-property.h \
+	glade-property-class.h \
+	glade-property-label.h \
+	glade-property-shell.h \
+	glade-signal.h \
+	glade-signal-class.h \
+	glade-signal-editor.h \
+	glade-signal-model.h \
+	glade-utils.h \
+	glade-widget.h \
+	glade-widget-action.h \
+	glade-widget-adaptor.h \
+	glade-xml-utils.h
 
 noinst_HEADERS = \
-	glade-marshallers.h \
-	glade-design-layout.h \
-	glade-object-stub.h \
-	glade-popup.h \
 	glade-accumulators.h \
+	glade-adaptor-chooser.h \
+	glade-design-layout.h \
 	glade-design-private.h \
-	glade-preview-tokens.h \
+	glade-marshallers.h \
+	glade-object-stub.h \
+	glade-path.h \
+	glade-popup.h \
 	glade-preview.h \
-	glade-path.h
+	glade-preview-tokens.h \
+	glade-preview-window.h \
+	glade-preview-template.h \
+	glade-private.h \
+	glade-project-properties.h \
+	glade-tsort.h \
+	gladeui-resources.h \
+	glade-drag.h \
+	glade-dnd.h
 
 if PLATFORM_WIN32
 libgladeui_2_la_LDFLAGS += -no-undefined
@@ -180,6 +232,17 @@ glade-marshallers.c: glade-marshallers.list $(GLIB_GENMARSHAL)
 	$(GLIB_GENMARSHAL) --prefix=_glade_marshal $(srcdir)/glade-marshallers.list --body --header > glade-marshallers-c.tmp     \
 	&& mv glade-marshallers-c.tmp glade-marshallers.c \
 	|| ( rm -f glade-marshallers-c.tmp && exit 1 )
+
+#
+# Enum type generation
+#
+gladeui-enum-types.h: gladeui-enum-types.h.template $(libgladeuiinclude_HEADERS) $(GLIB_MKENUMS)
+	$(AM_V_GEN) (cd $(srcdir) && $(GLIB_MKENUMS) --template $@.template \
+	$(libgladeuiinclude_HEADERS)) > $@
+
+gladeui-enum-types.c: gladeui-enum-types.c.template $(libgladeuiinclude_HEADERS) $(GLIB_MKENUMS)
+	$(AM_V_GEN) (cd $(srcdir) && $(GLIB_MKENUMS) --template $@.template \
+	$(libgladeuiinclude_HEADERS)) > $@
 
 CLEANFILES = $(BUILT_SOURCES)
 
@@ -215,3 +278,11 @@ typelib_DATA = $(INTROSPECTION_GIRS:.gir=.typelib)
 
 CLEANFILES += $(gir_DATA) $(typelib_DATA)
 endif
+
+# Generate resources
+gladeui-resources.h: gladeui-resources.gresource.xml $(UI_FILES) $(GRAPHICS_FILES)
+	$(AM_V_GEN) $(GLIB_COMPILE_RESOURCES) $(srcdir)/gladeui-resources.gresource.xml \
+		--target=$@ --sourcedir=$(srcdir) --c-name _gladeui --generate-header
+gladeui-resources.c: gladeui-resources.gresource.xml $(UI_FILES) $(GRAPHICS_FILES)
+	$(AM_V_GEN) $(GLIB_COMPILE_RESOURCES) $(srcdir)/gladeui-resources.gresource.xml \
+		--target=$@ --sourcedir=$(srcdir) --c-name _gladeui --generate-source

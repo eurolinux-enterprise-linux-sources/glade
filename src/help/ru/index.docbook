@@ -144,7 +144,8 @@
     	<varlistentry>
     		<term>Командная строка</term>
     		<listitem>
-    		<para>Для запуска <application>Glade</application> из командной строки, наберите следующую команду и нажмите <keycap>Enter</keycap>: <command>glade-3</command></para>	 
+			<para lang="en">To start <application>Glade</application> from a command line, type <command>glade</command>
+			and then press <keycap>Return</keycap>.</para>
     		</listitem>
     	</varlistentry>
     </variablelist>

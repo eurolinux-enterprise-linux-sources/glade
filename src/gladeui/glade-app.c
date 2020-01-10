@@ -53,9 +53,6 @@
 
 #define GLADE_CONFIG_FILENAME "glade.conf"
 
-#define GLADE_APP_GET_PRIVATE(object) (G_TYPE_INSTANCE_GET_PRIVATE ((object), \
-                                       GLADE_TYPE_APP,                        \
-                                       GladeAppPrivate))
 enum
 {
   DOC_SEARCH,
@@ -91,15 +88,15 @@ static gchar *lib_dir = NULL;
 static GladeApp *singleton_app = NULL;
 static gboolean check_initialised = FALSE;
 
-G_DEFINE_TYPE (GladeApp, glade_app, G_TYPE_OBJECT);
+G_DEFINE_TYPE_WITH_PRIVATE (GladeApp, glade_app, G_TYPE_OBJECT);
 
 /*****************************************************************
  *                    GObjectClass                               *
  *****************************************************************/
 static GObject *
-glade_app_constructor (GType type,
-                       guint n_construct_properties,
-                       GObjectConstructParam * construct_properties)
+glade_app_constructor (GType                  type,
+                       guint                  n_construct_properties,
+                       GObjectConstructParam *construct_properties)
 {
   GObject *object;
 
@@ -122,7 +119,7 @@ glade_app_constructor (GType type,
 
 
 static void
-glade_app_dispose (GObject * app)
+glade_app_dispose (GObject *app)
 {
   GladeAppPrivate *priv = GLADE_APP (app)->priv;
 
@@ -143,7 +140,7 @@ glade_app_dispose (GObject * app)
 }
 
 static void
-glade_app_finalize (GObject * app)
+glade_app_finalize (GObject *app)
 {
   g_free (catalogs_dir);
   g_free (modules_dir);
@@ -162,6 +159,12 @@ glade_app_finalize (GObject * app)
 static void
 build_package_paths (void)
 {
+  const gchar *path;
+
+  path = g_getenv (GLADE_ENV_PIXMAP_DIR);
+  if (path)
+    pixmaps_dir = g_strdup (path);
+
 #if defined (G_OS_WIN32) || (defined (MAC_INTEGRATION) && defined (MAC_BUNDLE))
   gchar *prefix;
 
@@ -173,7 +176,9 @@ build_package_paths (void)
 
 # endif
 
-  pixmaps_dir = g_build_filename (prefix, "share", PACKAGE, "pixmaps", NULL);
+  if (!pixmaps_dir)
+    pixmaps_dir = g_build_filename (prefix, "share", PACKAGE, "pixmaps", NULL);
+
   catalogs_dir = g_build_filename (prefix, "share", PACKAGE, "catalogs", NULL);
   modules_dir = g_build_filename (prefix, "lib", PACKAGE, "modules", NULL);
   locale_dir = g_build_filename (prefix, "share", "locale", NULL);
@@ -184,7 +189,9 @@ build_package_paths (void)
 #else
   catalogs_dir = g_strdup (GLADE_CATALOGSDIR);
   modules_dir = g_strdup (GLADE_MODULESDIR);
-  pixmaps_dir = g_strdup (GLADE_PIXMAPSDIR);
+
+  if (!pixmaps_dir)
+    pixmaps_dir = g_strdup (GLADE_PIXMAPSDIR);
   locale_dir = g_strdup (GLADE_LOCALEDIR);
   bin_dir = g_strdup (GLADE_BINDIR);
   lib_dir = g_strdup (GLADE_LIBDIR);
@@ -198,9 +205,9 @@ glade_init_check (void)
   if (check_initialised)
     return;
 
-  /* Make sure path accessors work on osx */
-  g_type_init ();
+  glade_init_debug_flags ();
 
+  /* Make sure path accessors work on osx */
   build_package_paths ();
 
   bindtextdomain (GETTEXT_PACKAGE, locale_dir);
@@ -261,41 +268,74 @@ glade_app_get_lib_dir (void)
 }
 
 static void
-pointer_mode_register_icon (GtkIconFactory *factory,
-                            const gchar *icon_name,
+pointer_mode_register_icon (const gchar     *icon_name,
+                            gint             real_size,
                             GladePointerMode mode,
-                            GtkIconSize size)
+                            GtkIconSize      size)
 {
   GdkPixbuf *pixbuf;
 
-  pixbuf = glade_utils_pointer_mode_render_icon (mode, size);
+  if ((pixbuf = glade_utils_pointer_mode_render_icon (mode, size)))
+    {
+      gtk_icon_theme_add_builtin_icon (icon_name, real_size, pixbuf);
+      g_object_unref (pixbuf);
+    }
+}
+
+static void
+register_icon (const gchar    *new_icon_name,
+               gint            size,
+               const gchar    *icon_name,
+               const gchar    *file_name)
+{
+  GtkIconTheme *icon_theme = gtk_icon_theme_get_default ();
+  GdkPixbuf *pixbuf;
+  GtkIconInfo *info;
+
+  if ((info = gtk_icon_theme_lookup_icon (icon_theme, icon_name, size, 0)))
+    {
+      pixbuf = gtk_icon_info_load_icon (info, NULL);
+    }
+  else
+    {
+      gchar *path = g_build_filename (glade_app_get_pixmaps_dir (), file_name, NULL);
+      pixbuf = gdk_pixbuf_new_from_file (path, NULL);
+      g_free (path);
+    }
+
   if (pixbuf)
     {
-      GtkIconSet *icon_set = gtk_icon_set_new_from_pixbuf (pixbuf);
-      gtk_icon_factory_add (factory, icon_name, icon_set);
+      gtk_icon_theme_add_builtin_icon (new_icon_name, size, pixbuf);
       g_object_unref (pixbuf);
     }
 }
 
 /*
- * glade_app_register_stock_icons:
+ * glade_app_register_icon_names:
  * @size: icon size
  *
- * Register a new stock icon for most of GladePointerMode.
+ * Register a new icon name for most of GladePointerMode.
  * After calling this function "glade-selector", "glade-drag-resize",
- * "glade-margin-edit" and "glade-align-edit" stock icons will be available.
+ * "glade-margin-edit" and "glade-align-edit" icon names will be available.
  */ 
 static void
-glade_app_register_stock_icons (GtkIconSize size)
+glade_app_register_icon_names (GtkIconSize size)
 {
-  GtkIconFactory *factory = gtk_icon_factory_new ();
+  gint w, h, real_size;
 
-  pointer_mode_register_icon (factory, "glade-selector", GLADE_POINTER_SELECT, size);
-  pointer_mode_register_icon (factory, "glade-drag-resize", GLADE_POINTER_DRAG_RESIZE, size);
-  pointer_mode_register_icon (factory, "glade-margin-edit", GLADE_POINTER_MARGIN_EDIT, size);
-  pointer_mode_register_icon (factory, "glade-align-edit", GLADE_POINTER_ALIGN_EDIT, size);
+  if (gtk_icon_size_lookup (size, &w, &h) == FALSE)
+    return;
 
-  gtk_icon_factory_add_default (factory);
+  real_size = MIN (w, h);
+
+  pointer_mode_register_icon ("glade-selector", real_size, GLADE_POINTER_SELECT, size);
+  pointer_mode_register_icon ("glade-drag-resize", real_size, GLADE_POINTER_DRAG_RESIZE, size);
+  pointer_mode_register_icon ("glade-margin-edit", real_size, GLADE_POINTER_MARGIN_EDIT, size);
+  pointer_mode_register_icon ("glade-align-edit", real_size, GLADE_POINTER_ALIGN_EDIT, size);
+
+  register_icon ("glade-devhelp", real_size,
+                 GLADE_DEVHELP_ICON_NAME,
+                 GLADE_DEVHELP_FALLBACK_ICON_FILE);
 }
 
 /**
@@ -314,8 +354,8 @@ glade_init (void)
   glade_init_check ();
 
   /* Register icons needed by the UI */
-  glade_app_register_stock_icons (GTK_ICON_SIZE_LARGE_TOOLBAR);
-
+  glade_app_register_icon_names (GTK_ICON_SIZE_LARGE_TOOLBAR);
+  
   init = TRUE;
 }
 
@@ -323,7 +363,7 @@ static void
 glade_app_init (GladeApp *app)
 {
   static gboolean initialized = FALSE;
-  GladeAppPrivate *priv = app->priv = GLADE_APP_GET_PRIVATE (app);
+  GladeAppPrivate *priv = app->priv = glade_app_get_instance_private (app);
 
   singleton_app = app;
 
@@ -360,15 +400,11 @@ glade_app_event_handler (GdkEvent *event, gpointer data)
 }
 
 static void
-glade_app_class_init (GladeAppClass * klass)
+glade_app_class_init (GladeAppClass *klass)
 {
-	GObjectClass *object_class;
+  GObjectClass *object_class;
 	
-	object_class = G_OBJECT_CLASS (klass);
-	
-	object_class->constructor  = glade_app_constructor;
-	object_class->dispose      = glade_app_dispose;
-	object_class->finalize     = glade_app_finalize;
+  object_class = G_OBJECT_CLASS (klass);
 
   object_class->constructor = glade_app_constructor;
   object_class->dispose = glade_app_dispose;
@@ -422,9 +458,7 @@ glade_app_class_init (GladeAppClass * klass)
                   G_SIGNAL_RUN_LAST,
                   0, NULL, NULL,
                   _glade_marshal_VOID__OBJECT,
-                  G_TYPE_NONE, 1, G_TYPE_OBJECT);  
-  
-  g_type_class_add_private (klass, sizeof (GladeAppPrivate));
+                  G_TYPE_NONE, 1, G_TYPE_OBJECT);
 
   gdk_event_handler_set (glade_app_event_handler, NULL, NULL);
 }
@@ -590,7 +624,7 @@ glade_app_get (void)
 }
 
 void
-glade_app_set_window (GtkWidget * window)
+glade_app_set_window (GtkWidget *window)
 {
   GladeApp *app = glade_app_get ();
 
@@ -598,7 +632,7 @@ glade_app_set_window (GtkWidget * window)
 }
 
 GladeCatalog *
-glade_app_get_catalog (const gchar * name)
+glade_app_get_catalog (const gchar *name)
 {
   GladeApp *app = glade_app_get ();
   GList *list;
@@ -616,7 +650,7 @@ glade_app_get_catalog (const gchar * name)
 }
 
 gboolean
-glade_app_get_catalog_version (const gchar * name, gint * major, gint * minor)
+glade_app_get_catalog_version (const gchar *name, gint *major, gint *minor)
 {
   GladeCatalog *catalog = glade_app_get_catalog (name);
 
@@ -682,7 +716,7 @@ glade_app_get_config (void)
 }
 
 gboolean
-glade_app_is_project_loaded (const gchar * project_path)
+glade_app_is_project_loaded (const gchar *project_path)
 {
   GladeApp *app;
   GList *list;
@@ -714,7 +748,7 @@ glade_app_is_project_loaded (const gchar * project_path)
  * Returns: A #GladeProject, or NULL if no such open project was found
  */
 GladeProject *
-glade_app_get_project_by_path (const gchar * project_path)
+glade_app_get_project_by_path (const gchar *project_path)
 {
   GladeApp *app;
   GList *l;
@@ -745,7 +779,7 @@ glade_app_get_project_by_path (const gchar * project_path)
 }
 
 void
-glade_app_add_project (GladeProject * project)
+glade_app_add_project (GladeProject *project)
 {
   GladeApp *app;
 
@@ -762,7 +796,7 @@ glade_app_add_project (GladeProject * project)
 }
 
 void
-glade_app_remove_project (GladeProject * project)
+glade_app_remove_project (GladeProject *project)
 {
   GladeApp *app;
   g_return_if_fail (GLADE_IS_PROJECT (project));

@@ -67,8 +67,11 @@ glade_gtk_action_widgets_read_responses (GladeWidget *widget,
       widget_name = glade_xml_get_content (node);
 
       if ((action_widget = glade_widget_find_child (action_area, widget_name)))
+	{
+	  glade_widget_property_set_enabled (action_widget, "response-id", TRUE);
           glade_widget_property_set (action_widget, "response-id",
                                      g_ascii_strtoll (response, NULL, 10));
+	}
 
       g_free (response);
       g_free (widget_name);
@@ -118,6 +121,9 @@ glade_gtk_action_widgets_write_responses (GladeWidget *widget,
            glade_widget_get_property (action_widget, "response-id")) == NULL)
         continue;
 
+      if (!glade_property_get_enabled (property))
+	continue;
+
       widget_node = glade_xml_node_new (context, GLADE_TAG_ACTION_WIDGET);
       glade_xml_node_append_child (node, widget_node);
 
@@ -129,6 +135,41 @@ glade_gtk_action_widgets_write_responses (GladeWidget *widget,
       glade_xml_set_content (widget_node, glade_widget_get_name (action_widget));
 
       g_free (str);
+    }
+
+  g_list_free (action_widgets);
+}
+
+void
+glade_gtk_action_widgets_ensure_names (GladeWidget *widget, gchar *action_container)
+{
+  GList *l, *action_widgets;
+  GladeWidget *action_area;
+
+  if ((action_area = glade_gtk_action_widgets_get_area (widget, action_container)) == NULL)
+   {
+     g_warning ("%s: Could not find action widgets container [%s]", __func__, action_container);
+     return;
+   }
+
+  action_widgets = glade_widget_get_children (action_area);
+
+  for (l = action_widgets; l; l = l->next)
+    {
+      GladeWidget *action_widget;
+      GladeProperty *property;
+
+      if ((action_widget = glade_widget_get_from_gobject (l->data)) == NULL)
+        continue;
+
+      if ((property =
+           glade_widget_get_property (action_widget, "response-id")) == NULL)
+        continue;
+
+      if (!glade_property_get_enabled (property))
+	continue;
+
+      glade_widget_ensure_name (action_widget, glade_widget_get_project (action_widget), FALSE);
     }
 
   g_list_free (action_widgets);

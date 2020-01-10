@@ -212,6 +212,9 @@ glade_eprop_accel_populate_view (GladeEditorProperty * eprop,
   GList *l, *found, *accelerators;
   gchar *name, *accel_text;
   const GList *list;
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
+  GType type_action = GTK_TYPE_ACTION;
+G_GNUC_END_IGNORE_DEPRECATIONS
 
   accelerators = g_value_get_boxed (glade_property_inline_value (property));
 
@@ -222,8 +225,8 @@ glade_eprop_accel_populate_view (GladeEditorProperty * eprop,
       sclass = list->data;
 
       /* Special case for GtkAction accelerators  */
-      if (glade_widget_adaptor_get_object_type (adaptor) == GTK_TYPE_ACTION ||
-          g_type_is_a (glade_widget_adaptor_get_object_type (adaptor), GTK_TYPE_ACTION))
+      if (glade_widget_adaptor_get_object_type (adaptor) == type_action ||
+          g_type_is_a (glade_widget_adaptor_get_object_type (adaptor), type_action))
         {
           if (g_strcmp0 (glade_signal_class_get_type (sclass), "GtkAction") != 0 ||
               g_strcmp0 (glade_signal_class_get_name (sclass), "activate") != 0)
@@ -259,8 +262,8 @@ glade_eprop_accel_populate_view (GladeEditorProperty * eprop,
       sclass = list->data;
 
       /* Special case for GtkAction accelerators  */
-      if (glade_widget_adaptor_get_object_type (adaptor) == GTK_TYPE_ACTION ||
-          g_type_is_a (glade_widget_adaptor_get_object_type (adaptor), GTK_TYPE_ACTION))
+      if (glade_widget_adaptor_get_object_type (adaptor) == type_action ||
+          g_type_is_a (glade_widget_adaptor_get_object_type (adaptor), type_action))
         {
           if (g_strcmp0 (glade_signal_class_get_type (sclass), "GtkAction") != 0 ||
               g_strcmp0 (glade_signal_class_get_name (sclass), "activate") != 0)
@@ -306,8 +309,8 @@ glade_eprop_accel_populate_view (GladeEditorProperty * eprop,
             }
 
           /* Special case for GtkAction accelerators  */
-          if ((glade_widget_adaptor_get_object_type (adaptor) == GTK_TYPE_ACTION ||
-               g_type_is_a (glade_widget_adaptor_get_object_type (adaptor), GTK_TYPE_ACTION)) &&
+          if ((glade_widget_adaptor_get_object_type (adaptor) == type_action ||
+               g_type_is_a (glade_widget_adaptor_get_object_type (adaptor), type_action)) &&
               g_list_length (accelerators) > 0)
             continue;
 
@@ -343,6 +346,9 @@ accel_edited (GtkCellRendererAccel * accel,
   GladePropertyClass *pclass;
   GladeWidgetAdaptor *adaptor;
   gboolean is_action;
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
+  GType type_action = GTK_TYPE_ACTION;
+G_GNUC_END_IGNORE_DEPRECATIONS
 
   pclass = glade_editor_property_get_pclass (GLADE_EDITOR_PROPERTY (eprop_accel));
   adaptor = glade_property_class_get_adaptor (pclass);
@@ -351,8 +357,8 @@ accel_edited (GtkCellRendererAccel * accel,
                                             &iter, path_string))
     return;
 
-  is_action = (glade_widget_adaptor_get_object_type (adaptor) == GTK_TYPE_ACTION ||
-               g_type_is_a (glade_widget_adaptor_get_object_type (adaptor), GTK_TYPE_ACTION));
+  is_action = (glade_widget_adaptor_get_object_type (adaptor) == type_action ||
+               g_type_is_a (glade_widget_adaptor_get_object_type (adaptor), type_action));
 
   gtk_tree_model_get (eprop_accel->model, &iter,
                       ACCEL_COLUMN_KEY_ENTERED, &key_was_set, -1);
@@ -515,9 +521,9 @@ glade_eprop_accel_show_dialog (GladeEditorProperty *eprop)
                                         GTK_WINDOW (parent),
                                         GTK_DIALOG_MODAL |
                                         GTK_DIALOG_DESTROY_WITH_PARENT,
-                                        GTK_STOCK_CLEAR, GLADE_RESPONSE_CLEAR,
-                                        GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-                                        GTK_STOCK_OK, GTK_RESPONSE_OK, NULL);
+                                        _("C_lear"), GLADE_RESPONSE_CLEAR,
+                                        _("_Cancel"), GTK_RESPONSE_CANCEL,
+                                        _("_OK"), GTK_RESPONSE_OK, NULL);
 
   vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 6);
   gtk_widget_show (vbox);
@@ -593,9 +599,9 @@ glade_eprop_accel_create_input (GladeEditorProperty * eprop)
   eprop_accel->entry = gtk_entry_new ();
   gtk_widget_set_valign (eprop_accel->entry, GTK_ALIGN_CENTER);
   gtk_editable_set_editable (GTK_EDITABLE (eprop_accel->entry), FALSE);
-  gtk_entry_set_icon_from_stock (GTK_ENTRY (eprop_accel->entry), 
-                                 GTK_ENTRY_ICON_SECONDARY,
-                                 GTK_STOCK_EDIT);
+  gtk_entry_set_icon_from_icon_name (GTK_ENTRY (eprop_accel->entry),
+                                     GTK_ENTRY_ICON_SECONDARY,
+                                     "gtk-edit");
   g_signal_connect_swapped (eprop_accel->entry, "icon-release",
                             G_CALLBACK (glade_eprop_accel_show_dialog), eprop);
 
@@ -858,4 +864,61 @@ glade_accel_write (GladeAccelInfo * accel,
   g_free (modifiers);
 
   return accel_node;
+}
+
+
+void
+glade_gtk_read_accels (GladeWidget * widget,
+                       GladeXmlNode * node, gboolean require_signal)
+{
+  GladeProperty *property;
+  GladeXmlNode *prop;
+  GladeAccelInfo *ainfo;
+  GValue *value = NULL;
+  GList *accels = NULL;
+
+  for (prop = glade_xml_node_get_children (node);
+       prop; prop = glade_xml_node_next (prop))
+    {
+      if (!glade_xml_node_verify_silent (prop, GLADE_TAG_ACCEL))
+        continue;
+
+      if ((ainfo = glade_accel_read (prop, require_signal)) != NULL)
+        accels = g_list_prepend (accels, ainfo);
+    }
+
+  if (accels)
+    {
+      value = g_new0 (GValue, 1);
+      g_value_init (value, GLADE_TYPE_ACCEL_GLIST);
+      g_value_take_boxed (value, accels);
+
+      property = glade_widget_get_property (widget, "accelerator");
+      glade_property_set_value (property, value);
+
+      g_value_unset (value);
+      g_free (value);
+    }
+}
+
+void
+glade_gtk_write_accels (GladeWidget * widget,
+                        GladeXmlContext * context,
+                        GladeXmlNode * node, gboolean write_signal)
+{
+  GladeXmlNode *accel_node;
+  GladeProperty *property;
+  GList *list;
+
+  /* Some child widgets may have disabled the property */
+  if (!(property = glade_widget_get_property (widget, "accelerator")))
+    return;
+
+  for (list = g_value_get_boxed (glade_property_inline_value (property)); list; list = list->next)
+    {
+      GladeAccelInfo *accel = list->data;
+
+      accel_node = glade_accel_write (accel, context, write_signal);
+      glade_xml_node_append_child (node, accel_node);
+    }
 }

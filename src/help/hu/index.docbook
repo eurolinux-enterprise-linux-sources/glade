@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd" [
+<!ENTITY appversion "3.1.0">
+<!ENTITY manrevision "3.0">
+<!ENTITY app "Glade">
+]>
+<!-- 
+  Maintained by the GNOME Documentation Project
+  http://developer.gnome.org/projects/gdp
+  Template version: 2.0 beta
+  Template last modified Apr 11, 2002
+-->
+<article id="index" lang="hu">
+
+  <articleinfo> 
+    <title>A Glade felhasználói felület-tervező leírása</title> 
+      
+    <abstract role="description"><para>A Glade egy felhasználói felület-tervező GTK+ és GNOME alkalmazásokhoz.</para>
+    </abstract>
+
+    <copyright><year>2006</year> <holder>Vincent Geddes</holder></copyright>
+    <copyright><year>2004</year> <year>2003</year> <holder>Sun Microsystems</holder></copyright> 
+    <copyright><year>2002</year><year>2000</year> <holder>Michael Vance</holder></copyright> 
+
+    <publisher> 
+      <publishername>GNOME dokumentációs projekt</publishername> 
+    </publisher> 
+
+   <include xmlns="http://www.w3.org/2001/XInclude" href="legal.xml"/>
+
+    <authorgroup> 
+      <author role="maintainer"><firstname>Vincent</firstname> <surname>Geddes</surname> <affiliation> <orgname>GNOME dokumentációs projekt</orgname> <address><email>vincent.geddes@gmail.com</email></address> </affiliation></author> 
+      <author><firstname>Sun</firstname> <surname>GNOME dokumentációs csapat</surname> <affiliation> <orgname>Sun Microsystems</orgname> </affiliation></author> 
+       <author><firstname>Michael</firstname> <surname>Vance</surname> <affiliation> <orgname>GNOME dokumentációs projekt</orgname> </affiliation></author> 
+    </authorgroup>
+
+
+<!-- According to GNU FDL, revision history is mandatory if you are -->
+<!-- modifying/reusing someone else's document.  If not, you can omit it. -->
+<!-- Remember to remove the &manrevision; entity from the revision entries other
+-->
+<!-- than the current revision. -->
+<!-- The revision numbering system for GNOME manuals is as follows: -->
+<!-- * the revision number consists of two components -->
+<!-- * the first component of the revision number reflects the release version of the GNOME desktop. -->
+<!-- * the second component of the revision number is a decimal unit that is incremented with each revision of the manual. -->
+<!-- For example, if the GNOME desktop release is V2.x, the first version of the manual that -->
+<!-- is written in that desktop timeframe is V2.0, the second version of the manual is V2.1, etc. -->
+<!-- When the desktop release version changes to V3.x, the revision number of the manual changes -->
+<!-- to V3.0, and so on. -->  
+    <revhistory>
+        <revision><revnumber>Glade kézikönyv 3.0</revnumber> <date>2006. december 5.</date> <revdescription> 
+	  		<para role="author">Vincent Geddes</para>
+	  		<para role="publisher">GNOME dokumentációs projekt</para>
+		</revdescription></revision>
+        <revision><revnumber>Glade kézikönyv 2.1;</revnumber> <date>2004. június 17.</date> <revdescription> 
+                        <para role="author">Sun GNOME dokumentációs csapat</para>
+                        <para role="publisher">GNOME dokumentációs projekt</para>
+                </revdescription></revision>
+        <revision><revnumber>Glade felhasználói kézikönyv 2.0</revnumber> <date>2004. február 25.</date> <revdescription> 
+                        <para role="author">Sun GNOME dokumentációs csapat</para>
+                        <para role="publisher">GNOME dokumentációs projekt</para>
+                </revdescription></revision>             
+        <revision><revnumber>Glade felhasználói kézikönyv 1.2</revnumber> <date>2004. február 10.</date> <revdescription> 
+                        <para role="author">Sun GNOME dokumentációs csapat</para>
+                        <para role="publisher">GNOME dokumentációs projekt</para>
+                </revdescription></revision>  
+        <revision><revnumber>Glade felhasználói kézikönyv 1.1</revnumber> <date>2002. március 30.</date> <revdescription> 
+                        <para role="author">Michael Vance</para>
+                        <para role="publisher">GNOME dokumentációs projekt</para>
+                </revdescription></revision> 
+        <revision><revnumber>Glade felhasználói kézikönyv 1.0</revnumber> <date>2000. május 11.</date> <revdescription> 
+                        <para role="author">Michael Vance</para>
+                        <para role="publisher">GNOME dokumentációs projekt</para>
+                </revdescription></revision> 
+    </revhistory> 
+
+    <releaseinfo>Ez a kézikönyv a Glade 3.1.0 verziójához készült.</releaseinfo> 
+    <legalnotice> 
+      <title>Visszajelzés</title> 
+      <para>Egy hiba bejelentéséhez vagy a Glade alkalmazással, illetve ezzel a kézikönyvvel kapcsolatos javaslat tételéhez kövesse a <ulink url="help:gnome-feedback" type="help">GNOME visszajelzés oldal</ulink> útmutatásait.</para>
+<!-- Translators may also add here feedback address for translations -->
+    </legalnotice> 
+  
+    <othercredit class="translator">
+      <personname>
+        <firstname>Meskó Balázs</firstname>
+      </personname>
+      <email>meskobalazs@gmail.com</email>
+    </othercredit>
+    <copyright>
+      
+        <year>2011.</year>
+      
+      <holder>Meskó Balázs</holder>
+    </copyright>
+  
+    <othercredit class="translator">
+      <personname>
+        <firstname>Úr Balázs</firstname>
+      </personname>
+      <email>urbalazs@gmail.com</email>
+    </othercredit>
+    <copyright>
+      
+        <year>2014.</year>
+      
+      <holder>Úr Balázs</holder>
+    </copyright>
+  </articleinfo> 
+
+    <indexterm><primary>glade</primary></indexterm>
+    <indexterm><primary>felhasználói felülettervező</primary></indexterm>
+
+
+<!-- ============= Document Body ============================= -->
+<!-- ============= Introduction ============================== -->
+<!-- Use the Introduction section to give a brief overview of what
+     the application is and what it does. -->
+  <sect1 id="introduction"> 
+    <title>Bevezetés</title> 
+
+    <para>A <application>Glade</application> felhasználói felülettervező segítségével felhasználói felületeket hozhat létre és szerkeszthet a <application>GTK+</application> alkalmazásaihoz.</para>
+
+    <para>A GTK+ függvénykönyvtár egy bővíthető, felhasználói felületelemeket tartalmazó gyűjteményt biztosít. Ilyen elemek például a szövegdobozok, üzenetcímkék, numerikus beviteli mezők, jelölőnégyzetek és menük Ezeket <emphasis>felületi elemeknek</emphasis> is nevezzük. A Glade-et arra használhatja, hogy a felületi elemeket elrendezze, és beállítsa tulajdonságaikat. Emellett kapcsolatokat is megadhat a felületi elemek és a forráskód között.</para>
+
+    <para>A Glade-del tervezett felhasználói felületek XML formátumban tárolódnak, ezáltal könnyű integrációt biztosítanak külső eszközökkel. A <application>libglade</application> függvénykönyvtár segítségével dinamikusan hozhat létre GUI-t az XML leírásból.</para>
+
+  </sect1>
+
+  <sect1 id="getting-started"> 
+    <title>Kezdeti lépések</title> 
+
+    <sect2 id="glade-start">
+    <title>A <application>Glade</application> indítása</title>
+    <para>A <application>Glade</application> alkalmazást az alábbi módokon tudja elindítani:</para> 
+    <variablelist>
+    	<varlistentry>
+    		<term><guimenu>Alkalmazások</guimenu> menü</term>
+    		<listitem>
+    		<para>Válassza a <menuchoice> <guisubmenu>Programozás</guisubmenu> <guimenuitem>Glade felülettervezőt</guimenuitem> </menuchoice>.</para>
+    		</listitem>
+    	</varlistentry>
+    	<varlistentry>
+    		<term>Parancssor</term>
+    		<listitem>
+			<para>A <application>Glade</application> alkalmazás parancssoros indításához gépelje be a következő parancsot: <command>glade</command>, és nyomja meg az <keycap>Enter</keycap> gombot.</para>
+    		</listitem>
+    	</varlistentry>
+    </variablelist>
+    </sect2>
+
+    <sect2 id="glade-when-start">
+    <title>Amikor elindítja a <application>Glade</application> alkalmazást</title>
+    <para>Amikor elindítja a <application>Glade</application> alkalmazást, a következő ablak jelenik meg.</para>
+
+        <figure id="main-window-fig"> 
+          <title>A <application>Glade</application> ablaka</title> 
+            <screenshot> 
+              <mediaobject><imageobject><imagedata fileref="figures/main-window.png" format="PNG"/></imageobject> <textobject><phrase>Megjeleníti a <application>Glade</application> ablakot.</phrase></textobject></mediaobject> 
+            </screenshot> 
+        </figure>
+        
+        <para>A <application>Glade</application> ablak a következő elemeket tartalmazza:</para>
+
+        <variablelist>
+          <varlistentry> <term>Menüsáv</term>
+            <listitem>
+            <para>A menüsáv elemei tartalmazzák az összes olyan funkciót, amely a <application>Glade</application> alkalmazás használatához szükséges.</para>
+            </listitem>
+          </varlistentry>
+          <varlistentry> <term>Eszköztár</term>
+            <listitem>
+            <para>Az eszköztár a menüsorról elérhető parancsok egy részét tartalmazza.</para>
+            </listitem>
+          </varlistentry>
+          <varlistentry> <term>Munkaterület</term>
+            <listitem>
+            <para>A munkaterület az a rész, ahol a felhasználói felület vizuálisan szerkeszthető.</para>
+            </listitem>
+          </varlistentry>
+          <varlistentry> <term>Paletta</term>
+            <listitem>
+            <para>A paletta azokat a felületi elemeket tartalmazza, amelyekből a felhasználói felület felépíthető.</para>
+            </listitem>
+          </varlistentry>
+          <varlistentry> <term>Felügyelő</term>
+            <listitem>
+            <para>A felügyelő a projektben szereplő felületi elemekről jelenít meg információt.</para>
+            </listitem>
+          </varlistentry>
+          <varlistentry> <term>Tulajdonság-szerkesztő</term>
+            <listitem>
+            <para>A tulajdonság-szerkesztő arra használható, hogy az egyes felületi elemektulajdonságait megváltoztassuk, illetve hogy kapcsolatokat hozzunk létre a forráskóddal.</para>
+            </listitem>
+          </varlistentry>
+          <varlistentry> <term>Állapotsor</term>
+            <listitem>
+            <para>Az állapotsor információt jelenít meg <application>Glade</application> aktuális műveletéről, és kontextus információt ad a menüelemekről.</para>
+            </listitem>
+          </varlistentry>
+        </variablelist>
+
+    </sect2>
+  </sect1>
+
+  <sect1 id="working-with-projects"> 
+         <title>Munka a projektekkel</title> 
+  
+ 
+<!-- To Create a New Project  -->
+	 <sect2 id="glade-create-new-project"> 
+		<title>Új projekt létrehozása</title>
+		<para>Egy új projekt létrehozásához válassza a <menuchoice><guimenu>Fájl</guimenu><guimenuitem>Új</guimenuitem></menuchoice> menüelemet. Az alkalmazás egy új projektet jelenít meg a <application>Glade</application> ablakban.</para>
+	 </sect2>
+
+	 <sect2 id="glade-open-project"> 
+		<title>Projekt megnyitása</title>
+		<para>Egy létező projekt megnyitásához válassza a <menuchoice><guimenu>Fájl</guimenu><guimenuitem>Megnyitás</guimenuitem></menuchoice> parancsot. Az alkalmazás ezután meg is jeleníti a projektet.</para>
+	 </sect2>
+
+<!-- To Save a Project -->
+	 <sect2 id="glade-save-project"> 
+		<title>Projekt mentése</title>
+		<para>A projekteket az alábbi módokon mentheti:</para>
+		<itemizedlist> 
+		  <listitem><para>Egy létező projektfájl mentéséhez válassza a <menuchoice><guimenu>Fájl</guimenu><guimenuitem>Mentés</guimenuitem></menuchoice> parancsot.</para>
+		  </listitem>
+		  <listitem><para>Egy új projektfájl mentéséhez vagy egy létező projektfájl új fájlnév alatti mentéséhez válassza ki a <menuchoice> <guimenu>Fájl</guimenu> <guimenuitem>Mentés másként</guimenuitem> </menuchoice> menüelemet. Adjon meg egy nevet a projektfájlhoz a <guilabel>Mentés másként</guilabel> párbeszédablakban, majd kattintson a <guibutton>Mentés</guibutton> gombra.</para>
+		  </listitem>
+		</itemizedlist>
+	 </sect2>
+  </sect1>
+
+
+  <sect1 id="working-with-widgets"> 
+         <title>Felületi elemek használata</title>
+         <sect2 id="select-widgets-palette">
+                <title>Felületi elemek kiválasztása a Paletta ablakból</title>
+                <para>A <guilabel>Paletta</guilabel> ablakban levő felületi elemeket az alábbi módokon használhatja:</para>
+                <variablelist> 
+                  <varlistentry> 
+                         <term>Kiválasztási mód</term> 
+                         <listitem>
+                                <para>A kiválasztási mód használatához válassza a <guilabel>Kiválasztás</guilabel> nyilat. A kurzor ilyenkor egy nyilat mutat, jelezve, hogy ez a mód aktív. Ebben a módban az egérrel választhat ki elemeket a projektben. Ezután a <guilabel>Tulajdonságok</guilabel> ablakban szerkesztheti a felületi elemektulajdonságait.</para>
+<para>A felületi elem környezeti menüjét is használhatja. Jobb-klikk a felületi elemre a menü megnyitásához.</para><para>Több egyforma típusú felületi elemet is hozzáadhat a <guilabel>Paletta</guilabel> ablakból, csak tartsa nyomva a <keycap>Control</keycap> gombot, amikor kiválasztja az elemet. A normál módhoz visszatéréshez kattintson a <guilabel>Kiválasztás</guilabel> nyílra, vagy egy másik felületi elemre a <guilabel>Paletta</guilabel> ablakban.</para>
+                         </listitem> 
+                  </varlistentry> 
+                </variablelist> 
+                <variablelist> 
+                  <varlistentry> 
+                         <term>Felületi elem elhelyezési mód</term> 
+                         <listitem> 
+                                <para>A felületi elem elhelyezési mód használatához válasszon egy felületi elemet a <guilabel>Palette</guilabel> ablakból. Ekkor az egérmutató is megváltozik. A felületi elemet konténerbe helyezheti, vagy felsőszintű ablakra teheti és így tovább. Miután elhelyezte a felületi elemet, a program újra kiválasztási módba kerül.</para>
+                         </listitem> 
+                  </varlistentry> 
+                </variablelist> 
+                <variablelist> 
+                  <varlistentry> 
+                         <term>Felsőszintű elhelyezési mód</term> 
+                         <listitem> 
+                                <para>A felsőszintű elhelyezési mód használatához válasszon egy felsőszintűnek jelzett felületi elemet a <guilabel>Paletta</guilabel> ablakból. Ekkor a felületi elem azonnal megjelenik a munkaasztalon. A felületi elem ekkor szerkeszthető. A felsőszintű felületi elem kiválasztása után a program újra kiválasztási módba kerül.</para>
+                         </listitem> 
+                  </varlistentry> 
+                </variablelist> 
+         </sect2>
+<sect2 id="organize-widgets">
+<title>Felületi elemek elrendezése a projektben</title>
+<para>A felületi elem konténerek, azaz dobozok, arra használhatóak, hogy szerkezetbe foglalják és elrendezzék a többi felületi elemet. A következő konténerek választhatóak a <guilabel>Paletta</guilabel> ablakból:</para>
+<itemizedlist>
+<listitem><para>Függőeleges doboz</para>
+</listitem><listitem><para>Vízszintes doboz</para></listitem>
+<listitem><para>Táblázat</para></listitem>
+<listitem><para>Rögzített pozíciók</para></listitem>
+<listitem><para>Vízszintes gombdoboz</para></listitem>
+<listitem><para>Függőleges gombdoboz</para></listitem>
+<listitem><para>Vízszintes ablaktáblák</para></listitem>
+<listitem><para>Függőleges ablaktáblák</para></listitem>
+<listitem><para>Notesz</para></listitem>
+<listitem><para>Keret</para></listitem>
+<listitem><para>Görgetőablak</para></listitem>
+<listitem><para>Nézetablak</para></listitem>
+</itemizedlist>
+<para>A dobozok egymásba ágyazhatóak, és komplex szerkezetek alakíthatóak ki belőlük. Amikor függőleges és vízszintes dobozokat hoz létre, a <application>Glade</application> megkérdezi, hogy hány sort és oszlopot szeretne kezdésként létrehozni, persze ez később egyszerűen megváltoztatható.</para>
+<para>Ha minden szükséges dobozt létrehozott, akkor hozzáadhatja a különböző egyéb felületi elemeket, a címkéket, gombokat és a többit. A <application>Glade</application> program a felületi elemeket a szerkezetbe helyezi, így sok fáradságos munkától kíméli meg. A dobozok használatával lehetséges az, hogy az ablak mérete a címkéknek megfelelően méreteződik át. Ez a lokalizáció miatt fontos.</para></sect2>
+         <sect2 id="place-widgets-clipboard"> 
+                <title>Felületi elem áthelyezése a vágólapra</title> 
+                <para>Egy felületi elem szülőjétől való eltávolításához és a felületi elem vágólapra helyezéséhez jelölje ki a felületi elemet, majd válassza ki a <menuchoice> <guimenu>Szerkesztés</guimenu> <guisubmenu>Kivágás</guisubmenu> </menuchoice> menüelemet.</para>
+         </sect2> 
+         <sect2 id="copy-widget-clipboard"> 
+                <title>Felületi elem másolása a vágólapra</title> 
+                <para>Egy felületi elem vágólapra másolásához jelölje ki a felületi elemet, majd válassza ki a <menuchoice> <guimenu>Szerkesztés</guimenu> <guisubmenu>Másolás</guisubmenu> </menuchoice> menüelemet. Az eredeti felületi elem a szülőhöz csatolva marad.</para>
+         </sect2> 
+         <sect2 id="paste-widget-clipboard"> 
+                <title>Felületi elem beillesztés a vágólapról a projektbe</title> 
+                <para>Egy vágólapon létező felületi elem beillesztéséhez a projektbe, válassza ki a <menuchoice> <guimenu>Szerkesztés</guimenu> <guisubmenu>Beillesztés</guisubmenu> </menuchoice> menüelemet.</para><para>Minden felületi elemnek egyedi névvel kell rendelkeznie a <application>Glade</application> alkalmazásban. Ha kivág egy felületi elemet, és újra beilleszti, akkor a kivágott felületi elem, és annak összes gyermeke megtartja az eredeti nevét. Ha másol egy felületi elemet, vagy többször illeszt be, akkor a <application>Glade</application> új neveket állít elő a másolatoknak.</para>
+         </sect2> 
+         <sect2 id="delete-widget"> 
+                <title>Felületi elem törlése</title> 
+                <para>Egy felületi elem szülőjétől való törléséhez anélkül, hogy a felületi elemet a vágólapra helyezné át, jelölje ki a felületi elemet, majd válassza ki a <menuchoice> <guimenu>Szerkesztés</guimenu> <guisubmenu>Törlés</guisubmenu> </menuchoice> menüelemet.</para>
+                 
+         </sect2> 
+         
+         <sect2 id="edit-widget"> 
+                <title>Felületi elem tulajdonságának megváltoztatása</title> 
+                <para>A tulajdonság-szerkesztő segítségével a kiválasztott felületi elem tulajdonságai szerkeszthetőek. Egy tulajdonság szerkesztéséhez válassza ki a felületi elemet, és írjon be egy megfelelő értéket a Tulajdonságok ablak megfelelő mezőjébe.</para>
+                
+                
+         </sect2> 
+  </sect1>
+  
+<sect1 id="about"> 
+    <title>A Glade programról</title> 
+    <para>A Glade programot a Glade fejlesztők, és a GNOME közösség önkéntesei tartják karban. Ha többet szeretne megtanulni a programról, akkor keresse fel a <ulink url="http://glade.gnome.org" type="http">Glade webhelyét</ulink>.</para>
+    <para>Ha hibát szeretne bejelenti, vagy javaslata van a programmal, leírással kapcsolatban, akkor ezt a <ulink url="http://bugzilla.gnome.org/enter_bug.cgi?product=glade3" type="http">bugzilla</ulink> segítségével teheti meg.</para>
+
+    <para>További hasznos információforrás a Glade <ulink url="http://lists.ximian.com/mailman/listinfo/glade-users" type="http">felhasználói</ulink> és <ulink url="http://lists.ximian.com/mailman/listinfo/glade-devel" type="http">fejlesztői</ulink> levelezőlista. A feliratkozás mellett, hasznos lehet megtekinteni az archívumot is, amely ugyanezeken a linkeken található.</para>
+
+    <para>Ez a program a Free Software Foundation által kiadott GNU Lesser General Public License dokumentumban leírtak, akár a licenc 2-es, akár (tetszőleges) későbbi  változata szerint kerül terjesztésre. Ennek a licencnek egy példánya megtalálható ezen a <ulink url="help:gpl" type="help">hivatkozáson</ulink>, vagy a program forráskódjában mellékelt fájl tartalmazza annak MÁSOLATÁT.</para>
+  </sect1> 
+
+</article>

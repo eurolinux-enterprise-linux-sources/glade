@@ -43,6 +43,7 @@
 #include "glade-inspector.h"
 #include "glade-popup.h"
 #include "glade-app.h"
+#include "glade-dnd.h"
 
 #include <string.h>
 #include <glib/gi18n-lib.h>
@@ -55,6 +56,17 @@
 #define GLADE_INSPECTOR_GET_PRIVATE(object)(G_TYPE_INSTANCE_GET_PRIVATE ((object),\
 					    GLADE_TYPE_INSPECTOR,                 \
 			 		    GladeInspectorPrivate))
+
+
+static void     search_entry_text_inserted_cb (GtkEntry       *entry,
+					       const gchar    *text,
+					       gint            length,
+					       gint           *position,
+					       GladeInspector *inspector);
+static void     search_entry_text_deleted_cb  (GtkEditable    *editable,
+					       gint            start_pos,
+					       gint            end_pos,
+					       GladeInspector *inspector);
 
 enum
 {
@@ -80,6 +92,8 @@ struct _GladeInspectorPrivate
   GtkWidget *entry;
   guint idle_complete;
   gboolean search_disabled;
+  gchar *completion_text;
+  gchar *completion_text_fold;
 };
 
 static GParamSpec *properties[N_PROPERTIES];
@@ -89,21 +103,23 @@ static guint glade_inspector_signals[LAST_SIGNAL] = { 0 };
 static void glade_inspector_dispose (GObject *object);
 static void glade_inspector_finalize (GObject *object);
 static void add_columns (GtkTreeView *inspector);
-static void item_activated_cb (GtkTreeView *view,
-                               GtkTreePath *path,
+static void item_activated_cb (GtkTreeView       *view,
+                               GtkTreePath       *path,
                                GtkTreeViewColumn *column,
-                               GladeInspector *inspector);
+                               GladeInspector    *inspector);
 static void selection_changed_cb (GtkTreeSelection *selection,
-                                  GladeInspector *inspector);
-static gint button_press_cb (GtkWidget *widget,
+                                  GladeInspector   *inspector);
+static gint button_press_cb (GtkWidget      *widget,
                              GdkEventButton *event,
                              GladeInspector *inspector);
 
-G_DEFINE_TYPE (GladeInspector, glade_inspector, GTK_TYPE_VBOX)
-     static void
-         glade_inspector_set_property (GObject *object,
-                                       guint property_id,
-                                       const GValue *value, GParamSpec *pspec)
+G_DEFINE_TYPE_WITH_PRIVATE (GladeInspector, glade_inspector, GTK_TYPE_BOX)
+
+static void
+glade_inspector_set_property (GObject      *object,
+			      guint         property_id,
+			      const GValue *value,
+                              GParamSpec   *pspec)
 {
   GladeInspector *inspector = GLADE_INSPECTOR (object);
 
@@ -119,9 +135,9 @@ G_DEFINE_TYPE (GladeInspector, glade_inspector, GTK_TYPE_VBOX)
 }
 
 static void
-glade_inspector_get_property (GObject *object,
-                              guint property_id,
-                              GValue *value,
+glade_inspector_get_property (GObject    *object,
+                              guint       property_id,
+                              GValue     *value,
                               GParamSpec *pspec)
 {
   GladeInspector *inspector = GLADE_INSPECTOR (object);
@@ -184,29 +200,12 @@ glade_inspector_class_init (GladeInspectorClass *klass)
   
   /* Install all properties */
   g_object_class_install_properties (object_class, N_PROPERTIES, properties);
-
-  g_type_class_add_private (klass, sizeof (GladeInspectorPrivate));
-}
-
-static gboolean
-find_in_string_insensitive (const gchar *_haystack, const gchar *_needle)
-{
-  gboolean visible;
-  gchar *haystack = g_utf8_casefold (_haystack, -1);
-  gchar *needle = g_utf8_casefold (_needle, -1);
-
-  visible = strstr (haystack, needle) != NULL;
-
-  g_free (haystack);
-  g_free (needle);
-
-  return visible;
 }
 
 static gboolean
 glade_inspector_visible_func (GtkTreeModel *model,
-                              GtkTreeIter *parent,
-                              gpointer data)
+                              GtkTreeIter  *parent,
+                              gpointer      data)
 {
   GladeInspector *inspector = data;
   GladeInspectorPrivate *priv = inspector->priv;
@@ -215,7 +214,7 @@ glade_inspector_visible_func (GtkTreeModel *model,
 
   gboolean retval = FALSE;
 
-  if (priv->search_disabled)
+  if (priv->search_disabled || priv->completion_text == NULL)
     return TRUE;
 
   if (gtk_tree_model_iter_children (model, &iter, parent))
@@ -226,16 +225,19 @@ glade_inspector_visible_func (GtkTreeModel *model,
         }
       while (gtk_tree_model_iter_next (model, &iter) && !retval);
     }
+
   if (!retval)
     {
-      const gchar *text = gtk_entry_get_text (GTK_ENTRY (priv->entry));
-      gchar *widget_name;
+      gchar *widget_name, *haystack;
 
       gtk_tree_model_get (model, parent, GLADE_PROJECT_MODEL_COLUMN_NAME,
                           &widget_name, -1);
 
-      retval = find_in_string_insensitive (widget_name, text);
+      haystack = g_utf8_casefold (widget_name, -1);
 
+      retval = strstr (haystack, priv->completion_text_fold) != NULL;
+
+      g_free (haystack);
       g_free (widget_name);
     }
 
@@ -243,7 +245,7 @@ glade_inspector_visible_func (GtkTreeModel *model,
 }
 
 static void
-glade_inspector_filter (GladeInspector *inspector)
+glade_inspector_refilter (GladeInspector *inspector)
 {
   GladeInspectorPrivate *priv = inspector->priv;
 
@@ -252,61 +254,147 @@ glade_inspector_filter (GladeInspector *inspector)
       gtk_tree_model_filter_refilter (GTK_TREE_MODEL_FILTER (priv->filter));
       gtk_tree_view_expand_all (GTK_TREE_VIEW (priv->view));
     }
-
 }
 
 static void
 search_entry_changed_cb (GtkEntry *entry, GladeInspector *inspector)
 {
-  glade_inspector_filter (inspector);
+  glade_inspector_refilter (inspector);
+}
+
+typedef struct {
+  const gchar    *text;
+  gchar          *common_text;
+  gchar          *first_match;
+} CommonMatchData;
+
+static void
+reduce_string (gchar *str1,
+	       const gchar *str2)
+{
+  gint str1len = strlen (str1);
+  gint i;
+
+  for (i = 0; str2[i] != '\0'; i++)
+    {
+
+      if (str1[i] != str2[i] || i >= str1len)
+	{
+	  str1[i] = '\0';
+	  break;
+	}
+    }
+
+  if (str2[i] == '\0')
+    str1[i] = '\0';
+}
+
+static gboolean
+search_common_matches (GtkTreeModel    *model,
+		       GtkTreePath     *path,
+		       GtkTreeIter     *iter,
+		       CommonMatchData *data)
+{
+  GladeWidget *gwidget;
+  const gchar *name;
+  GObject *obj;
+  gboolean match;
+
+  gtk_tree_model_get (model, iter, GLADE_PROJECT_MODEL_COLUMN_OBJECT, &obj, -1);
+  gwidget = glade_widget_get_from_gobject (obj);
+
+  if (!glade_widget_has_name (gwidget))
+    {
+      g_object_unref (obj);
+      return FALSE;
+    }
+
+  name  = glade_widget_get_name (gwidget);
+  match = (strncmp (data->text, name, strlen (data->text)) == 0);
+
+  if (match)
+    {
+      if (!data->first_match)
+	data->first_match = g_strdup (name);
+
+      if (data->common_text)
+        reduce_string (data->common_text, name);
+      else
+	data->common_text = g_strdup (name);
+    }
+
+  g_object_unref (obj);
+  return FALSE;
+}
+
+/* Returns the shortest common matching text from all
+ * project widget names.
+ *
+ * If shortest_match is specified, it is given the first
+ * full match for the 'search' text
+ */
+static gchar *
+get_partial_match (GladeInspector *inspector,
+		   const gchar    *search,
+		   gchar         **first_match)
+{
+  GtkTreeModel     *model = GTK_TREE_MODEL (inspector->priv->project);
+  CommonMatchData   data;
+
+  data.text        = search;
+  data.common_text = NULL;
+  data.first_match = NULL;
+  
+  gtk_tree_model_foreach (model, (GtkTreeModelForeachFunc)search_common_matches, &data);
+
+  if (first_match)
+    *first_match = data.first_match;
+  else
+    g_free (data.first_match);
+
+  return data.common_text;
 }
 
 static void
-selection_name_foreach_func (GtkTreeModel *model,
-                             GtkTreePath *path,
-                             GtkTreeIter *iter,
-                             gchar **selection)
+inspector_set_completion_text (GladeInspector *inspector, const gchar *text)
 {
-  if (*selection == NULL)
-    {
-      gchar *name;
-      
-      gtk_tree_model_get (model, iter, GLADE_PROJECT_MODEL_COLUMN_NAME, &name, -1);
-      *selection = name;
-    }
-}
+  GladeInspectorPrivate *priv = inspector->priv;
 
-static gchar *
-get_selected_name (GladeInspector *inspector)
-{
-  GtkTreeSelection *selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (inspector->priv->view));
-  gchar *name = NULL;
-  
-  gtk_tree_selection_selected_foreach (selection,
-                                       (GtkTreeSelectionForeachFunc)
-                                       selection_name_foreach_func, &name);
+  g_free (priv->completion_text);
+  priv->completion_text = g_strdup (text);
+  priv->completion_text_fold = text ? g_utf8_casefold (text, -1) : NULL;
 
-  return name;
 }
 
 static gboolean
 search_complete_idle (GladeInspector *inspector)
 {
   GladeInspectorPrivate *priv = inspector->priv;
-  gchar *completed = get_selected_name (inspector);
+  gchar *completed;
   const gchar *str;
   gsize length;
 
   str = gtk_entry_get_text (GTK_ENTRY (priv->entry));
 
+  completed = get_partial_match (inspector, str, NULL);
+  
+  inspector_set_completion_text (inspector, str);
+
   if (completed)
     {
       length = strlen (str);
+
+      g_signal_handlers_block_by_func (priv->entry, search_entry_text_inserted_cb, inspector);
+      g_signal_handlers_block_by_func (priv->entry, search_entry_text_deleted_cb, inspector);
 
       gtk_entry_set_text (GTK_ENTRY (priv->entry), completed);
       gtk_editable_set_position (GTK_EDITABLE (priv->entry), length);
       gtk_editable_select_region (GTK_EDITABLE (priv->entry), length, -1);
       g_free (completed);
+
+      g_signal_handlers_unblock_by_func (priv->entry, search_entry_text_inserted_cb, inspector);
+      g_signal_handlers_unblock_by_func (priv->entry, search_entry_text_deleted_cb, inspector);
+
     }
 
   priv->idle_complete = 0;
@@ -315,10 +403,10 @@ search_complete_idle (GladeInspector *inspector)
 }
 
 static void
-search_entry_text_inserted_cb (GtkEntry *entry,
-                               const gchar *text,
-                               gint length,
-                               gint *position,
+search_entry_text_inserted_cb (GtkEntry       *entry,
+                               const gchar    *text,
+                               gint            length,
+                               gint           *position,
                                GladeInspector *inspector)
 {
   GladeInspectorPrivate *priv = inspector->priv;
@@ -330,105 +418,143 @@ search_entry_text_inserted_cb (GtkEntry *entry,
     }
 }
 
+static void
+search_entry_text_deleted_cb (GtkEditable    *editable,
+			      gint            start_pos,
+			      gint            end_pos,
+			      GladeInspector *inspector)
+{
+  GladeInspectorPrivate *priv = inspector->priv;
+
+  if (!priv->search_disabled)
+    {
+      inspector_set_completion_text (inspector, gtk_entry_get_text (GTK_ENTRY (priv->entry)));
+      glade_inspector_refilter (inspector);
+    }
+}
+
 static gboolean
-search_entry_key_press_event_cb (GtkEntry *entry,
-                                 GdkEventKey *event,
+search_entry_key_press_event_cb (GtkEntry       *entry,
+                                 GdkEventKey    *event,
                                  GladeInspector *inspector)
 {
   GladeInspectorPrivate *priv = inspector->priv;
   const gchar *str;
 
+  str = gtk_entry_get_text (GTK_ENTRY (priv->entry));
+
   if (event->keyval == GDK_KEY_Tab)
     {
+      /* CNTL-Tab: An escape route to move focus */
       if (event->state & GDK_CONTROL_MASK)
         {
           gtk_widget_grab_focus (priv->view);
         }
-      else
+      else /* Tab: Move cursor forward and refine the filter to include all text */
         {
+          inspector_set_completion_text (inspector, str);
+
           gtk_editable_set_position (GTK_EDITABLE (entry), -1);
           gtk_editable_select_region (GTK_EDITABLE (entry), -1, -1);
+
+	  glade_inspector_refilter (inspector);
         }
       return TRUE;
     }
 
+  /* Enter/Return: Find the first complete match, refine filter to the complete match, and select the match  */
   if (event->keyval == GDK_KEY_Return || event->keyval == GDK_KEY_KP_Enter)
     {
-      gchar *name;
+      gchar *name, *full_match = NULL;
 
-      str = gtk_entry_get_text (GTK_ENTRY (priv->entry));
-
-      if (str && (name = get_selected_name (inspector)))
+      if (str && (name = get_partial_match (inspector, str, &full_match)))
         {
-          gtk_entry_set_text (GTK_ENTRY (entry), name);
-          g_free (name);
+	  GladeWidget *widget;
+
+          inspector_set_completion_text (inspector, full_match);
+	  g_free (name);
+
+	  g_signal_handlers_block_by_func (priv->entry, search_entry_text_inserted_cb, inspector);
+	  g_signal_handlers_block_by_func (priv->entry, search_entry_text_deleted_cb, inspector);
+
+          gtk_entry_set_text (GTK_ENTRY (entry), priv->completion_text);
+
+	  g_signal_handlers_unblock_by_func (priv->entry, search_entry_text_inserted_cb, inspector);
+	  g_signal_handlers_unblock_by_func (priv->entry, search_entry_text_deleted_cb, inspector);
+
           gtk_editable_set_position (GTK_EDITABLE (entry), -1);
           gtk_editable_select_region (GTK_EDITABLE (entry), -1, -1);
+
+	  glade_inspector_refilter (inspector);
+
+	  widget = glade_project_get_widget_by_name (priv->project, priv->completion_text);
+	  if (widget)
+	    glade_project_selection_set (priv->project, glade_widget_get_object (widget), TRUE);
         }
       return TRUE;
+    }
+
+  /* Backspace: Attempt to move the cursor backwards and maintain the completed/selected portion */
+  if (event->keyval == GDK_KEY_BackSpace)
+    {
+      if (!priv->search_disabled && !priv->idle_complete && str && str[0])
+	{
+	  /* Now, set the text to the current completion text -1 char, and recomplete */
+	  if (priv->completion_text && priv->completion_text[0])
+	    {
+	      /* If we're not at the position of the length of the completion text, just carry on */
+	      if (!gtk_editable_get_selection_bounds (GTK_EDITABLE (priv->entry), NULL, NULL))
+		return FALSE;
+
+	      priv->completion_text[strlen (priv->completion_text) -1] = '\0';
+
+	      g_signal_handlers_block_by_func (priv->entry, search_entry_text_inserted_cb, inspector);
+	      g_signal_handlers_block_by_func (priv->entry, search_entry_text_deleted_cb, inspector);
+
+	      gtk_entry_set_text (GTK_ENTRY (priv->entry), priv->completion_text);
+	      gtk_editable_set_position (GTK_EDITABLE (priv->entry), -1);
+
+	      g_signal_handlers_unblock_by_func (priv->entry, search_entry_text_inserted_cb, inspector);
+	      g_signal_handlers_unblock_by_func (priv->entry, search_entry_text_deleted_cb, inspector);
+
+	      priv->idle_complete =
+		g_idle_add ((GSourceFunc) search_complete_idle, inspector);
+
+	      return TRUE;
+	    }
+	}
     }
 
   return FALSE;
 }
 
-static void
-widget_font_desc_set_style (GtkWidget *widget, PangoStyle style)
-{
-  GtkStyleContext *context = gtk_widget_get_style_context (widget);
-  PangoFontDescription *font_desc = 
-    pango_font_description_copy (gtk_style_context_get_font (context, GTK_STATE_FLAG_NORMAL));
-
-  pango_font_description_set_style (font_desc, style);
-  gtk_widget_override_font (widget, font_desc);
-  pango_font_description_free (font_desc);
-}
-
-static void
-search_entry_update (GladeInspector *inspector)
-{
-  GladeInspectorPrivate *priv = inspector->priv;
-  const gchar *str = gtk_entry_get_text (GTK_ENTRY (priv->entry));
-
-  if (str[0] == '\0')
-    {
-      GtkStyleContext *context;
-      GdkRGBA          color;
-
-      priv->search_disabled = TRUE;
-      widget_font_desc_set_style (priv->entry, PANGO_STYLE_ITALIC);
-      gtk_entry_set_text (GTK_ENTRY (priv->entry), _("< search widgets >"));
-
-      context = gtk_widget_get_style_context (priv->entry);
-      gtk_style_context_get_color (context, GTK_STATE_FLAG_INSENSITIVE, &color);
-      gtk_widget_override_color (priv->entry, GTK_STATE_FLAG_NORMAL, &color);
-    }
-}
-
 static gboolean
-search_entry_focus_in_cb (GtkWidget *entry,
-                          GdkEventFocus *event,
+search_entry_focus_in_cb (GtkWidget      *entry,
+                          GdkEventFocus  *event,
                           GladeInspector *inspector)
 {
   GladeInspectorPrivate *priv = inspector->priv;
 
   if (priv->search_disabled)
-    {
-      gtk_entry_set_text (GTK_ENTRY (priv->entry), "");
-      gtk_widget_override_color (priv->entry, GTK_STATE_NORMAL, NULL);
-      gtk_widget_override_font (priv->entry, NULL);
-
-      priv->search_disabled = FALSE;
-    }
+    priv->search_disabled = FALSE;
 
   return FALSE;
 }
 
 static gboolean
-search_entry_focus_out_cb (GtkWidget *entry,
-                           GdkEventFocus *event,
+search_entry_focus_out_cb (GtkWidget      *entry,
+                           GdkEventFocus  *event,
                            GladeInspector *inspector)
 {
-  search_entry_update (inspector);
+  GladeInspectorPrivate *priv = inspector->priv;
+
+  priv->search_disabled = TRUE;
+
+  inspector_set_completion_text (inspector, NULL);
+
+  gtk_entry_set_text (GTK_ENTRY (priv->entry), "");
+
+  gtk_tree_model_filter_refilter (GTK_TREE_MODEL_FILTER (priv->filter));
 
   return FALSE;
 }
@@ -440,15 +566,16 @@ glade_inspector_init (GladeInspector *inspector)
   GtkWidget *sw;
   GtkTreeSelection *selection;
 
-  inspector->priv = priv = GLADE_INSPECTOR_GET_PRIVATE (inspector);
+  inspector->priv = priv = glade_inspector_get_instance_private (inspector);
 
-  gtk_widget_push_composite_child ();
+  gtk_orientable_set_orientation (GTK_ORIENTABLE (inspector),
+				  GTK_ORIENTATION_VERTICAL);
 
   priv->project = NULL;
 
   priv->entry = gtk_entry_new ();
 
-  search_entry_update (inspector);
+  gtk_entry_set_placeholder_text (GTK_ENTRY (priv->entry), _(" < Search Widgets >"));
   gtk_widget_show (priv->entry);
   gtk_box_pack_start (GTK_BOX (inspector), priv->entry, FALSE, FALSE, 2);
 
@@ -459,14 +586,23 @@ glade_inspector_init (GladeInspector *inspector)
   g_signal_connect_after (priv->entry, "insert-text",
                           G_CALLBACK (search_entry_text_inserted_cb),
                           inspector);
+  g_signal_connect_after (priv->entry, "delete-text",
+                          G_CALLBACK (search_entry_text_deleted_cb),
+                          inspector);
   g_signal_connect (priv->entry, "focus-in-event",
                     G_CALLBACK (search_entry_focus_in_cb), inspector);
   g_signal_connect (priv->entry, "focus-out-event",
                     G_CALLBACK (search_entry_focus_out_cb), inspector);
 
   priv->view = gtk_tree_view_new ();
+  gtk_tree_view_set_enable_search (GTK_TREE_VIEW (priv->view), FALSE);
+  gtk_scrollable_set_hscroll_policy (GTK_SCROLLABLE (priv->view), GTK_SCROLL_MINIMUM);
   add_columns (GTK_TREE_VIEW (priv->view));
-  gtk_tree_view_set_search_column (GTK_TREE_VIEW (priv->view), GLADE_PROJECT_MODEL_COLUMN_NAME);
+
+  /* Set it as a drag source */
+  gtk_tree_view_enable_model_drag_source (GTK_TREE_VIEW (priv->view),
+                                          GDK_BUTTON1_MASK,
+                                          _glade_dnd_get_target (), 1, 0);
 
   g_signal_connect (G_OBJECT (priv->view), "row-activated",
                     G_CALLBACK (item_activated_cb), inspector);
@@ -475,6 +611,11 @@ glade_inspector_init (GladeInspector *inspector)
   gtk_tree_selection_set_mode (selection, GTK_SELECTION_MULTIPLE);
   g_signal_connect (G_OBJECT (selection), "changed",
                     G_CALLBACK (selection_changed_cb), inspector);
+
+  /* Expand All */
+  gtk_entry_set_icon_from_icon_name (GTK_ENTRY (priv->entry), GTK_ENTRY_ICON_SECONDARY, "go-down");
+  gtk_entry_set_icon_tooltip_text (GTK_ENTRY (priv->entry), GTK_ENTRY_ICON_SECONDARY, _("Expand all"));
+  g_signal_connect_swapped (priv->entry, "icon-press", G_CALLBACK (gtk_tree_view_expand_all), priv->view);
 
   /* popup menu */
   g_signal_connect (G_OBJECT (priv->view), "button-press-event",
@@ -489,8 +630,6 @@ glade_inspector_init (GladeInspector *inspector)
 
   gtk_widget_show (priv->view);
   gtk_widget_show (sw);
-
-  gtk_widget_pop_composite_child ();
 }
 
 static void
@@ -512,11 +651,17 @@ glade_inspector_dispose (GObject *object)
 static void
 glade_inspector_finalize (GObject *object)
 {
+  GladeInspector *inspector = GLADE_INSPECTOR (object);
+  GladeInspectorPrivate *priv = inspector->priv;
+
+  g_free (priv->completion_text);
+  g_free (priv->completion_text_fold);
+
   G_OBJECT_CLASS (glade_inspector_parent_class)->finalize (object);
 }
 
 static void
-project_selection_changed_cb (GladeProject *project,
+project_selection_changed_cb (GladeProject   *project,
                               GladeInspector *inspector)
 {
   GladeWidget *widget;
@@ -583,9 +728,9 @@ project_selection_changed_cb (GladeProject *project,
 
 static void
 selection_foreach_func (GtkTreeModel *model,
-                        GtkTreePath *path,
-                        GtkTreeIter *iter,
-                        GList **selection)
+                        GtkTreePath  *path,
+                        GtkTreeIter  *iter,
+                        GList       **selection)
 {
   GObject *object;
 
@@ -638,16 +783,16 @@ selection_changed_cb (GtkTreeSelection *selection, GladeInspector *inspector)
 }
 
 static void
-item_activated_cb (GtkTreeView *view,
-                   GtkTreePath *path,
+item_activated_cb (GtkTreeView       *view,
+                   GtkTreePath       *path,
                    GtkTreeViewColumn *column,
-                   GladeInspector *inspector)
+                   GladeInspector    *inspector)
 {
   g_signal_emit (inspector, glade_inspector_signals[ITEM_ACTIVATED], 0);
 }
 
 static gint
-button_press_cb (GtkWidget *widget,
+button_press_cb (GtkWidget      *widget,
                  GdkEventButton *event,
                  GladeInspector *inspector)
 {
@@ -696,46 +841,152 @@ button_press_cb (GtkWidget *widget,
 }
 
 static void
+glade_inspector_warning_cell_data_func (GtkTreeViewColumn *column,
+					GtkCellRenderer   *renderer,
+					GtkTreeModel      *model,
+					GtkTreeIter       *iter,
+					gpointer           data)
+{
+  gchar *warning = NULL;
+
+  gtk_tree_model_get (model, iter,
+		      GLADE_PROJECT_MODEL_COLUMN_WARNING, &warning,
+		      -1);
+
+  g_object_set (renderer, "visible", warning != NULL, NULL);
+
+  g_free (warning);
+}
+
+static void
+glade_inspector_name_cell_data_func (GtkTreeViewColumn *column,
+				     GtkCellRenderer   *renderer,
+				     GtkTreeModel      *model,
+				     GtkTreeIter       *iter,
+				     gpointer           data)
+{
+  GladeWidget *gwidget;
+  GObject *obj;
+
+  gtk_tree_model_get (model, iter,
+		      GLADE_PROJECT_MODEL_COLUMN_OBJECT, &obj,
+		      -1);
+
+  gwidget = glade_widget_get_from_gobject (obj);
+
+  g_object_set (renderer, "text", 
+		(glade_widget_has_name (gwidget)) ? 
+		  glade_widget_get_display_name (gwidget) : NULL,
+		NULL);
+
+  g_object_unref (obj);
+}
+
+
+static void
+glade_inspector_detail_cell_data_func (GtkTreeViewColumn *column,
+				       GtkCellRenderer   *renderer,
+				       GtkTreeModel      *model,
+				       GtkTreeIter       *iter,
+				       gpointer           data)
+{
+  gchar *type_name = NULL, *detail = NULL;
+
+  gtk_tree_model_get (model, iter,
+		      GLADE_PROJECT_MODEL_COLUMN_TYPE_NAME, &type_name,
+		      GLADE_PROJECT_MODEL_COLUMN_MISC, &detail,
+		      -1);
+
+  if (detail)
+    {
+      gchar *final = g_strconcat (type_name, "  ", detail, NULL);
+
+      g_object_set (renderer, "text", final, NULL);
+
+      g_free (final);
+    }
+  else
+      g_object_set (renderer, "text", type_name, NULL);
+
+  g_free (type_name);
+  g_free (detail);
+}
+
+
+
+
+static void
 add_columns (GtkTreeView *view)
 {
   GtkTreeViewColumn *column;
   GtkCellRenderer *renderer;
+  GtkCellAreaBox *box;
 
-  column = gtk_tree_view_column_new ();
+  /* Use a GtkCellArea box to set the alignments manually */
+  box = (GtkCellAreaBox *)gtk_cell_area_box_new ();
 
+  column = gtk_tree_view_column_new_with_area (GTK_CELL_AREA (box));
+  gtk_tree_view_column_set_sizing (column, GTK_TREE_VIEW_COLUMN_AUTOSIZE);
+  gtk_cell_area_box_set_spacing (GTK_CELL_AREA_BOX (box), 2);
+
+  gtk_tree_view_set_tooltip_column (view, GLADE_PROJECT_MODEL_COLUMN_WARNING);
+
+  /* Padding */
+  renderer = gtk_cell_renderer_text_new ();
+  g_object_set (G_OBJECT (renderer), "width", 4, NULL);
+  gtk_cell_area_box_pack_start (box, renderer, FALSE, FALSE, FALSE);
+
+  /* Warning cell */
   renderer = gtk_cell_renderer_pixbuf_new ();
-  gtk_tree_view_column_pack_start (column, renderer, FALSE);
+  g_object_set (renderer,
+		"stock-id", "gtk-dialog-warning",
+		"xpad", 2,
+		NULL);
+  gtk_cell_area_box_pack_start (box, renderer, FALSE, FALSE, FALSE);
+  gtk_tree_view_column_set_cell_data_func (column, renderer,
+					   glade_inspector_warning_cell_data_func,
+					   NULL, NULL);
+
+  /* Class Icon */
+  renderer = gtk_cell_renderer_pixbuf_new ();
+  g_object_set (renderer,
+		"xpad", 2,
+		NULL);
+  gtk_cell_area_box_pack_start (box, renderer, FALSE, FALSE, FALSE);
   gtk_tree_view_column_set_attributes (column,
                                        renderer,
                                        "icon_name",
                                        GLADE_PROJECT_MODEL_COLUMN_ICON_NAME,
                                        NULL);
 
+  /* Widget Name */
   renderer = gtk_cell_renderer_text_new ();
-  gtk_tree_view_column_pack_start (column, renderer, FALSE);
+  gtk_cell_area_box_pack_start (box, renderer, FALSE, FALSE, FALSE);
   gtk_tree_view_column_set_attributes (column,
                                        renderer,
                                        "text", GLADE_PROJECT_MODEL_COLUMN_NAME,
                                        NULL);
+  gtk_tree_view_column_set_cell_data_func (column, renderer,
+					   glade_inspector_name_cell_data_func,
+					   NULL, NULL);
 
+  /* Padding */
   renderer = gtk_cell_renderer_text_new ();
-  g_object_set (renderer, "style", PANGO_STYLE_ITALIC, NULL);
-  gtk_tree_view_column_pack_start (column, renderer, FALSE);
-  gtk_tree_view_column_set_attributes (column,
-                                       renderer,
-                                       "text",
-                                       GLADE_PROJECT_MODEL_COLUMN_TYPE_NAME,
-                                       NULL);
+  g_object_set (G_OBJECT (renderer), "width", 8, NULL);
+  gtk_cell_area_box_pack_start (box, renderer, FALSE, FALSE, FALSE);
 
-
+  /* Class name & detail */
   renderer = gtk_cell_renderer_text_new ();
   g_object_set (G_OBJECT (renderer),
-                "style", PANGO_STYLE_ITALIC, "foreground", "Gray", NULL);
-  gtk_tree_view_column_pack_start (column, renderer, FALSE);
-  gtk_tree_view_column_set_attributes (column,
-                                       renderer,
-                                       "text", GLADE_PROJECT_MODEL_COLUMN_MISC,
-                                       NULL);
+                "style", PANGO_STYLE_ITALIC,
+		"foreground", "Gray",
+		"ellipsize", PANGO_ELLIPSIZE_END,
+		NULL);
+
+  gtk_cell_area_box_pack_start (box, renderer, FALSE, FALSE, FALSE);
+  gtk_tree_view_column_set_cell_data_func (column, renderer,
+					   glade_inspector_detail_cell_data_func,
+					   NULL, NULL);
 
   gtk_tree_view_append_column (view, column);
   gtk_tree_view_set_headers_visible (view, FALSE);
@@ -773,6 +1024,9 @@ glade_inspector_set_project (GladeInspector *inspector, GladeProject *project)
 
   GladeInspectorPrivate *priv = inspector->priv;
 
+  if(priv->project == project)
+    return;
+
   if (inspector->priv->project)
     {
       disconnect_project_signals (inspector, inspector->priv->project);
@@ -801,14 +1055,6 @@ glade_inspector_set_project (GladeInspector *inspector, GladeProject *project)
       g_object_unref (priv->filter);    /* pass ownership of the filter to the model */
 
       connect_project_signals (inspector, project);
-
-      gtk_tree_view_set_search_entry (GTK_TREE_VIEW (priv->view), GTK_ENTRY (priv->entry));
-      gtk_tree_view_set_enable_search (GTK_TREE_VIEW (priv->view), TRUE);
-    }
-  else
-    {
-      gtk_tree_view_set_search_entry (GTK_TREE_VIEW (priv->view), NULL);
-      gtk_tree_view_set_enable_search (GTK_TREE_VIEW (priv->view), FALSE);
     }
 
   g_object_notify_by_pspec (G_OBJECT (inspector), properties[PROP_PROJECT]);

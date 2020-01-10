@@ -36,7 +36,7 @@ static void glade_tool_item_group_editor_grab_focus (GtkWidget * widget);
 
 static GladeEditableIface *parent_editable_iface;
 
-G_DEFINE_TYPE_WITH_CODE (GladeToolItemGroupEditor, glade_tool_item_group_editor, GTK_TYPE_VBOX,
+G_DEFINE_TYPE_WITH_CODE (GladeToolItemGroupEditor, glade_tool_item_group_editor, GTK_TYPE_BOX,
                          G_IMPLEMENT_INTERFACE (GLADE_TYPE_EDITABLE,
                                                 glade_tool_item_group_editor_editable_init));
 
@@ -54,6 +54,8 @@ glade_tool_item_group_editor_class_init (GladeToolItemGroupEditorClass * klass)
 static void
 glade_tool_item_group_editor_init (GladeToolItemGroupEditor * self)
 {
+  gtk_orientable_set_orientation (GTK_ORIENTABLE (self),
+				  GTK_ORIENTATION_VERTICAL);
 }
 
 static void
@@ -238,7 +240,7 @@ glade_tool_item_group_editor_new (GladeWidgetAdaptor *adaptor,
 
   table = gtk_grid_new ();
   gtk_widget_set_margin_top (table, 6);
-  gtk_widget_set_margin_left (table, 12);
+  gtk_widget_set_margin_start (table, 12);
   gtk_orientable_set_orientation (GTK_ORIENTABLE (table),
                                   GTK_ORIENTATION_VERTICAL);
   gtk_grid_set_row_spacing (GTK_GRID (table), 4);

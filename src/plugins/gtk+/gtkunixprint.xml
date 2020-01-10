@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<glade-catalog name="unixprint" library="gladegtk" icon-prefix="gtk" domain="glade3" depends="gtk+" book="gtk">
+<glade-catalog name="unixprint" library="gladegtk" icon-prefix="gtk" domain="glade" depends="gtk+" book="gtk">
 
   <glade-widget-classes>
     <glade-widget-class name="GtkPageSetupUnixDialog" generic-name="pagesetupdialog" title="Page Setup Dialog"></glade-widget-class>
     <glade-widget-class name="GtkPrintUnixDialog" generic-name="printdialog" title="Print Dialog">
       <properties>
+        <property id="page-setup" disabled="True"/>
         <property id="manual-capabilities">
   	  <displayable-values>
 	    <value id="GTK_PRINT_CAPABILITY_PAGE_SET" name="Page Set"></value>

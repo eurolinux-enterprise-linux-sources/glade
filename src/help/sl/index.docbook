@@ -177,7 +177,8 @@
     	<varlistentry>
     		<term>Ukazna vrstica</term>
     		<listitem>
-    		<para>Za zagon programa <application>Glade</application> iz ukazne vrstice, je treba vpisati ukaz <command>glade-3</command> in pritisniti tipko <keycap>Enter</keycap>.</para>	 
+			<para lang="en">To start <application>Glade</application> from a command line, type <command>glade</command>
+			and then press <keycap>Return</keycap>.</para>
     		</listitem>
     	</varlistentry>
     </variablelist>

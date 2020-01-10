@@ -170,10 +170,8 @@ typedef enum
 	GLADE_CREATE_REASONS
 } GladeCreateReason;
 
-#define GLADE_TYPE_CREATE_REASON (glade_create_reason_get_type())
-
 /**
- * GladeSetPropertyFunc:
+ * GladeCreateWidgetFunc:
  * @adaptor: A #GladeWidgetAdaptor
  * @first_property_name: the name of the first property
  * @var_args: the value of the first property, followed optionally by more
@@ -385,6 +383,27 @@ typedef GObject *(* GladeConstructObjectFunc)     (GladeWidgetAdaptor *adaptor,
 						   guint               n_parameters,
 						   GParameter         *parameters);
 
+/**
+ * GladeDestroyObjectFunc:
+ * @adaptor: A #GladeWidgetAdaptor
+ * @object: The #GObject to destroy
+ *
+ * This function is called to break any additional references to
+ * a GObject instance. Note that this function is not responsible
+ * for calling g_object_unref() on @object, the reference count
+ * of @object belongs to it's #GladeWidget wrapper.
+ *
+ * The #GtkWidget adaptor will call gtk_widget_destroy() before
+ * chaining up in this function.
+ *
+ * If your adaptor adds any references in any way at
+ * #GladePostCreateFunc time or #GladeConstructObjectFunc
+ * time, then this function must be implemented to also
+ * remove that reference.
+ *
+ */
+typedef void (* GladeDestroyObjectFunc) (GladeWidgetAdaptor *adaptor,
+					 GObject            *object);
 
 
 /**
@@ -659,6 +678,9 @@ struct _GladeWidgetAdaptorClass
   GladeCreateEPropFunc         create_eprop;      /* Creates a GladeEditorProperty */
   GladeStringFromValueFunc     string_from_value; /* Creates a string for a value */
   GladeCreateEditableFunc      create_editable;   /* Creates a page for the editor */
+
+  GladeDestroyObjectFunc       destroy_object;    /* Object destructor */
+  GladeWriteWidgetFunc         write_widget_after;/* Writes widget attributes to the xml (after children) */
     
   void   (* glade_reserved1)   (void);
   void   (* glade_reserved2)   (void);
@@ -666,8 +688,6 @@ struct _GladeWidgetAdaptorClass
   void   (* glade_reserved4)   (void);
   void   (* glade_reserved5)   (void);
   void   (* glade_reserved6)   (void);
-  void   (* glade_reserved7)   (void);
-  void   (* glade_reserved8)   (void);
 };
 
 #define glade_widget_adaptor_create_widget(adaptor, query, ...) \
@@ -675,7 +695,6 @@ struct _GladeWidgetAdaptorClass
 
 
 GType                 glade_widget_adaptor_get_type         (void) G_GNUC_CONST;
-GType                 glade_create_reason_get_type          (void) G_GNUC_CONST;
 
 GType                 glade_widget_adaptor_get_object_type  (GladeWidgetAdaptor   *adaptor);
 G_CONST_RETURN gchar *glade_widget_adaptor_get_name         (GladeWidgetAdaptor   *adaptor);
@@ -683,6 +702,8 @@ G_CONST_RETURN gchar *glade_widget_adaptor_get_generic_name (GladeWidgetAdaptor 
 G_CONST_RETURN gchar *glade_widget_adaptor_get_title        (GladeWidgetAdaptor   *adaptor);
 G_CONST_RETURN gchar *glade_widget_adaptor_get_icon_name    (GladeWidgetAdaptor   *adaptor);
 G_CONST_RETURN gchar *glade_widget_adaptor_get_missing_icon (GladeWidgetAdaptor   *adaptor);
+G_CONST_RETURN gchar *glade_widget_adaptor_get_catalog      (GladeWidgetAdaptor   *adaptor);
+G_CONST_RETURN gchar *glade_widget_adaptor_get_book         (GladeWidgetAdaptor   *adaptor);
 G_CONST_RETURN GList *glade_widget_adaptor_get_properties   (GladeWidgetAdaptor   *adaptor);
 G_CONST_RETURN GList *glade_widget_adaptor_get_packing_props(GladeWidgetAdaptor   *adaptor);
 G_CONST_RETURN GList *glade_widget_adaptor_get_signals      (GladeWidgetAdaptor   *adaptor);
@@ -723,6 +744,8 @@ GParameter           *glade_widget_adaptor_default_params     (GladeWidgetAdapto
 GObject              *glade_widget_adaptor_construct_object   (GladeWidgetAdaptor *adaptor,
 							       guint               n_parameters,
 							       GParameter         *parameters);
+void                  glade_widget_adaptor_destroy_object     (GladeWidgetAdaptor *adaptor,
+							       GObject            *object);
 void                  glade_widget_adaptor_post_create        (GladeWidgetAdaptor *adaptor,
 							       GObject            *object,
 							       GladeCreateReason   reason);
@@ -807,6 +830,8 @@ void                  glade_widget_adaptor_child_action_activate (GladeWidgetAda
 GtkWidget            *glade_widget_adaptor_action_submenu        (GladeWidgetAdaptor *adaptor,
 								  GObject            *object,
 								  const gchar        *action_path);
+
+G_DEPRECATED
 gboolean              glade_widget_adaptor_depends            (GladeWidgetAdaptor *adaptor,
 							       GladeWidget        *widget,
 							       GladeWidget        *another);
@@ -815,6 +840,10 @@ void                  glade_widget_adaptor_read_widget        (GladeWidgetAdapto
 							       GladeWidget        *widget,
 							       GladeXmlNode       *node);
 void                  glade_widget_adaptor_write_widget       (GladeWidgetAdaptor *adaptor,
+							       GladeWidget        *widget,
+							       GladeXmlContext    *context,
+							       GladeXmlNode       *node);
+void                  glade_widget_adaptor_write_widget_after (GladeWidgetAdaptor *adaptor,
 							       GladeWidget        *widget,
 							       GladeXmlContext    *context,
 							       GladeXmlNode       *node);

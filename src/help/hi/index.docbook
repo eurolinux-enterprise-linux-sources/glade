@@ -177,7 +177,8 @@
     	<varlistentry>
     		<term>कमान्ड लाईन</term>
     		<listitem>
-    		<para>शुरु करने के लिए <application>ग्लेद</application> को कमान्ड लाईन मे लिखिये और फिर <keycap>वापस</keycap>: <command>ग्लेड</command></para>	 
+			<para lang="en">To start <application>Glade</application> from a command line, type <command>glade</command>
+			and then press <keycap>Return</keycap>.</para>
     		</listitem>
     	</varlistentry>
     </variablelist>

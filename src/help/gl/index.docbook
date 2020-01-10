@@ -177,7 +177,8 @@
     	<varlistentry>
     		<term>Liña de ordes</term>
     		<listitem>
-    		<para>Para iniciar <application>Glade</application> desde a liña de ordes, escriba a seguinte orde, despois prema <keycap>Retorno</keycap>: <command>glade-3</command></para>	 
+			<para lang="en">To start <application>Glade</application> from a command line, type <command>glade</command>
+			and then press <keycap>Return</keycap>.</para>
     		</listitem>
     	</varlistentry>
     </variablelist>

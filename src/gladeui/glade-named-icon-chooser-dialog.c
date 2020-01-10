@@ -22,6 +22,7 @@
 
 #include <config.h>
 
+#include "glade-private.h"
 #include "glade-named-icon-chooser-dialog.h"
 #include "icon-naming-spec.c"
 
@@ -32,10 +33,6 @@
 
 
 #define DEFAULT_SETTING_LIST_STANDARD_ONLY   TRUE
-
-#define GLADE_NAMED_ICON_CHOOSER_DIALOG_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o),     \
-							GLADE_TYPE_NAMED_ICON_CHOOSER_DIALOG, \
-							GladeNamedIconChooserDialogPrivate))
 
 enum
 {
@@ -103,45 +100,46 @@ static GHashTable *standard_icon_quarks = NULL;
 
 static guint dialog_signals[LAST_SIGNAL] = { 0, };
 
+gchar *
+glade_named_icon_chooser_dialog_get_icon_name (GladeNamedIconChooserDialog *dialog);
 
-gchar
-    *glade_named_icon_chooser_dialog_get_icon_name (GladeNamedIconChooserDialog
-                                                    * dialog);
-
-void glade_named_icon_chooser_dialog_set_icon_name (GladeNamedIconChooserDialog
-                                                    * dialog,
-                                                    const gchar * icon_name);
+void
+glade_named_icon_chooser_dialog_set_icon_name (GladeNamedIconChooserDialog *dialog,
+                                               const gchar                 *icon_name);
 
 gboolean
-glade_named_icon_chooser_dialog_set_context (GladeNamedIconChooserDialog *
-                                             dialog, const gchar * context);
+glade_named_icon_chooser_dialog_set_context (GladeNamedIconChooserDialog *dialog,
+                                             const gchar                 *context);
 
-gchar *glade_named_icon_chooser_dialog_get_context (GladeNamedIconChooserDialog
-                                                    * dialog);
+gchar *
+glade_named_icon_chooser_dialog_get_context (GladeNamedIconChooserDialog *dialog);
 
-static gboolean should_respond (GladeNamedIconChooserDialog * dialog);
+static gboolean should_respond (GladeNamedIconChooserDialog *dialog);
 
-static void filter_icons_model (GladeNamedIconChooserDialog * dialog);
+static void filter_icons_model (GladeNamedIconChooserDialog *dialog);
 
-static gboolean scan_for_name_func (GtkTreeModel * model,
-                                    GtkTreePath * path,
-                                    GtkTreeIter * iter, gpointer data);
+static gboolean scan_for_name_func (GtkTreeModel *model,
+                                    GtkTreePath  *path,
+                                    GtkTreeIter  *iter,
+                                    gpointer      data);
 
-static gboolean scan_for_context_func (GtkTreeModel * model,
-                                       GtkTreePath * path,
-                                       GtkTreeIter * iter, gpointer data);
+static gboolean scan_for_context_func (GtkTreeModel *model,
+                                       GtkTreePath  *path,
+                                       GtkTreeIter  *iter,
+                                       gpointer      data);
 
-static void settings_load (GladeNamedIconChooserDialog * dialog);
+static void settings_load (GladeNamedIconChooserDialog *dialog);
 
-static void settings_save (GladeNamedIconChooserDialog * dialog);
+static void settings_save (GladeNamedIconChooserDialog *dialog);
 
 
-G_DEFINE_TYPE (GladeNamedIconChooserDialog, glade_named_icon_chooser_dialog,
-               GTK_TYPE_DIALOG);
+G_DEFINE_TYPE_WITH_PRIVATE (GladeNamedIconChooserDialog,
+                            glade_named_icon_chooser_dialog,
+                            GTK_TYPE_DIALOG);
 
 
 static void
-entry_set_name (GladeNamedIconChooserDialog * dialog, const gchar * name)
+entry_set_name (GladeNamedIconChooserDialog *dialog, const gchar *name)
 {
   /* Must disable completion before setting text, in order to avoid
    * spurious warnings (possible GTK+ bug).
@@ -155,7 +153,7 @@ entry_set_name (GladeNamedIconChooserDialog * dialog, const gchar * name)
 }
 
 static GtkIconTheme *
-get_icon_theme_for_widget (GtkWidget * widget)
+get_icon_theme_for_widget (GtkWidget *widget)
 {
   if (gtk_widget_has_screen (widget))
     return gtk_icon_theme_get_for_screen (gtk_widget_get_screen (widget));
@@ -184,9 +182,10 @@ is_well_formed (const gchar * name)
 }
 
 static void
-check_entry_text (GladeNamedIconChooserDialog * dialog,
-                  gchar ** name_ret,
-                  gboolean * is_wellformed_ret, gboolean * is_empty_ret)
+check_entry_text (GladeNamedIconChooserDialog *dialog,
+                  gchar                      **name_ret,
+                  gboolean                    *is_wellformed_ret,
+                  gboolean                    *is_empty_ret)
 {
   if (strlen (gtk_entry_get_text (GTK_ENTRY (dialog->priv->entry))) == 0)
     {
@@ -209,18 +208,19 @@ check_entry_text (GladeNamedIconChooserDialog * dialog,
 }
 
 static void
-changed_text_handler (GtkEditable * editable,
-                      GladeNamedIconChooserDialog * dialog)
+changed_text_handler (GtkEditable                 *editable,
+                      GladeNamedIconChooserDialog *dialog)
 {
   g_signal_emit_by_name (dialog, "selection-changed", NULL);
 }
 
 /* ensure that only valid text can be inserted into entry */
 static void
-insert_text_handler (GtkEditable * editable,
-                     const gchar * text,
-                     gint length,
-                     gint * position, GladeNamedIconChooserDialog * dialog)
+insert_text_handler (GtkEditable                 *editable,
+                     const gchar                 *text,
+                     gint                         length,
+                     gint                        *position,
+                     GladeNamedIconChooserDialog *dialog)
 {
   if (is_well_formed (text))
     {
@@ -256,8 +256,8 @@ typedef struct
 } ForEachFuncData;
 
 void
-glade_named_icon_chooser_dialog_set_icon_name (GladeNamedIconChooserDialog *
-                                               dialog, const gchar * name)
+glade_named_icon_chooser_dialog_set_icon_name (GladeNamedIconChooserDialog *dialog, 
+                                               const gchar                 *name)
 {
   ForEachFuncData *data;
   gboolean located_in_theme;
@@ -322,8 +322,8 @@ glade_named_icon_chooser_dialog_set_icon_name (GladeNamedIconChooserDialog *
 }
 
 gboolean
-glade_named_icon_chooser_dialog_set_context (GladeNamedIconChooserDialog *
-                                             dialog, const gchar * name)
+glade_named_icon_chooser_dialog_set_context (GladeNamedIconChooserDialog *dialog,
+                                             const gchar                 *name)
 {
   ForEachFuncData *data;
 
@@ -353,8 +353,7 @@ glade_named_icon_chooser_dialog_set_context (GladeNamedIconChooserDialog *
 }
 
 gchar *
-glade_named_icon_chooser_dialog_get_context (GladeNamedIconChooserDialog *
-                                             dialog)
+glade_named_icon_chooser_dialog_get_context (GladeNamedIconChooserDialog *dialog)
 {
   GtkTreeSelection *sel;
   GtkTreeIter iter;
@@ -382,7 +381,7 @@ glade_named_icon_chooser_dialog_get_context (GladeNamedIconChooserDialog *
 }
 
 static gchar *
-get_icon_name_from_selection (GladeNamedIconChooserDialog * dialog)
+get_icon_name_from_selection (GladeNamedIconChooserDialog *dialog)
 {
   GtkTreeIter iter;
   GtkTreeModel *model;
@@ -397,8 +396,7 @@ get_icon_name_from_selection (GladeNamedIconChooserDialog * dialog)
 }
 
 gchar *
-glade_named_icon_chooser_dialog_get_icon_name (GladeNamedIconChooserDialog *
-                                               dialog)
+glade_named_icon_chooser_dialog_get_icon_name (GladeNamedIconChooserDialog *dialog)
 {
   GtkWidget *current_focus;
   gchar *name;
@@ -444,7 +442,7 @@ glade_named_icon_chooser_dialog_get_icon_name (GladeNamedIconChooserDialog *
 }
 
 static void
-set_busy_cursor (GladeNamedIconChooserDialog * dialog, gboolean busy)
+set_busy_cursor (GladeNamedIconChooserDialog *dialog, gboolean busy)
 {
   GdkDisplay *display;
   GdkCursor *cursor;
@@ -504,10 +502,10 @@ populate_icon_contexts_model (void)
 }
 
 static void
-icons_row_activated_cb (GtkTreeView * view,
-                        GtkTreePath * path,
-                        GtkTreeViewColumn * column,
-                        GladeNamedIconChooserDialog * dialog)
+icons_row_activated_cb (GtkTreeView                 *view,
+                        GtkTreePath                 *path,
+                        GtkTreeViewColumn           *column,
+                        GladeNamedIconChooserDialog *dialog)
 {
   g_signal_emit_by_name (dialog, "icon-activated", NULL);
 }
@@ -538,10 +536,10 @@ icons_selection_changed_cb (GtkTreeSelection * selection,
 }
 
 static void
-contexts_row_activated_cb (GtkTreeView * view,
-                           GtkTreePath * cpath,
-                           GtkTreeViewColumn * column,
-                           GladeNamedIconChooserDialog * dialog)
+contexts_row_activated_cb (GtkTreeView                 *view,
+                           GtkTreePath                 *cpath,
+                           GtkTreeViewColumn           *column,
+                           GladeNamedIconChooserDialog *dialog)
 {
   GtkTreeIter iter;
   GtkTreePath *path;
@@ -565,8 +563,8 @@ contexts_row_activated_cb (GtkTreeView * view,
 }
 
 static void
-contexts_selection_changed_cb (GtkTreeSelection * selection,
-                               GladeNamedIconChooserDialog * dialog)
+contexts_selection_changed_cb (GtkTreeSelection            *selection,
+                               GladeNamedIconChooserDialog *dialog)
 {
   GtkTreeIter iter;
   GtkTreeModel *model;
@@ -593,7 +591,7 @@ contexts_selection_changed_cb (GtkTreeSelection * selection,
 }
 
 static gboolean
-row_separator_func (GtkTreeModel * model, GtkTreeIter * iter, gpointer unused)
+row_separator_func (GtkTreeModel *model, GtkTreeIter *iter, gpointer unused)
 {
   gboolean retval;
   gchar *name, *title;
@@ -611,7 +609,7 @@ row_separator_func (GtkTreeModel * model, GtkTreeIter * iter, gpointer unused)
 }
 
 static GtkWidget *
-create_contexts_view (GladeNamedIconChooserDialog * dialog)
+create_contexts_view (GladeNamedIconChooserDialog *dialog)
 {
   GtkTreeView *view;
   GtkTreeViewColumn *column;
@@ -656,7 +654,7 @@ create_contexts_view (GladeNamedIconChooserDialog * dialog)
 
 /* filters the icons model based on the current state */
 static void
-filter_icons_model (GladeNamedIconChooserDialog * dialog)
+filter_icons_model (GladeNamedIconChooserDialog *dialog)
 {
 
   set_busy_cursor (dialog, TRUE);
@@ -680,8 +678,9 @@ filter_icons_model (GladeNamedIconChooserDialog * dialog)
 }
 
 static gboolean
-filter_visible_func (GtkTreeModel * model,
-                     GtkTreeIter * iter, GladeNamedIconChooserDialog * dialog)
+filter_visible_func (GtkTreeModel                *model,
+                     GtkTreeIter                 *iter,
+                     GladeNamedIconChooserDialog *dialog)
 {
   gboolean standard;
   gint context_id;
@@ -701,10 +700,11 @@ filter_visible_func (GtkTreeModel * model,
 
 
 static gboolean
-search_equal_func (GtkTreeModel * model,
-                   gint column,
-                   const gchar * key,
-                   GtkTreeIter * iter, GladeNamedIconChooserDialog * dialog)
+search_equal_func (GtkTreeModel                *model,
+                   gint                         column,
+                   const gchar                 *key,
+                   GtkTreeIter                 *iter,
+                   GladeNamedIconChooserDialog *dialog)
 {
   gchar *name;
   gboolean retval;
@@ -720,9 +720,10 @@ search_equal_func (GtkTreeModel * model,
 }
 
 static gboolean
-scan_for_context_func (GtkTreeModel * model,
-                       GtkTreePath * path,
-                       GtkTreeIter * iter, gpointer user_data)
+scan_for_context_func (GtkTreeModel *model,
+                       GtkTreePath  *path,
+                       GtkTreeIter  *iter,
+                       gpointer      user_data)
 {
   ForEachFuncData *data = (ForEachFuncData *) user_data;
   GtkTreeSelection *selection =
@@ -769,8 +770,10 @@ scan_for_context_func (GtkTreeModel * model,
 }
 
 gboolean
-scan_for_name_func (GtkTreeModel * model,
-                    GtkTreePath * path, GtkTreeIter * iter, gpointer user_data)
+scan_for_name_func (GtkTreeModel *model,
+                    GtkTreePath  *path,
+                    GtkTreeIter  *iter,
+                    gpointer      user_data)
 {
   ForEachFuncData *data = (ForEachFuncData *) user_data;
   gchar *name = NULL;
@@ -814,7 +817,7 @@ scan_for_name_func (GtkTreeModel * model,
 }
 
 static void
-centre_selected_row (GladeNamedIconChooserDialog * dialog)
+centre_selected_row (GladeNamedIconChooserDialog *dialog)
 {
   GList *l;
 
@@ -845,7 +848,7 @@ centre_selected_row (GladeNamedIconChooserDialog * dialog)
 }
 
 static void
-select_first_row (GladeNamedIconChooserDialog * dialog)
+select_first_row (GladeNamedIconChooserDialog *dialog)
 {
   GtkTreePath *path;
 
@@ -859,7 +862,7 @@ select_first_row (GladeNamedIconChooserDialog * dialog)
 }
 
 static void
-pending_select_name_process (GladeNamedIconChooserDialog * dialog)
+pending_select_name_process (GladeNamedIconChooserDialog *dialog)
 {
   ForEachFuncData *data;
 
@@ -897,7 +900,7 @@ pending_select_name_process (GladeNamedIconChooserDialog * dialog)
 }
 
 static gboolean
-is_standard_icon_name (const gchar * icon_name)
+is_standard_icon_name (const gchar *icon_name)
 {
   GQuark quark;
 
@@ -912,7 +915,7 @@ is_standard_icon_name (const gchar * icon_name)
 }
 
 static void
-cleanup_after_load (GladeNamedIconChooserDialog * dialog)
+cleanup_after_load (GladeNamedIconChooserDialog *dialog)
 {
   dialog->priv->load_id = 0;
 
@@ -922,7 +925,7 @@ cleanup_after_load (GladeNamedIconChooserDialog * dialog)
 }
 
 static void
-chooser_set_model (GladeNamedIconChooserDialog * dialog)
+chooser_set_model (GladeNamedIconChooserDialog *dialog)
 {
 
   /* filter model */
@@ -957,13 +960,13 @@ typedef struct
 } IconData;
 
 static gint
-icon_data_compare (IconData * a, IconData * b)
+icon_data_compare (IconData *a, IconData *b)
 {
   return g_ascii_strcasecmp (a->name, b->name);
 }
 
 static gboolean
-reload_icons (GladeNamedIconChooserDialog * dialog)
+reload_icons (GladeNamedIconChooserDialog *dialog)
 {
   GtkListStore *store = dialog->priv->icons_store;
   GtkTreeIter iter;
@@ -1020,7 +1023,7 @@ reload_icons (GladeNamedIconChooserDialog * dialog)
 }
 
 static void
-change_icon_theme (GladeNamedIconChooserDialog * dialog)
+change_icon_theme (GladeNamedIconChooserDialog *dialog)
 {
   if (dialog->priv->icon_theme == NULL)
     dialog->priv->icon_theme = get_icon_theme_for_widget (GTK_WIDGET (dialog));
@@ -1038,8 +1041,8 @@ change_icon_theme (GladeNamedIconChooserDialog * dialog)
 }
 
 static void
-glade_named_icon_chooser_dialog_screen_changed (GtkWidget * widget,
-                                                GdkScreen * previous_screen)
+glade_named_icon_chooser_dialog_screen_changed (GtkWidget *widget,
+                                                GdkScreen *previous_screen)
 {
   GladeNamedIconChooserDialog *dialog;
 
@@ -1056,7 +1059,7 @@ glade_named_icon_chooser_dialog_screen_changed (GtkWidget * widget,
 }
 
 static GtkWidget *
-create_icons_view (GladeNamedIconChooserDialog * dialog)
+create_icons_view (GladeNamedIconChooserDialog *dialog)
 {
   GtkTreeView *view;
   GtkTreeViewColumn *column;
@@ -1124,7 +1127,7 @@ create_icons_view (GladeNamedIconChooserDialog * dialog)
 
 /* sets the 'list-standard' state and refilters the icons model */
 static void
-button_toggled (GtkToggleButton * button, GladeNamedIconChooserDialog * dialog)
+button_toggled (GtkToggleButton *button, GladeNamedIconChooserDialog *dialog)
 {
   dialog->priv->settings_list_standard = gtk_toggle_button_get_active (button);
 
@@ -1154,8 +1157,8 @@ create_standard_icon_quarks (void)
 }
 
 static void
-glade_named_icon_chooser_dialog_style_set (GtkWidget * widget,
-                                           GtkStyle * previous_style)
+glade_named_icon_chooser_dialog_style_set (GtkWidget *widget,
+                                           GtkStyle  *previous_style)
 {
   if (gtk_widget_has_screen (widget) && gtk_widget_get_mapped (widget))
     change_icon_theme (GLADE_NAMED_ICON_CHOOSER_DIALOG (widget));
@@ -1165,7 +1168,7 @@ glade_named_icon_chooser_dialog_style_set (GtkWidget * widget,
  * hidden unless we decide otherwise, like the list-standard-icons-only checkbox.
  */
 static void
-glade_named_icon_chooser_dialog_show_all (GtkWidget * widget)
+glade_named_icon_chooser_dialog_show_all (GtkWidget *widget)
 {
   gtk_widget_show (widget);
 }
@@ -1174,8 +1177,7 @@ glade_named_icon_chooser_dialog_show_all (GtkWidget * widget)
  * widget on our toplevel.  See glade_named_icon_chooser_dialog_hierarchy_changed()
  */
 static void
-glade_named_icon_chooser_dialog_set_focus (GtkWindow * window,
-                                           GtkWidget * focus)
+glade_named_icon_chooser_dialog_set_focus (GtkWindow *window, GtkWidget *focus)
 {
 
   GTK_WINDOW_CLASS (glade_named_icon_chooser_dialog_parent_class)->
@@ -1186,7 +1188,7 @@ glade_named_icon_chooser_dialog_set_focus (GtkWindow * window,
 }
 
 static void
-glade_named_icon_chooser_dialog_finalize (GObject * object)
+glade_named_icon_chooser_dialog_finalize (GObject *object)
 {
   GladeNamedIconChooserDialog *dialog =
       GLADE_NAMED_ICON_CHOOSER_DIALOG (object);
@@ -1198,11 +1200,11 @@ glade_named_icon_chooser_dialog_finalize (GObject * object)
     }
 
   G_OBJECT_CLASS (glade_named_icon_chooser_dialog_parent_class)->
-      finalize (object);
+    finalize (object);
 }
 
 static void
-glade_named_icon_chooser_dialog_map (GtkWidget * widget)
+glade_named_icon_chooser_dialog_map (GtkWidget *widget)
 {
   GladeNamedIconChooserDialog *dialog =
       GLADE_NAMED_ICON_CHOOSER_DIALOG (widget);
@@ -1218,7 +1220,7 @@ glade_named_icon_chooser_dialog_map (GtkWidget * widget)
 }
 
 static void
-glade_named_icon_chooser_dialog_unmap (GtkWidget * widget)
+glade_named_icon_chooser_dialog_unmap (GtkWidget *widget)
 {
   GladeNamedIconChooserDialog *dialog =
       GLADE_NAMED_ICON_CHOOSER_DIALOG (widget);
@@ -1233,7 +1235,7 @@ glade_named_icon_chooser_dialog_unmap (GtkWidget * widget)
  * to be fully painted before loading begins
  */
 static gboolean
-glade_named_icon_chooser_dialog_draw (GtkWidget * widget, cairo_t * cr)
+glade_named_icon_chooser_dialog_draw (GtkWidget *widget, cairo_t *cr)
 {
   GladeNamedIconChooserDialog *dialog =
       GLADE_NAMED_ICON_CHOOSER_DIALOG (widget);
@@ -1252,7 +1254,7 @@ glade_named_icon_chooser_dialog_draw (GtkWidget * widget, cairo_t * cr)
 }
 
 static void
-response_cb (GtkDialog * dialog, gint response_id)
+response_cb (GtkDialog *dialog, gint response_id)
 {
   /* Act only on response IDs we recognize */
   if (!(response_id == GTK_RESPONSE_ACCEPT
@@ -1271,7 +1273,7 @@ response_cb (GtkDialog * dialog, gint response_id)
  * make the dialog emit a valid response signal
  */
 static void
-icon_activated_cb (GladeNamedIconChooserDialog * dialog)
+icon_activated_cb (GladeNamedIconChooserDialog *dialog)
 {
   GList *children, *l;
 
@@ -1307,7 +1309,7 @@ icon_activated_cb (GladeNamedIconChooserDialog * dialog)
  * make the affirmative response button insensitive when the selection is empty 
  */
 static void
-selection_changed_cb (GladeNamedIconChooserDialog * dialog)
+selection_changed_cb (GladeNamedIconChooserDialog *dialog)
 {
   GList *children, *l;
   gchar *icon_name;
@@ -1343,7 +1345,7 @@ selection_changed_cb (GladeNamedIconChooserDialog * dialog)
 }
 
 static void
-glade_named_icon_chooser_dialog_init (GladeNamedIconChooserDialog * dialog)
+glade_named_icon_chooser_dialog_init (GladeNamedIconChooserDialog *dialog)
 {
   GtkWidget *contents;
   GtkWidget *hbox;
@@ -1352,10 +1354,9 @@ glade_named_icon_chooser_dialog_init (GladeNamedIconChooserDialog * dialog)
   GtkWidget *label;
   GtkWidget *hpaned;
   GtkWidget *content_area;
-  GtkWidget *action_area;
   GtkSizeGroup *group;
 
-  dialog->priv = GLADE_NAMED_ICON_CHOOSER_DIALOG_GET_PRIVATE (dialog);
+  dialog->priv = glade_named_icon_chooser_dialog_get_instance_private (dialog);
 
   dialog->priv->filter_model = NULL;
   dialog->priv->icons_store = NULL;
@@ -1369,15 +1370,8 @@ glade_named_icon_chooser_dialog_init (GladeNamedIconChooserDialog * dialog)
 
   gtk_window_set_default_size (GTK_WINDOW (dialog), 610, 480);
 
-#if !GTK_CHECK_VERSION (2, 21, 8)
-  gtk_dialog_set_has_separator (GTK_DIALOG (dialog), FALSE);
-#endif
+  _glade_util_dialog_set_hig (GTK_DIALOG (dialog));
   content_area = gtk_dialog_get_content_area (GTK_DIALOG (dialog));
-  gtk_container_set_border_width (GTK_CONTAINER (content_area), 12);
-  gtk_box_set_spacing (GTK_BOX (content_area), 12);
-  action_area = gtk_dialog_get_action_area (GTK_DIALOG (dialog));
-  gtk_container_set_border_width (GTK_CONTAINER (action_area), 0);
-  gtk_box_set_spacing (GTK_BOX (action_area), 6);
 
   /* We do a signal connection here rather than overriding the method in
    * class_init because GtkDialog::response is a RUN_LAST signal.  We want *our*
@@ -1396,14 +1390,12 @@ glade_named_icon_chooser_dialog_init (GladeNamedIconChooserDialog * dialog)
   if (standard_icon_quarks == NULL)
     standard_icon_quarks = create_standard_icon_quarks ();
 
-
-  gtk_widget_push_composite_child ();
-
   contents = gtk_box_new (GTK_ORIENTATION_VERTICAL, 6);
+  gtk_container_set_border_width (GTK_CONTAINER (contents), 5);
   gtk_widget_show (contents);
 
   label = gtk_label_new_with_mnemonic (_("Icon _Name:"));
-  gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
+  gtk_widget_set_halign (label, GTK_ALIGN_START);
   gtk_widget_show (label);
 
   dialog->priv->entry = gtk_entry_new ();
@@ -1449,7 +1441,7 @@ glade_named_icon_chooser_dialog_init (GladeNamedIconChooserDialog * dialog)
   label = gtk_label_new_with_mnemonic (_("C_ontexts:"));
   gtk_label_set_mnemonic_widget (GTK_LABEL (label),
                                  dialog->priv->contexts_view);
-  gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
+  gtk_widget_set_halign (label, GTK_ALIGN_START);
   gtk_size_group_add_widget (group, label);
   gtk_widget_show (label);
 
@@ -1471,7 +1463,7 @@ glade_named_icon_chooser_dialog_init (GladeNamedIconChooserDialog * dialog)
 
   label = gtk_label_new_with_mnemonic (_("Icon Na_mes:"));
   gtk_label_set_mnemonic_widget (GTK_LABEL (label), dialog->priv->icons_view);
-  gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
+  gtk_widget_set_halign (label, GTK_ALIGN_START);
   gtk_size_group_add_widget (group, label);
   gtk_widget_show (label);
 
@@ -1503,20 +1495,15 @@ glade_named_icon_chooser_dialog_init (GladeNamedIconChooserDialog * dialog)
                       0);
   gtk_box_pack_start (GTK_BOX (content_area), contents, TRUE, TRUE, 0);
 
-  gtk_widget_pop_composite_child ();
-
   /* underlying model */
   dialog->priv->icons_store = gtk_list_store_new (ICONS_N_COLUMNS,
                                                   G_TYPE_UINT,
                                                   G_TYPE_BOOLEAN,
                                                   G_TYPE_STRING);
-
-
 }
 
 static void
-glade_named_icon_chooser_dialog_class_init (GladeNamedIconChooserDialogClass *
-                                            klass)
+glade_named_icon_chooser_dialog_class_init (GladeNamedIconChooserDialogClass *klass)
 {
   GObjectClass *object_class;
   GtkWidgetClass *widget_class;
@@ -1570,13 +1557,10 @@ glade_named_icon_chooser_dialog_class_init (GladeNamedIconChooserDialogClass *
                     G_STRUCT_OFFSET (GladeNamedIconChooserDialogClass,
                                      selection_changed), NULL, NULL,
                     g_cclosure_marshal_VOID__VOID, G_TYPE_NONE, 0);
-
-
-  g_type_class_add_private (klass, sizeof (GladeNamedIconChooserDialogPrivate));
 }
 
 static gboolean
-should_respond (GladeNamedIconChooserDialog * dialog)
+should_respond (GladeNamedIconChooserDialog *dialog)
 {
   gchar *icon_name;
 
@@ -1605,7 +1589,7 @@ get_config_dirname (void)
 
 /* loads the configuration settings */
 static void
-settings_load (GladeNamedIconChooserDialog * dialog)
+settings_load (GladeNamedIconChooserDialog *dialog)
 {
   GKeyFile *keyfile;
   gboolean success, boolean_value;
@@ -1648,7 +1632,7 @@ settings_load (GladeNamedIconChooserDialog * dialog)
 
 /* creates a GKeyFile based on the current settings */
 static GKeyFile *
-settings_to_keyfile (GladeNamedIconChooserDialog * dialog)
+settings_to_keyfile (GladeNamedIconChooserDialog *dialog)
 {
   GKeyFile *keyfile;
   gchar *filename;
@@ -1671,7 +1655,7 @@ settings_to_keyfile (GladeNamedIconChooserDialog * dialog)
 
 /* serializes the the current configuration to the config file */
 static void
-settings_save (GladeNamedIconChooserDialog * dialog)
+settings_save (GladeNamedIconChooserDialog *dialog)
 {
   GKeyFile *keyfile;
   gchar *contents;
@@ -1721,10 +1705,10 @@ out:
 }
 
 static GtkWidget *
-glade_named_icon_chooser_dialog_new_valist (const gchar * title,
-                                            GtkWindow * parent,
-                                            const gchar * first_button_text,
-                                            va_list varargs)
+glade_named_icon_chooser_dialog_new_valist (const gchar *title,
+                                            GtkWindow   *parent,
+                                            const gchar *first_button_text,
+                                            va_list      varargs)
 {
   GtkWidget *result;
   const char *button_text = first_button_text;
@@ -1757,9 +1741,10 @@ glade_named_icon_chooser_dialog_new_valist (const gchar * title,
  * Return value: a new #GladeNamedIconChooserDialog
  */
 GtkWidget *
-glade_named_icon_chooser_dialog_new (const gchar * title,
-                                     GtkWindow * parent,
-                                     const gchar * first_button_text, ...)
+glade_named_icon_chooser_dialog_new (const gchar *title,
+                                     GtkWindow   *parent,
+                                     const gchar *first_button_text,
+                                     ...)
 {
   GtkWidget *result;
   va_list varargs;

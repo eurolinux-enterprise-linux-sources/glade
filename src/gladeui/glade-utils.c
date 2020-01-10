@@ -39,6 +39,7 @@
 #include "glade-property.h"
 #include "glade-property-class.h"
 #include "glade-clipboard.h"
+#include "glade-private.h"
 
 #include <string.h>
 #include <gdk/gdkkeysyms.h>
@@ -134,7 +135,9 @@ glade_util_get_type_from_name (const gchar *name, gboolean have_func)
         {
           g_warning (_("We could not find the symbol \"%s\""), func_name);
         }
-      g_free (func_name);
+
+      if (!have_func)
+	g_free (func_name);
     }
 
   if (type == 0)
@@ -170,6 +173,21 @@ glade_utils_get_pspec_from_funcname (const gchar *funcname)
   pspec = get_pspec ();
 
   return pspec;
+}
+
+void
+_glade_util_dialog_set_hig (GtkDialog *dialog)
+{
+  GtkWidget *vbox, *action_area;
+
+  /* HIG spacings */
+  vbox = gtk_dialog_get_content_area (dialog);
+  gtk_container_set_border_width (GTK_CONTAINER (dialog), 5);
+  gtk_box_set_spacing (GTK_BOX (vbox), 2); /* 2 * 5 + 2 = 12 */
+
+  action_area = gtk_dialog_get_action_area (dialog);
+  gtk_container_set_border_width (GTK_CONTAINER (action_area), 5);
+  gtk_box_set_spacing (GTK_BOX (action_area), 6);
 }
 
 /**
@@ -261,6 +279,9 @@ glade_util_ui_message (GtkWidget *parent,
                         (gtk_dialog_get_content_area (GTK_DIALOG (dialog))),
                         widget, TRUE, TRUE, 2);
       gtk_widget_show (widget);
+
+      /* If theres additional content, make it resizable */
+      gtk_window_set_resizable (GTK_WINDOW (dialog), TRUE);
     }
   
   response = gtk_dialog_run (GTK_DIALOG (dialog));
@@ -409,8 +430,10 @@ glade_util_compare_stock_labels (gconstpointer a, gconstpointer b)
   gboolean founda, foundb;
   gint retval;
 
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
   founda = gtk_stock_lookup (stock_ida, &itema);
   foundb = gtk_stock_lookup (stock_idb, &itemb);
+G_GNUC_END_IGNORE_DEPRECATIONS
 
   if (founda)
     {
@@ -457,11 +480,10 @@ glade_util_file_dialog_new (const gchar *title,
                          GLADE_IS_PROJECT (project)), NULL);
 
   file_dialog = gtk_file_chooser_dialog_new (title, parent, action,
-                                             GTK_STOCK_CANCEL,
-                                             GTK_RESPONSE_CANCEL,
+                                             _("_Cancel"), GTK_RESPONSE_CANCEL,
                                              action ==
                                              GLADE_FILE_DIALOG_ACTION_OPEN ?
-                                             GTK_STOCK_OPEN : GTK_STOCK_SAVE,
+                                             _("_Open") : _("_Save"),
                                              GTK_RESPONSE_OK, NULL);
 
   file_filter = gtk_file_filter_new ();
@@ -514,6 +536,36 @@ glade_util_replace (gchar *str, gchar a, gchar b)
 
       str = g_utf8_next_char (str);
     }
+}
+
+/**
+ * _glade_util_strreplace:
+ * @str: a string
+ * @free_str: wheter to free str or not
+ * @key: the key string to search for
+ * @replacement: string to replace key
+ *
+ * Replaces each occurance of the string @key in @str to @replacement.
+ */
+gchar *
+_glade_util_strreplace (gchar *str,
+                        gboolean free_str,
+                        const gchar *key,
+                        const gchar *replacement)
+{
+  gchar *retval, **array;
+
+  if ((array = g_strsplit (str, key, -1)) && array[0])
+    retval = g_strjoinv (replacement, array);
+  else
+    retval = g_strdup (str);
+
+  g_strfreev (array);
+
+  if (free_str)
+    g_free (str);
+	
+  return retval;
 }
 
 /**
@@ -898,7 +950,7 @@ glade_util_load_library (const gchar *library_name)
         }
     }
 
-  if (!module)
+  if (g_getenv (GLADE_ENV_TESTING) == NULL && !module)
     {
       const gchar *paths[] = { glade_app_get_modules_dir (),
                                glade_app_get_lib_dir (),
@@ -1642,7 +1694,6 @@ glade_utils_hijack_key_press (GtkWindow *win,
 }
 
 
-
 void
 glade_utils_cairo_draw_line (cairo_t *cr,
                              GdkColor *color,
@@ -1651,7 +1702,9 @@ glade_utils_cairo_draw_line (cairo_t *cr,
 {
   cairo_save (cr);
 
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
   gdk_cairo_set_source_color (cr, color);
+G_GNUC_END_IGNORE_DEPRECATIONS
   cairo_set_line_cap (cr, CAIRO_LINE_CAP_SQUARE);
 
   cairo_move_to (cr, x1 + 0.5, y1 + 0.5);
@@ -1669,7 +1722,9 @@ glade_utils_cairo_draw_rectangle (cairo_t *cr,
                                   gint x, gint y,
                                   gint width, gint height)
 {
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
   gdk_cairo_set_source_color (cr, color);
+G_GNUC_END_IGNORE_DEPRECATIONS
 
   if (filled)
     {
@@ -1786,10 +1841,8 @@ draw_pointer (cairo_t *cr)
 GdkPixbuf *
 glade_utils_pointer_mode_render_icon (GladePointerMode mode, GtkIconSize size)
 {
-  GtkStyleContext *ctx = gtk_style_context_new ();
   GdkRGBA c1, c2, fg, bg;
   cairo_surface_t *surface;
-  GtkWidgetPath *path;
   gint width, height;
   GdkPixbuf *pix;
   cairo_t *cr;
@@ -1800,16 +1853,8 @@ glade_utils_pointer_mode_render_icon (GladePointerMode mode, GtkIconSize size)
   cr = cairo_create (surface);
   cairo_scale (cr, width/24.0, height/24.0);
 
-  /* Get Style context */
-  path = gtk_widget_path_new ();
-  gtk_widget_path_append_type (path, GTK_TYPE_WIDGET);
-  gtk_style_context_set_path (ctx, path);
-  gtk_style_context_add_class (ctx, GTK_STYLE_CLASS_VIEW);
-  gtk_widget_path_free (path);
-
   /* Now get colors */
-  _glade_design_layout_get_colors (ctx, &bg, &fg, &c1, &c2);
-  g_object_unref (ctx);
+  _glade_design_layout_get_colors (&bg, &fg, &c1, &c2);
 
   /* Clear surface */
   cairo_set_operator (cr, CAIRO_OPERATOR_CLEAR);
@@ -1915,4 +1960,66 @@ glade_utils_pointer_mode_render_icon (GladePointerMode mode, GtkIconSize size)
   cairo_destroy (cr);
 
   return pix;
+}
+
+/**
+ * glade_utils_get_pointer:
+ * @widget: The widget to get the mouse position relative for
+ * @window: The window of the current event, or %NULL
+ * @device: The device, if not specified, the current event will be expected to have a @device.
+ * @x: The location to store the mouse pointer X position
+ * @y: The location to store the mouse pointer Y position
+ *
+ * Get's the pointer position relative to @widget, while @window and @device
+ * are not absolutely needed, they should be passed wherever possible.
+ *
+ */
+void
+glade_utils_get_pointer (GtkWidget *widget,
+			 GdkWindow *window,
+			 GdkDevice *device,
+			 gint      *x,
+			 gint      *y)
+{
+  gint device_x = 0, device_y = 0;
+  gint final_x = 0, final_y = 0;
+  GtkWidget *event_widget = NULL;
+
+  g_return_if_fail (GTK_IS_WIDGET (widget));
+
+  if (!device)
+    {
+      GdkEvent *event = gtk_get_current_event ();
+
+      device = gdk_event_get_device (event);
+      gdk_event_free (event);
+    }
+
+  g_return_if_fail (GDK_IS_DEVICE (device));
+
+  if (!window)
+    window = gtk_widget_get_window (widget);
+
+  g_return_if_fail (GDK_IS_WINDOW (window));
+
+  gdk_window_get_device_position (window, device, &device_x, &device_y, NULL);
+  gdk_window_get_user_data (window, (gpointer)&event_widget);
+
+  if (event_widget != widget)
+    {
+      gtk_widget_translate_coordinates (event_widget,
+                                        widget,
+                                        device_x, device_y,
+					&final_x, &final_y);
+    }
+  else
+    {
+      final_x = device_x;
+      final_y = device_y;
+    }
+
+  if (x)
+    *x = final_x;
+  if (y)
+    *y = final_y;
 }

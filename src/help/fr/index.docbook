@@ -49,27 +49,27 @@
 <!-- When the desktop release version changes to V3.x, the revision number of the manual changes -->
 <!-- to V3.0, and so on. -->  
     <revhistory>
-        <revision><revnumber>Manuel utilisateur 3.0 de Glade</revnumber> <date>5 Décembre 2006</date> <revdescription> 
+        <revision><revnumber>Manuel de Glade 3.0</revnumber> <date>5 Décembre 2006</date> <revdescription> 
 	  		<para role="author">Vincent Geddes</para>
 	  		<para role="publisher">Projet de documentation GNOME</para>
 		</revdescription></revision>
-        <revision><revnumber>Manuel utilisateur 2.1 de Glade</revnumber> <date>17 Juin 2004</date> <revdescription> 
+        <revision><revnumber>Manuel de Glade 2.1</revnumber> <date>17 Juin 2004</date> <revdescription> 
                         <para role="author">Équipe de documentation GNOME Sun</para>
                         <para role="publisher">Projet de documentation GNOME</para>
                 </revdescription></revision>
-        <revision><revnumber>Manuel utilisateur 2.0 de Glade</revnumber> <date>25 Février 2004</date> <revdescription> 
+        <revision><revnumber>Manuel de Glade 2.0</revnumber> <date>25 Février 2004</date> <revdescription> 
                         <para role="author">Équipe de documentation GNOME Sun</para>
                         <para role="publisher">Projet de documentation GNOME</para>
                 </revdescription></revision>             
-        <revision><revnumber>Manuel utilisateur 1.2 de Glade</revnumber> <date>10 Février 2004</date> <revdescription> 
+        <revision><revnumber>Manuel de Glade 1.2</revnumber> <date>10 Février 2004</date> <revdescription> 
                         <para role="author">Équipe de documentation GNOME Sun</para>
                         <para role="publisher">Projet de documentation GNOME</para>
                 </revdescription></revision>  
-        <revision><revnumber>Manuel utilisateur 1.1 de Glade</revnumber> <date>30 Mars 2002</date> <revdescription> 
+        <revision><revnumber>Manuel de Glade 1.1</revnumber> <date>30 Mars 2002</date> <revdescription> 
                         <para role="author">Michael Vance</para>
                         <para role="publisher">Projet de documentation GNOME</para>
                 </revdescription></revision> 
-        <revision><revnumber>Manuel utilisateur 1.0 de Glade</revnumber> <date>11 Mai 2000</date> <revdescription> 
+        <revision><revnumber>Manuel de Glade 1.0</revnumber> <date>11 Mai 2000</date> <revdescription> 
                         <para role="author">Michael Vance</para>
                         <para role="publisher">Projet de documentation GNOME</para>
                 </revdescription></revision> 
@@ -144,7 +144,8 @@
     	<varlistentry>
     		<term>Ligne de commande</term>
     		<listitem>
-    		<para>Pour lancer <application>Glade</application> à partir d'une ligne de commande, saisissez la commande ci-après, puis appuyez sur <keycap>Entrée</keycap> : <command>glade-3</command></para>	 
+			<para lang="en">To start <application>Glade</application> from a command line, type <command>glade</command>
+			and then press <keycap>Return</keycap>.</para>
     		</listitem>
     	</varlistentry>
     </variablelist>
@@ -157,7 +158,7 @@
         <figure id="main-window-fig"> 
           <title>Fenêtre de <application>Glade</application></title> 
             <screenshot> 
-              <mediaobject><imageobject><imagedata fileref="figures/main-window.png" format="PNG"/></imageobject> <textobject><phrase>Affiche la fenêtre de <application>Glade</application>.</phrase></textobject></mediaobject> 
+              <mediaobject><imageobject><imagedata fileref="figures/main-window.png" format="PNG"/></imageobject> <textobject><phrase>Fenêtre principale de <application>Glade</application>.</phrase></textobject></mediaobject> 
             </screenshot> 
         </figure>
         

@@ -24,25 +24,29 @@ BUILT_SOURCES = glade-resources.c glade-resources.h
 
 glade_SOURCES = \
 	glade-window.c \
-	glade-window.h \
 	glade-close-button.c \
-	glade-close-button.h \
 	glade-resources.c \
-	glade-callbacks.h \
 	glade-preferences.c \
-	glade-preferences.h \
+	glade-http.c \
+	glade-registration.c \
 	main.c
 
 noinst_HEADERS = \
 	glade-window.h \
 	glade-close-button.h \
 	glade-resources.h \
-	glade-preferences.h
+	glade-preferences.h \
+	glade-logo.h \
+	glade-registration.h \
+	glade-http.h
 
-# This could be split in two, but its better to rebuild both, sources and header
-# each time the xml or the actual resources files change, just in case. 
-glade-resources.c glade-resources.h: glade-resources.gresource.xml \
-	$(shell $(GLIB_COMPILE_RESOURCES) --generate-dependencies glade-resources.gresource.xml)
+# Generate resources
+glade-resources.h: glade-resources.gresource.xml $(UI_FILES)
+	$(AM_V_GEN) $(GLIB_COMPILE_RESOURCES) $(srcdir)/glade-resources.gresource.xml \
+		--target=$@ --sourcedir=$(srcdir) --c-name _glade --generate-header
+glade-resources.c: glade-resources.gresource.xml $(UI_FILES)
+	$(AM_V_GEN) $(GLIB_COMPILE_RESOURCES) $(srcdir)/glade-resources.gresource.xml \
+		--target=$@ --sourcedir=$(srcdir) --c-name _glade --generate-source
 
 if NATIVE_WIN32
 glade_LDADD += glade-win32-res.o
@@ -57,4 +61,6 @@ endif
 glade-win32-res.o: glade.rc
 	$(WINDRES) $< $@
 
-EXTRA_DIST = glade.rc.in glade-resources.gresource.xml glade.glade
+UI_FILES = glade.glade glade-preferences.glade glade-registration.glade glade-registration.css
+
+EXTRA_DIST = glade.rc.in glade-resources.gresource.xml $(UI_FILES)

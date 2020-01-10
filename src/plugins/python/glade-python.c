@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006-2011 Juan Pablo Ugarte.
+ * Copyright (C) 2006-2015 Juan Pablo Ugarte.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as
@@ -26,19 +26,33 @@
 
 #include <gladeui/glade.h>
 
+#if PY_MAJOR_VERSION >= 3
+
+#define WCHAR(str) L##str
+
+#define PY_STRING(str) WCHAR(str)
+#define STRING_FROM_PYSTR(pstr) PyUnicode_AsUTF8 (pstr)
+
+#else
+
+/* include bytesobject.h to map PyBytes_* to PyString_* */
+#include <bytesobject.h>
+
+#define PY_STRING(str) str
+#define STRING_FROM_PYSTR(pstr) PyBytes_AsString (pstr)
+
+#endif
+
 static void
 python_init (void)
 {
-  char *argv[1];
-  
   if (Py_IsInitialized ())
     return;
 
   Py_InitializeEx (0);
 
-  argv[0] = g_get_prgname ();
-
-  PySys_SetArgv (1, argv);
+  /* if argc is 0 an empty string is prepended to sys.path */
+  PySys_SetArgvEx (0, NULL, 0);
 }
 
 static void
@@ -75,13 +89,14 @@ glade_python_init_pygobject_check (gint req_major, gint req_minor, gint req_micr
     }
 }
 
-static void
+static gboolean
 glade_python_setup ()
 {
-  gchar *command;
+  GString *command;
   const gchar *module_path;
+  const GList *paths;
 
-  Py_SetProgramName (PACKAGE_NAME);
+  Py_SetProgramName (PY_STRING (PACKAGE_NAME));
 
   /* Initialize the Python interpreter */
   python_init ();
@@ -94,45 +109,74 @@ glade_python_setup ()
                                      PYGOBJECT_REQUIRED_MICRO);
   if (PyErr_Occurred ())
     {
-      PyObject *ptype, *pvalue, *ptraceback;
+      PyObject *ptype, *pvalue, *ptraceback, *pstr;
+      char *pvalue_char = "";
+
       PyErr_Fetch (&ptype, &pvalue, &ptraceback);
+      PyErr_NormalizeException (&ptype, &pvalue, &ptraceback);
+
+      if ((pstr = PyObject_Str (pvalue)))
+        pvalue_char = STRING_FROM_PYSTR (pstr);
+
       g_warning ("Unable to load pygobject module >= %d.%d.%d, "
                  "please make sure it is in python's path (sys.path). "
                  "(use PYTHONPATH env variable to specify non default paths)\n%s",
                  PYGOBJECT_REQUIRED_MAJOR, PYGOBJECT_REQUIRED_MINOR,
-                 PYGOBJECT_REQUIRED_MICRO, PyString_AsString (pvalue));
+                 PYGOBJECT_REQUIRED_MICRO, pvalue_char);
+
+      Py_DecRef (ptype);
+      Py_DecRef (pvalue);
+      Py_DecRef (ptraceback);
+      Py_DecRef (pstr);
       PyErr_Clear ();
       Py_Finalize ();
-      return;
+
+      return TRUE;
     }
 
   pyg_disable_warning_redirections ();
 
-  /* Set path */
-  module_path = g_getenv (GLADE_ENV_MODULE_PATH);
-  if (module_path == NULL)
-    command = g_strdup_printf ("import sys; sys.path+=['%s'];\n",
-                               glade_app_get_modules_dir ());
-  else
-    command = g_strdup_printf ("import sys; sys.path+=['%s', '%s'];\n",
-                               module_path,
-                               glade_app_get_modules_dir ());
+  /* Generate system path array */
+  command = g_string_new ("import sys; sys.path+=[");
 
-  PyRun_SimpleString (command);
-  g_free (command);
+  /* GLADE_ENV_MODULE_PATH has priority */
+  module_path = g_getenv (GLADE_ENV_MODULE_PATH);
+  if (module_path)
+    g_string_append_printf (command, "'%s', ", module_path);
+
+  /* Append modules directory */
+  g_string_append_printf (command, "'%s'", glade_app_get_modules_dir ());
+  
+  /* Append extra paths (declared in the Preferences) */
+  for (paths = glade_catalog_get_extra_paths (); paths; paths = g_list_next (paths))
+    g_string_append_printf (command, ", '%s'", (gchar *) paths->data);
+
+  /* Close python statement */
+  g_string_append (command, "];\n");
+
+  /* Make sure we load Gtk 3 */
+  g_string_append (command, "import gi; gi.require_version('Gtk', '3.0');\n");
+
+  /* Finally run statement in vm */
+  PyRun_SimpleString (command->str);
+
+  g_string_free (command, TRUE);
+
+  return FALSE;
 }
 
-
 void
-glade_python_init (const gchar * name)
+glade_python_init (const gchar *name)
 {
-  static gboolean init = TRUE;
+  static gsize init = 0;
   gchar *import_sentence;
 
-  if (init)
+  if (g_once_init_enter (&init))
     {
-      glade_python_setup ();
-      init = FALSE;
+      if (glade_python_setup ())
+        return;
+
+      g_once_init_leave (&init, TRUE);
     }
 
   /* Yeah, we use the catalog name as the library */

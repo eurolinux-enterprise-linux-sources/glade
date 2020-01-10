@@ -21,130 +21,50 @@
 
 #include <config.h>
 
-#include <stdlib.h>
-#include <string.h>
-#include <gtk/gtk.h>
-
 #include <gladeui/glade.h>
 
 #include <stdlib.h>
 #include <locale.h>
 #include <glib/gi18n-lib.h>
+#include <glib/gstdio.h>
 
+#include "glade-preview-window.h"
+#include "glade-preview-template.h"
 #include "glade-preview-tokens.h"
 
-static void
-display_help_and_quit (const GOptionEntry * entries)
+typedef struct
 {
-  GOptionContext *context;
-  context = g_option_context_new (_("- previews a glade UI definition"));
-  g_option_context_add_main_entries (context, entries, NULL);
-  g_option_context_add_group (context, gtk_get_option_group (TRUE));
+  GladePreviewWindow *window;
+  gchar *file_name, *toplevel;
+  gboolean is_template;
+} GladePreviewer;
 
-  g_print ("%s\n", g_option_context_get_help (context, TRUE, NULL));
-
-  g_option_context_free (context);
-  exit (1);
-}
-
-static void
-parse_arguments (int argc, char **argv, gchar ** toplevel_name,
-                 gchar ** file_name)
+static GObject *
+get_toplevel (GtkBuilder *builder, gchar *name)
 {
-  *toplevel_name = NULL;
-  *file_name = NULL;
-  gboolean listen = FALSE;
-  gboolean version = FALSE;
-  GError *error = NULL;
-
-  GOptionEntry entries[] = {
-    {"filename", 'f', G_OPTION_ARG_NONE,
-     G_OPTION_ARG_FILENAME, file_name, _("Name of the file to preview"),
-     "FILENAME"},
-    {"toplevel", 't', G_OPTION_ARG_NONE,
-     G_OPTION_ARG_STRING, toplevel_name, _("Name of the toplevel to preview"),
-     "TOPLEVELNAME"},
-    {"listen", 'l', 0, G_OPTION_ARG_NONE, &listen, _("Listen standard input"),
-     NULL},
-    {"version", 'v', 0, G_OPTION_ARG_NONE, &version,
-     _("Display previewer version"), NULL},
-
-    {NULL}
-  };
-
-  if (!gtk_init_with_args (&argc, &argv, _("- previews a glade UI definition"),
-                           entries, NULL, &error))
-    {
-      g_printerr (_
-                  ("%s\nRun '%s --help' to see a full list of available command line "
-                   "options.\n"), error->message, argv[0]);
-      g_error_free (error);
-      exit (1);
-    }
-
-  if (version)
-    {
-      g_print ("glade-previewer " VERSION "\n");
-      exit (0);
-    }
-
-  if (listen && *file_name != NULL)
-    {
-      g_printerr (_
-                  ("--listen and --filename must not be simultaneously specified.\n"));
-      display_help_and_quit (entries);
-    }
-
-  if (!listen && *file_name == NULL)
-    {
-      g_printerr (_("Either --listen or --filename must be specified.\n"));
-      display_help_and_quit (entries);
-    }
-}
-
-static GtkWidget *
-get_toplevel (gchar * name, gchar * string, gsize length)
-{
-  GError *error = NULL;
-  GtkWidget *toplevel = NULL;
-  GtkWidget *window = NULL;
-  GtkBuilder *builder;
+  GObject *toplevel = NULL;
   GObject *object;
-  GSList *objects;
-
-  builder = gtk_builder_new ();
-  if (!gtk_builder_add_from_string (builder, string, length, &error))
-    {
-      g_printerr (_("Couldn't load builder definition: %s"), error->message);
-      g_error_free (error);
-      exit (1);
-    }
 
   if (name == NULL)
     {
-      objects = gtk_builder_get_objects (builder);
+      GSList *l, *objects = gtk_builder_get_objects (builder);
 
       /* Iterate trough objects and search for a window or widget */
-      while (objects != NULL)
+      for (l = objects; l; l = g_slist_next (l))
         {
-          if (GTK_IS_WIDGET (objects->data) && toplevel == NULL)
-            {
-              toplevel = GTK_WIDGET (objects->data);
-              g_object_ref (toplevel);
-            }
-          if (GTK_IS_WINDOW (objects->data))
-            {
-              window = GTK_WIDGET (objects->data);
-              break;
-            }
-          objects = objects->next;
+          GObject *obj = l->data;
+
+          if (!GTK_IS_WIDGET (obj) || gtk_widget_get_parent (GTK_WIDGET (obj)))
+            continue;
+
+          if (toplevel == NULL)
+            toplevel = obj;
+          else if (GTK_IS_WINDOW (obj))
+            toplevel = obj;
         }
 
-      if (window != NULL)
-        {
-          toplevel = window;
-        }
-      else if (toplevel == NULL)
+      g_slist_free (objects);
+      if (toplevel == NULL)
         {
           g_printerr (_("UI definition has no previewable widgets.\n"));
           exit (1);
@@ -166,74 +86,81 @@ get_toplevel (gchar * name, gchar * string, gsize length)
           exit (1);
         }
 
-      toplevel = GTK_WIDGET (object);
+      toplevel = object;
     }
 
-  g_object_unref (builder);
-
-  return toplevel;
+  return g_object_ref_sink (toplevel);
 }
 
-static GtkWidget *
-preview_widget (gchar * name, gchar * buffer, gsize length)
+static GObject *
+get_toplevel_from_string (GladePreviewer *app, gchar *name, gchar *string, gsize size)
 {
-  GtkWidget *widget;
+  gchar *wd = NULL;
+  GObject *retval = NULL;
 
-  widget = get_toplevel (name, buffer, length);
-
-  return widget;
-}
-
-static GtkWidget*
-show_widget (GtkWidget *widget)
-{
-  GtkWidget *window;
-  GtkWidget *widget_parent;
-
-  window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
-
-  if (!GTK_IS_WINDOW (widget))
+  /* We need to change the working directory so builder get a chance to load resources */
+  if (app->file_name)
     {
-      gtk_window_set_title (GTK_WINDOW (window), _("Preview"));
-
-      /* Reparenting snippet */
-      g_object_ref (widget);
-      widget_parent = gtk_widget_get_parent (widget);
-      if (widget_parent != NULL)
-        gtk_container_remove (GTK_CONTAINER (widget_parent), widget);
-      gtk_container_add (GTK_CONTAINER (window), widget);
-      g_object_unref (widget);
-    }
-  else
-    {
-      gtk_widget_realize (window);
-      gtk_widget_set_parent_window (widget, gtk_widget_get_window (window));
-      gtk_container_add (GTK_CONTAINER (window), widget);
+      gchar *dirname = g_path_get_dirname (app->file_name);
+      wd = g_get_current_dir ();
+      g_chdir (dirname);
+      g_free (dirname);
     }
 
-  g_signal_connect (window, "destroy", G_CALLBACK (gtk_main_quit), NULL);
-  return window;
-}
+  /* We use template flag as a hint since the user can turn on and off template
+   * while the preview is live.
+   */
+  if (app->is_template)
+    retval = glade_preview_template_object_new (string, size,
+                                                glade_preview_window_connect_function,
+                                                app->window);
 
-static void
-preview_file (gchar * toplevel_name, gchar * file_name)
-{
-  GError *error = NULL;
-  gchar *buffer;
-  gsize length;
+  if (!retval)
+    {
+      GtkBuilder *builder = gtk_builder_new ();
+      GError *error = NULL;
 
-  if (g_file_get_contents (file_name, &buffer, &length, &error))
-    {
-      GtkWidget *widget = preview_widget (toplevel_name, buffer, length);
-      gtk_widget_show_all (show_widget (widget));
-      g_free (buffer);
+      /* We do not know if its a template yet */
+      app->is_template = FALSE;
+
+      if (gtk_builder_add_from_string (builder, string, size, &error))
+        {
+          gtk_builder_connect_signals_full (builder,
+                                            glade_preview_window_connect_function,
+                                            app->window);
+          retval = get_toplevel (builder, name);
+        }
+      else
+        {
+          if (error->code == GTK_BUILDER_ERROR_UNHANDLED_TAG &&
+              (retval = glade_preview_template_object_new (string, size,
+                                                           glade_preview_window_connect_function,
+                                                           app->window)))
+            {
+              /* At this point we know it is a template, so keep a hint for next time */
+              app->is_template = TRUE;
+            }
+          else
+            {
+              gchar *message = g_strdup_printf (_("Couldn't load builder definition: %s"), error->message);
+              glade_preview_window_set_message (app->window, GTK_MESSAGE_ERROR, message);
+              g_free (message);
+            }
+
+          g_error_free (error);
+        }
+
+      g_object_unref (builder);
     }
-  else
+
+  /* restore directory */
+  if (wd)
     {
-      g_printerr (_("Error: %s.\n"), error->message);
-      g_error_free (error);
-      exit (1);
+      g_chdir (wd);
+      g_free (wd);
     }
+  
+  return retval;
 }
 
 static gchar *
@@ -282,38 +209,50 @@ read_buffer (GIOChannel * source)
 }
 
 static void
-update_window (GtkWindow *old_window, GtkWidget *new_widget)
+glade_previewer_window_set_title (GtkWindow *window, 
+                                  gchar *filename,
+                                  gchar *toplevel)
 {
-	GtkWidget *old_window_child;
+  gchar *title, *pretty_path = NULL;
+  const gchar *widget_name = toplevel;
+  if (widget_name && g_str_has_prefix (widget_name, GLADE_UNNAMED_PREFIX))
+    widget_name = _("(unnamed)");
 
-	if (!old_window) return;
-
-	/* gtk_widget_destroy the *running preview's* window child */
-	old_window_child = gtk_bin_get_child (GTK_BIN (old_window));
-	if (old_window_child)
-		gtk_widget_destroy (old_window_child);
-
-	/* add new widget as child to the old preview's window */
-	if (new_widget)
+  if (filename && g_path_is_absolute (filename))
     {
-      gtk_widget_set_parent_window (new_widget, gtk_widget_get_window (
-                                                            GTK_WIDGET (old_window)));
-  		gtk_container_add (GTK_CONTAINER (old_window), new_widget);
+      gchar *canonical_path = glade_util_canonical_path (filename); 
+      filename = pretty_path = glade_utils_replace_home_dir_with_tilde (canonical_path);
+      g_free (canonical_path);      
     }
 
-  gtk_widget_show_all (GTK_WIDGET (old_window));
+  if (filename)
+    {
+      if (toplevel)
+        title = g_strdup_printf (_("Previewing %s - %s"), filename, widget_name);
+      else
+        title = g_strdup_printf (_("Previewing %s"), filename);
+    }
+  else if (toplevel)
+    {
+      title = g_strdup_printf (_("Previewing %s"), widget_name);
+    }
+  else
+    {
+      gtk_window_set_title (window, _("Glade Preview"));
+      return;
+    }
+
+  gtk_window_set_title (window, title);
+  g_free (pretty_path);
+  g_free (title);
 }
 
 static gboolean
-on_data_incoming (GIOChannel * source, GIOCondition condition, gpointer data)
+on_data_incoming (GIOChannel *source, GIOCondition condition, gpointer data)
 {
+  GladePreviewer *app = data;
+  GObject *new_widget;
   gchar *buffer;
-  gsize length;
-  static GtkWidget *preview_window = NULL;
-  GtkWidget *new_widget;
-  gchar **split_buffer = NULL;
-
-  gchar *toplevel_name = (gchar *) data;
 
   buffer = read_buffer (source);
   if (buffer == NULL)
@@ -328,67 +267,146 @@ on_data_incoming (GIOChannel * source, GIOCondition condition, gpointer data)
       exit (1);
     }
 
-  length = strlen (buffer);
+  /* We have an update */
+  if (g_str_has_prefix (buffer, UPDATE_TOKEN))
+    {
+     gchar **split_buffer = g_strsplit_set (buffer + UPDATE_TOKEN_SIZE, "\n", 2);
 
-  /* if it is the first time this is called */
-  if (!preview_window)
-  {
-    new_widget = preview_widget (toplevel_name, buffer, length);
-    preview_window = show_widget (new_widget);
-    gtk_widget_show_all (preview_window);
-  }
+      if (!split_buffer)
+        {
+          g_free (buffer);
+          return FALSE;
+        }
+
+      new_widget = get_toplevel_from_string (app, split_buffer[0], split_buffer[1], -1);
+      glade_previewer_window_set_title (GTK_WINDOW (app->window), app->file_name,
+                                        split_buffer[0]);
+
+      g_strfreev (split_buffer);
+    }
   else
-  {
-    /* We have an update */
-    split_buffer = g_strsplit_set (buffer + UPDATE_TOKEN_SIZE, "\n", 2);
+    {
+      new_widget = get_toplevel_from_string (app, app->toplevel, buffer, -1);
+      glade_previewer_window_set_title (GTK_WINDOW (app->window), app->file_name, app->toplevel);
+    }
 
-    g_free (buffer);
-    if (!split_buffer) return FALSE;
+  if (new_widget)
+    {
+      glade_preview_window_set_widget (app->window, GTK_WIDGET (new_widget));
+      gtk_widget_show (GTK_WIDGET (new_widget));
+    }
 
-    toplevel_name = split_buffer[0];
-    buffer = split_buffer[1];
-    length = strlen (buffer);
-
-    new_widget = get_toplevel (toplevel_name, buffer, length);
-
-    update_window (GTK_WINDOW (preview_window), new_widget);
-  }
-
-  if (!split_buffer)
-  {
-    /* This means we're not in an update, we should free the buffer. */
-    g_free (buffer);
-  }
-  else
-  {
-    /* This means we've had an update, buffer was already freed. */
-    g_free (split_buffer[0]);
-    g_free (split_buffer[1]);
-    g_free (split_buffer);
-  }
-
+  gtk_window_present (GTK_WINDOW (app->window));
+  
+  g_free (buffer);
+  
   return TRUE;
 }
 
-static void
-start_listener (gchar * toplevel_name)
+static GladePreviewer *
+glade_previewer_new (gchar *filename, gchar *toplevel)
 {
-  GIOChannel *input;
+  GladePreviewer *app = g_new0 (GladePreviewer, 1);
 
-#ifdef WINDOWS
-  input = g_io_channel_win32_new_fd (fileno (stdin));
-#else
-  input = g_io_channel_unix_new (fileno (stdin));
-#endif
+  app->window = GLADE_PREVIEW_WINDOW (glade_preview_window_new ());
+  g_object_ref_sink (app->window);
+  
+  g_signal_connect (app->window, "delete-event", G_CALLBACK (gtk_main_quit), NULL);
+  glade_previewer_window_set_title (GTK_WINDOW (app->window), filename, toplevel);
+   
+  app->file_name = g_strdup (filename);
+  app->toplevel = g_strdup (toplevel);
 
-  g_io_add_watch (input, G_IO_IN | G_IO_HUP, on_data_incoming, toplevel_name);
+  return app;
 }
+
+static void
+glade_previewer_free (GladePreviewer *app)
+{
+  g_object_unref (app->window);
+  g_free (app->file_name);
+  g_free (app->toplevel);
+  g_free (app);
+}
+
+static gint
+objects_cmp_func (gconstpointer a, gconstpointer b)
+{
+  const gchar *name_a, *name_b;
+  name_a = gtk_buildable_get_name (GTK_BUILDABLE (a));
+  name_b = gtk_buildable_get_name (GTK_BUILDABLE (b));
+  return g_strcmp0 (name_a, name_b);
+}
+static gboolean 
+glade_previewer_stack_key_press_event (GtkWidget *window, GdkEventKey *event, GtkWidget *widget)
+{
+  GtkWidget *child =  gtk_stack_get_visible_child  (GTK_STACK (widget));
+  GList *children, *node;
+  gboolean retval = FALSE;
+  
+  if (!child)
+    return FALSE;
+
+  children = gtk_container_get_children (GTK_CONTAINER (widget));
+
+  node = g_list_find (children, child);
+
+  if (node)
+    {
+      switch (event->keyval)
+        {
+          case GDK_KEY_Page_Up:
+            if (node->prev)
+              gtk_stack_set_visible_child  (GTK_STACK (widget), node->prev->data);
+            retval = TRUE;
+            break;
+          case GDK_KEY_Page_Down:
+            if (node->next)
+              gtk_stack_set_visible_child  (GTK_STACK (widget), node->next->data);
+            retval = TRUE;
+            break;
+          default:
+            retval = FALSE;
+            break;
+        }
+    }
+
+  g_list_free (children);
+  return retval;
+}
+
+
+static gboolean listen = FALSE;
+static gboolean version = FALSE;
+static gboolean slideshow = FALSE;
+static gboolean template = FALSE;
+static gboolean print_handler = FALSE;
+static gchar *file_name = NULL;
+static gchar *toplevel_name = NULL;
+static gchar *css_file_name = NULL;
+static gchar *screenshot_file_name = NULL;
+
+static GOptionEntry option_entries[] =
+{
+    {"filename", 'f', 0, G_OPTION_ARG_FILENAME, &file_name, N_("Name of the file to preview"), "FILENAME"},
+    {"template", 0, 0, G_OPTION_ARG_NONE, &template, N_("Creates dummy widget class to load a template"), NULL},
+    {"toplevel", 't', 0, G_OPTION_ARG_STRING, &toplevel_name, N_("Name of the toplevel to preview"), "TOPLEVELNAME"},
+    {"screenshot", 0, 0, G_OPTION_ARG_FILENAME, &screenshot_file_name, N_("File name to save a screenshot"), NULL},
+    {"css", 0, 0, G_OPTION_ARG_FILENAME, &css_file_name, N_("CSS file to use"), NULL},
+    {"listen", 'l', 0, G_OPTION_ARG_NONE, &listen, N_("Listen standard input"), NULL},
+    {"slideshow", 0, 0, G_OPTION_ARG_NONE, &slideshow, N_("make a slideshow of every toplevel widget by adding them in a GtkStack"), NULL},
+    {"print-handler", 0, 0, G_OPTION_ARG_NONE, &print_handler, N_("Print handlers signature on invocation"), NULL},
+    {"version", 'v', 0, G_OPTION_ARG_NONE, &version, N_("Display previewer version"), NULL},
+    {NULL}
+};
 
 int
 main (int argc, char **argv)
 {
-  gchar *file_name;
-  gchar *toplevel_name;
+  GladePreviewer *app;
+  GOptionContext *context;
+  GError *error = NULL;
+  GObject *toplevel = NULL;
 
 #ifdef ENABLE_NLS
   setlocale (LC_ALL, "");
@@ -397,21 +415,153 @@ main (int argc, char **argv)
   textdomain (GETTEXT_PACKAGE);
 #endif
 
-  parse_arguments (argc, argv, &toplevel_name, &file_name);
+  context = g_option_context_new (_("- previews a glade UI definition"));
+  g_option_context_add_main_entries (context, option_entries, GETTEXT_PACKAGE);
+  g_option_context_add_group (context, gtk_get_option_group (TRUE));
+  
+  if (!g_option_context_parse (context, &argc, &argv, &error))
+    {
+      g_printerr (_("%s\nRun '%s --help' to see a full list of available command line "
+                   "options.\n"), error->message, argv[0]);
+      g_error_free (error);
+      g_option_context_free (context);
+      return 1;
+    }
+
+  g_option_context_free (context);
+
+  if (version)
+    {
+      g_print ("glade-previewer " VERSION "\n");
+      return 0;
+    }
+
+  if (!listen && !file_name)
+    {
+      g_printerr (_("Either --listen or --filename must be specified.\n"));
+      return 0;
+    }
 
   gtk_init (&argc, &argv);
   glade_app_get ();
 
-  if (file_name != NULL)
+  app = glade_previewer_new (file_name, toplevel_name);
+  gtk_widget_show (GTK_WIDGET (app->window));
+
+  app->is_template = template;
+
+  if (print_handler)
+    glade_preview_window_set_print_handlers (GLADE_PREVIEW_WINDOW (app->window), TRUE);
+
+  if (css_file_name)
+    glade_preview_window_set_css_file (app->window, css_file_name);
+
+  if (listen)
     {
-      preview_file (toplevel_name, file_name);
+#ifdef WINDOWS
+      GIOChannel *input = g_io_channel_win32_new_fd (fileno (stdin));
+#else
+      GIOChannel *input = g_io_channel_unix_new (fileno (stdin));
+#endif
+
+      g_io_add_watch (input, G_IO_IN | G_IO_HUP, on_data_incoming, app);
+
+      gtk_main ();
     }
-  else
+  else if (template)
     {
-      start_listener (toplevel_name);
+      gchar *contents = NULL;
+      gsize size;
+
+      if (g_file_get_contents (file_name, &contents, &size, NULL))
+        toplevel = get_toplevel_from_string (app, NULL, contents, size);
+
+      g_free (contents);
+    }
+  else if (file_name)
+    {
+      GtkBuilder *builder = gtk_builder_new ();
+      GError *error = NULL;
+
+      /* Use from_file() function gives builder a chance to know where to load resources from */
+      if (!gtk_builder_add_from_file (builder, app->file_name, &error))
+        {
+          g_printerr (_("Couldn't load builder definition: %s"), error->message);
+          g_error_free (error);
+          return 1;
+        }
+
+      if (slideshow)
+        {
+          GSList *l, *objects = gtk_builder_get_objects (builder);
+          GtkStack *stack = GTK_STACK (gtk_stack_new ());
+
+          /* Add Page up and Page down key binding */
+          g_signal_connect (app->window, "key-press-event",
+                            G_CALLBACK (glade_previewer_stack_key_press_event),
+                            stack);
+
+          objects = g_slist_sort (objects, objects_cmp_func);
+
+          for (l = objects; l; l = g_slist_next (l))
+            {
+              GObject *obj = l->data;
+
+              if (!GTK_IS_WIDGET (obj) || gtk_widget_get_parent (GTK_WIDGET (obj)))
+                continue;
+
+              /* TODO: make sure we can add a toplevel inside a stack */
+              if (GTK_IS_WINDOW (obj))
+                continue;
+
+              gtk_stack_add_named (stack, GTK_WIDGET (obj),
+                                   gtk_buildable_get_name (GTK_BUILDABLE (obj)));
+            }
+
+          glade_preview_window_set_widget (app->window, GTK_WIDGET (stack));
+          gtk_widget_show (GTK_WIDGET (stack));
+          
+          if (screenshot_file_name)
+            glade_preview_window_slideshow_save (app->window, screenshot_file_name);
+          else
+            {
+              gtk_stack_set_transition_type (stack, GTK_STACK_TRANSITION_TYPE_CROSSFADE);
+
+              gtk_main ();
+            }
+
+          g_slist_free (objects);
+        }
+      else
+        {
+          toplevel = get_toplevel (builder, toplevel_name);
+
+          gtk_builder_connect_signals_full (builder,
+                                            glade_preview_window_connect_function,
+                                            app->window);
+        }
+
+      g_object_unref (builder);
     }
 
-  gtk_main ();
+  if (toplevel)
+    {
+      glade_preview_window_set_widget (app->window, GTK_WIDGET (toplevel));
+      g_object_unref (toplevel);
+      gtk_widget_show (GTK_WIDGET (toplevel));
+
+      if (screenshot_file_name)
+        glade_preview_window_screenshot (app->window, TRUE, screenshot_file_name);
+      else
+        gtk_main ();
+    }
+
+  /* free unused resources */
+  g_free (file_name);
+  g_free (toplevel_name);
+  g_free (css_file_name);
+  g_free (screenshot_file_name);
+  glade_previewer_free (app);
 
   return 0;
 }

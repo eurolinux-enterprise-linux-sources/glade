@@ -131,15 +131,26 @@
     <releaseinfo>このマニュアルではGladeのバージョン3.1.0 について説明しています。</releaseinfo> 
     <legalnotice> 
       <title>フィードバック</title> 
-      <para lang="en">To report a bug or make a suggestion regarding the Glade application or
-      this manual, follow the directions in the <ulink url="help:gnome-feedback" type="help">GNOME Feedback Page</ulink>.
-      </para>
+      <para>アプリケーションやこのドキュメントに関するバグの報告や提案については <ulink url="help:gnome-feedback" type="help">GNOME Feedback Page</ulink> に従ってください。</para>
 <!-- Translators may also add here feedback address for translations -->
     </legalnotice> 
+  
+    <othercredit class="translator">
+      <personname>
+        <firstname>Hiroyuki Sekihara</firstname>
+      </personname>
+      <email>hiroyuki.sekihara@gmail.com</email>
+    </othercredit>
+    <copyright>
+      
+        <year>2010.</year>
+      
+      <holder>Hiroyuki Sekihara</holder>
+    </copyright>
   </articleinfo> 
 
     <indexterm lang="en"><primary>glade</primary></indexterm>
-    <indexterm lang="en"><primary>user interface designer</primary></indexterm>
+    <indexterm><primary>ユーザー インターフェース デザイナー</primary></indexterm>
 
 
 <!-- ============= Document Body ============================= -->
@@ -167,17 +178,14 @@
     	<varlistentry>
     		<term><guimenu>アプリケーション</guimenu> メニュー</term>
     		<listitem>
-    		<para lang="en">Choose 
-    		<menuchoice>
-    		<guisubmenu>Programming</guisubmenu>
-    		<guimenuitem>Glade Interface Designer</guimenuitem>
-    		</menuchoice>. </para>
+    		<para><menuchoice><guisubmenu>プログラミング</guisubmenu><guimenuitem>Glade インターフェース・デザイナー</guimenuitem></menuchoice> を選択する。</para>
     		</listitem>
     	</varlistentry>
     	<varlistentry>
     		<term>コマンドライン</term>
     		<listitem>
-    		<para><application>Glade</application> をコマンドラインから開始するには以下のコマンドを入力して<keycap>Return</keycap> キーを押します: <command>glade-3</command></para>	 
+			<para lang="en">To start <application>Glade</application> from a command line, type <command>glade</command>
+			and then press <keycap>Return</keycap>.</para>
     		</listitem>
     	</varlistentry>
     </variablelist>
@@ -262,7 +270,7 @@
 		<itemizedlist> 
 		  <listitem><para>既存のプロジェクトへの変更を保存するには、<menuchoice><guimenu>ファイル</guimenu><guimenuitem>保存</guimenuitem></menuchoice> を選択します。</para>
 		  </listitem>
-		  <listitem><para lang="en">To save a new project file or to save an existing project file under a new filename, choose <menuchoice> <guimenu>File</guimenu> <guimenuitem>Save As</guimenuitem> </menuchoice>. Enter a name for the project file in the <guilabel>Save As</guilabel> dialog, then click <guibutton>Save</guibutton>. </para>
+		  <listitem><para>新しいプロジェクトを保存する場合や既存のプロジェクトを別のファイル名で保存する場合は、 <menuchoice><guimenu>ファイル</guimenu><guimenuitem>名前を付けて保存</guimenuitem></menuchoice> を選択して表示される <guilabel>名前を付けて保存</guilabel> ダイアログでプロジェクトのファイル名を入力して、 <guibutton>保存</guibutton> をクリックします。</para>
 		  </listitem>
 		</itemizedlist>
 	 </sect2>
@@ -273,7 +281,7 @@
          <title>ウィジェットの使い方</title>
          <sect2 id="select-widgets-palette">
                 <title>パレットウィンドウからウィジェットを選択する</title>
-                <para>以下の方法によりあなたがウィジェットで動作することができます<guilabel>パレット</guilabel> ウィンドウのウィジェットを操作できます：</para>
+                <para>以下の方法により<guilabel>パレット</guilabel> ウィンドウのウィジェットを操作できます：</para>
                 <variablelist> 
                   <varlistentry> 
                          <term>選択モード</term> 
@@ -295,7 +303,7 @@
                   <varlistentry> 
                          <term>トップレベルの配置モード</term> 
                          <listitem> 
-                                <para>トップレベルの配置モードを使用するには、<guilabel>パレット</guilabel> ウィンドウでトップレベルに定義されているウィジェットを選択します。。<guilabel>パレット</guilabel> ウィンドウでトップレベルのウィジェットを選択すると、即座にウィジェットがデスクトップに表示されます。その後でウィジェットを編集することができます。トップレベルのウィジェットを選択した後、モードは選択モードに復帰します。</para>
+                                <para>トップレベルの配置モードを使用するには、<guilabel>パレット</guilabel> ウィンドウでトップレベルに定義されているウィジェットを選択します。<guilabel>パレット</guilabel> ウィンドウでトップレベルのウィジェットを選択すると、即座にウィジェットがデスクトップに表示されます。その後でウィジェットを編集することができます。トップレベルのウィジェットを選択した後、モードは選択モードに復帰します。</para>
                          </listitem> 
                   </varlistentry> 
                 </variablelist> 
@@ -321,50 +329,19 @@
 <para>必要なボックスをすべて作成した後に、ラベル、ボタン、もしくは、より複雑なウィジェットをボックスの中に配置することができます。<application>Glade</application> によるレイアウトへのウィジェットのパックは、多くの退屈な作業をなくしてくれるのに気づいてください。ボックスを使用することにより、アプリケーションがローカライズされていて異なる言語を表示する時も、ウィンドウがラベルのサイズを調整できるようになります。</para></sect2>
          <sect2 id="place-widgets-clipboard"> 
                 <title>クリップボードにウィジェットを移動する</title> 
-                <para lang="en">
-                  To remove a widget from a parent and place the widget on
-the clipboard,
-                  select the widget then choose 
-                  <menuchoice> 
-                         <guimenu>Edit</guimenu> 
-                         <guisubmenu>Cut</guisubmenu> 
-                  </menuchoice>. 
-                </para>
+                <para>ウィジェットを親ウィジェットから削除してクリップボードに移動するには、ウィジェットを選択してから <menuchoice><guimenu>編集</guimenu><guisubmenu>切り取り</guisubmenu></menuchoice> を選択します。</para>
          </sect2> 
          <sect2 id="copy-widget-clipboard"> 
                 <title>クリップボードにウィジェットをコピーする</title> 
-                <para lang="en">
-                  To copy a widget to the clipboard, select the widget then
-choose 
-                  <menuchoice> 
-                         <guimenu>Edit</guimenu> 
-                         <guisubmenu>Copy</guisubmenu> 
-                  </menuchoice>. The original widget remains attached to
-the parent. 
-                </para>
+                <para>クリップボードにウィジェットをコピーするには、ウィジェットを選択してから <menuchoice><guimenu>編集</guimenu><guisubmenu>コピー</guisubmenu></menuchoice> を選択します。元のウィジェットは親ウィジェットに残されたままになります。</para>
          </sect2> 
          <sect2 id="paste-widget-clipboard"> 
                 <title>クリップボードからプロジェクトにウィジェットを貼り付ける</title> 
-                <para lang="en">
-                  To paste a widget that exists on the clipboard into your
-project,
-                  choose 
-                  <menuchoice> 
-                         <guimenu>Edit</guimenu> 
-                         <guisubmenu>Paste</guisubmenu> 
-                  </menuchoice>.</para><para><application>Glade</application> ではウィジェットはユニークな名前を持たなければなりません。もしウィジェットを切り取ってからウィジェットを再び貼り付ける場合、ウィジェットとその子ウィジェットは元の名前のままとなります。もしウィジェットをコピーしてからウィジェットの貼り付けを何回か行った場合、<application>Glade</application> はウィジェットのコピーのために新しい名前を生成します。</para>
+                <para>クリップボードにあるウィジェットをプロジェクトに貼り付けるには <menuchoice><guimenu>編集</guimenu><guisubmenu>貼り付け</guisubmenu></menuchoice> を選択します。</para><para><application>Glade</application> ではウィジェットはユニークな名前を持たなければなりません。もしウィジェットを切り取ってからウィジェットを再び貼り付ける場合、ウィジェットとその子ウィジェットは元の名前のままとなります。もしウィジェットをコピーしてからウィジェットの貼り付けを何回か行った場合、<application>Glade</application> はウィジェットのコピーのために新しい名前を生成します。</para>
          </sect2> 
          <sect2 id="delete-widget"> 
                 <title>ウィジェットの削除</title> 
-                <para lang="en">To delete a widget from the parent without
-                  moving the widget to the clipboard, 
-                                select the widget then 
-                                choose 
-                                <menuchoice> 
-                                  <guimenu>Edit</guimenu> 
-                                  <guisubmenu>Delete</guisubmenu> 
-                                </menuchoice>. 
-                         </para>
+                <para>ウィジェットをクリップボードに移動せずに親ウィジェットから削除する場合は、ウィジェットを選択してから <menuchoice><guimenu>編集</guimenu><guisubmenu>削除</guisubmenu></menuchoice> を選択します。</para>
                  
          </sect2> 
          

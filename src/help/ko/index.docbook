@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd" [
+<!ENTITY appversion "3.1.0">
+<!ENTITY manrevision "3.0">
+<!ENTITY app "Glade">
+]>
+<!-- 
+  Maintained by the GNOME Documentation Project
+  http://developer.gnome.org/projects/gdp
+  Template version: 2.0 beta
+  Template last modified Apr 11, 2002
+-->
+<article id="index" lang="ko">
+
+  <articleinfo> 
+    <title>글레이드 인터페이스 디자인 프로그램 설명서</title> 
+      
+    <abstract role="description"><para>글레이드는 GTK+ 프로그램을 위한 사용자 인터페이스 디자인 프로그램 입니다.</para>
+    </abstract>
+
+    <copyright><year>2006</year> <holder>Vincent Geddes</holder></copyright>
+    <copyright><year>2004</year> <year>2003</year> <holder>Sun Microsystems</holder></copyright> 
+    <copyright><year>2002</year><year>2000</year> <holder>Michael Vance</holder></copyright> 
+
+    <publisher> 
+      <publishername>그놈 문서화 프로젝트</publishername> 
+    </publisher> 
+
+   <include xmlns="http://www.w3.org/2001/XInclude" href="legal.xml"/>
+
+    <authorgroup> 
+      <author role="maintainer"><firstname>Vincent</firstname> <surname>Geddes</surname> <affiliation> <orgname>그놈 문서화 프로젝트</orgname> <address><email>vincent.geddes@gmail.com</email></address> </affiliation></author> 
+      <author><firstname>Sun</firstname> <surname>그놈 문서화 팀</surname> <affiliation> <orgname>Sun Microsystems</orgname> </affiliation></author> 
+       <author><firstname>Michael</firstname> <surname>Vance</surname> <affiliation> <orgname>그놈 문서화 팀</orgname> </affiliation></author> 
+    </authorgroup>
+
+
+<!-- According to GNU FDL, revision history is mandatory if you are -->
+<!-- modifying/reusing someone else's document.  If not, you can omit it. -->
+<!-- Remember to remove the &manrevision; entity from the revision entries other
+-->
+<!-- than the current revision. -->
+<!-- The revision numbering system for GNOME manuals is as follows: -->
+<!-- * the revision number consists of two components -->
+<!-- * the first component of the revision number reflects the release version of the GNOME desktop. -->
+<!-- * the second component of the revision number is a decimal unit that is incremented with each revision of the manual. -->
+<!-- For example, if the GNOME desktop release is V2.x, the first version of the manual that -->
+<!-- is written in that desktop timeframe is V2.0, the second version of the manual is V2.1, etc. -->
+<!-- When the desktop release version changes to V3.x, the revision number of the manual changes -->
+<!-- to V3.0, and so on. -->  
+    <revhistory>
+        <revision><revnumber>글레이드 사용자 설명서 3.0</revnumber> <date>2006년 12월 5일</date> <revdescription> 
+	  		<para role="author">Vincent Geddes</para>
+	  		<para role="publisher">그놈 문서화 프로젝트</para>
+		</revdescription></revision>
+        <revision><revnumber>글레이드 사용자 설명서 2.1;</revnumber> <date>2004년 6월 17일</date> <revdescription> 
+                        <para role="author">Sun 그놈 문서화 팀</para>
+                        <para role="publisher">그놈 문서화 프로젝트</para>
+                </revdescription></revision>
+        <revision><revnumber>글레이드 사용자 설명서 2.0</revnumber> <date>2004년 2월 25일</date> <revdescription> 
+                        <para role="author">Sun 그놈 문서화 팀</para>
+                        <para role="publisher">그놈 문서화 프로젝트</para>
+                </revdescription></revision>             
+        <revision><revnumber>글레이드 사용자 설명서 1.2</revnumber> <date>2004년 2월 10일</date> <revdescription> 
+                        <para role="author">Sun 그놈 문서화 팀</para>
+                        <para role="publisher">그놈 문서화 프로젝트</para>
+                </revdescription></revision>  
+        <revision><revnumber>글레이드 사용자 설명서 1.1</revnumber> <date>2002년 3월 30일</date> <revdescription> 
+                        <para role="author">Michael Vance</para>
+                        <para role="publisher">그놈 문서화 프로젝트</para>
+                </revdescription></revision> 
+        <revision><revnumber>글레이드 사용자 설명서 1.0</revnumber> <date>2000년 5월 11일</date> <revdescription> 
+                        <para role="author">Michael Vance</para>
+                        <para role="publisher">그놈 문서화 프로젝트</para>
+                </revdescription></revision> 
+    </revhistory> 
+
+    <releaseinfo>이 사용자 설명서는 글레이드 버전 3.1.0을 설명 합니다.</releaseinfo> 
+    <legalnotice> 
+      <title>피드백</title> 
+      <para>버그를 보고하거나 글레이드 프로그램 또는 매뉴얼에 대해서 제안을 하시려면 <ulink url="help:gnome-feedback" type="help">그놈 피드백 페이지</ulink>의 지시를 따르세요.</para>
+<!-- Translators may also add here feedback address for translations -->
+    </legalnotice> 
+  </articleinfo> 
+
+    <indexterm><primary>글레이드</primary></indexterm>
+    <indexterm><primary>사용자 인터페이스 디자인 프로그램</primary></indexterm>
+
+
+<!-- ============= Document Body ============================= -->
+<!-- ============= Introduction ============================== -->
+<!-- Use the Introduction section to give a brief overview of what
+     the application is and what it does. -->
+  <sect1 id="introduction"> 
+    <title>소개</title> 
+
+    <para><application>글레이드</application> 인터페이스 디자인 프로그램으로 <application>GTK+</application> 프로그램의 사용자 인터페이스를 만들고 편집할 수 있습니다.</para>
+
+    <para>GTK+ 라이브러리는 텍스트 박스, 다이얼로그 라벨, 숫자 항목, 체크 박스 그리고 메뉴와 같은 다양한 사용자 인터페이스 빌딩 블럭을 제공합니다. 이런 빌딩 블럭을 <emphasis>위젯</emphasis>이라고 부릅니다. 글레이드를 사용하여 GUI에 위젯을 배치 할 수 있습니다. 글레이드로 레이아웃을 변경하거나 위젯의 속성을 변경 할 수 있습니다. 또한 글레이드를 사용하여 위젯과 프로그램의 소스코드를 연결 할 수 있습니다.</para>
+
+    <para>글레이드로 디자인된 사용자 인터페이스는 XML 형태로 저장이 되어서 외부 툴에 쉽게 통합 됩니다. <application>libglade</application> 라이브러리를 사용하면 XML 명세서를 이용하여 동적으로 GUI를 만들 수 있습니다.</para>
+
+  </sect1>
+
+  <sect1 id="getting-started"> 
+    <title>시작하기</title> 
+
+    <sect2 id="glade-start">
+    <title><application>글레이드</application>를 시작하기</title>
+    <para>다음 순서로 <application>글레이드</application>를 시작하세요:</para> 
+    <variablelist>
+    	<varlistentry>
+    		<term><guimenu>프로그램</guimenu> 메뉴</term>
+    		<listitem>
+    		<para>선택 <menuchoice> <guisubmenu>프로그래밍</guisubmenu> <guimenuitem>글레이드 인터페이스 디자이너</guimenuitem> </menuchoice>.</para>
+    		</listitem>
+    	</varlistentry>
+    	<varlistentry>
+    		<term>명령행</term>
+    		<listitem>
+			<para lang="en">To start <application>Glade</application> from a command line, type <command>glade</command>
+			and then press <keycap>Return</keycap>.</para>
+    		</listitem>
+    	</varlistentry>
+    </variablelist>
+    </sect2>
+
+    <sect2 id="glade-when-start">
+    <title><application>글레이드</application>를 시작 할 때</title>
+    <para><application>글레이드</application>를 시작하면 다음 창이 보여집니다.</para>
+
+        <figure id="main-window-fig"> 
+          <title><application>글레이드</application> 창</title> 
+            <screenshot> 
+              <mediaobject><imageobject><imagedata fileref="figures/main-window.png" format="PNG"/></imageobject> <textobject><phrase><application>글레이드</application> 창 보이기.</phrase></textobject></mediaobject> 
+            </screenshot> 
+        </figure>
+        
+        <para><application>글레이드</application> 창은 다음 엘리먼트를 포함 합니다:</para>
+
+        <variablelist>
+          <varlistentry> <term>메뉴모음</term>
+            <listitem>
+            <para lang="en">The menus on the menubar contain all of the commands you need to work with files in <application>Glade</application>.</para>
+            </listitem>
+          </varlistentry>
+          <varlistentry> <term>도구모음</term>
+            <listitem>
+            <para>도구모음은 메뉴모음에서 접근할 수 있는 명령의 하위모음이다.</para>
+            </listitem>
+          </varlistentry>
+          <varlistentry> <term>디자인 영역</term>
+            <listitem>
+            <para>디자인 영역은 사용자 인터페이스를 시각적으로 확인하면서 수정할 수 있는 곳 입니다.</para>
+            </listitem>
+          </varlistentry>
+          <varlistentry> <term>팔레트</term>
+            <listitem>
+            <para>팔레트는 사용자 인터페이스를 구성하는데 필요한 위젯이 들어있다.</para>
+            </listitem>
+          </varlistentry>
+          <varlistentry> <term>인스펙터</term>
+            <listitem>
+            <para>인스펙터는 프로젝트에 있는 위젯의 정보를 보여줍니다.</para>
+            </listitem>
+          </varlistentry>
+          <varlistentry> <term>속성 편집기</term>
+            <listitem>
+            <para>속성 편집기는 위젯의 속성을 변경하거나 소스코드와 연결시킬 때 사용 됩니다.</para>
+            </listitem>
+          </varlistentry>
+          <varlistentry> <term>상태 표시줄</term>
+            <listitem>
+            <para>상태바는 <application>글레이드</application>의 현재 상태를 보여주거나 메뉴 항목의 문맥 정보를 보여줍니다.</para>
+            </listitem>
+          </varlistentry>
+        </variablelist>
+
+    </sect2>
+  </sect1>
+
+  <sect1 id="working-with-projects"> 
+         <title>프로젝트로 작업하기</title> 
+  
+ 
+<!-- To Create a New Project  -->
+	 <sect2 id="glade-create-new-project"> 
+		<title>새로운 프로젝트 만들기</title>
+		<para>새 프로젝트를 만드려면 <menuchoice><guimenu>파일</guimenu><guimenuitem>새로 만들기</guimenuitem></menuchoice>를 선택하세요. 프로그램은 <application>글레이드</application> 창에서 빈 프로젝트를 보여줍니다.</para>
+	 </sect2>
+
+	 <sect2 id="glade-open-project"> 
+		<title>프로젝트 열기</title>
+		<para>존재하는 프로젝트를 열려면 <menuchoice><guimenu>파일</guimenu><guimenuitem>열기</guimenuitem></menuchoice>를 선택하세요. 프로그램은 <application>글레이드</application> 창에 프로젝트를 보여줍니다.</para>
+	 </sect2>
+
+<!-- To Save a Project -->
+	 <sect2 id="glade-save-project"> 
+		<title>프로젝트 저장하기</title>
+		<para>다음과 같은 방법으로 프로젝트를 저장 할 수 있습니다:</para>
+		<itemizedlist> 
+		  <listitem><para>프로젝트의 변경 사항을 저장하려면 <menuchoice><guimenu>파일</guimenu><guimenuitem>저장하기</guimenuitem></menuchoice>를 선택하세요.</para>
+		  </listitem>
+		  <listitem><para>새로운 프로젝트 파일이나 존재하는 프로젝트 파일을 새로운 이름으로 저장하려면  <menuchoice> <guimenu>파일</guimenu> <guimenuitem>다른 이름으로 저장</guimenuitem> </menuchoice>를 선택하세요.</para>
+		  </listitem>
+		</itemizedlist>
+	 </sect2>
+  </sect1>
+
+
+  <sect1 id="working-with-widgets"> 
+         <title>위젯으로 작업하기</title>
+         <sect2 id="select-widgets-palette">
+                <title>팔레트 창에서 위젯을 선택하기</title>
+                <para>다음과 같은 방법으로 <guilabel>팔레트</guilabel> 창에서 위젯으로 작업 할 수 있습니다:</para>
+                <variablelist> 
+                  <varlistentry> 
+                         <term>선택 모드</term> 
+                         <listitem>
+                                <para>선택 모드를 사용하려면 <guilabel>선택</guilabel>을 선택하세요. 선택 모드가 되면 포인터는 화살표 모양으로 변하고 프로젝트에 있는 위젯을 선택 할 수 있습니다. <guilabel>속성</guilabel> 창에서 위젯의 속성을 수정 할 수 있습니다.</para>
+<para>위젯 컨텍스트 메뉴로 위젯을 선택 할 수도 있습니다. 위젯에서 오른쪽 마우스 버튼을 클릭하면 위젯 컨텍스트 메뉴를 열 수 있습니다.</para><para><keycap>컨트롤</keycap>키를 누르고 <guilabel>팔레트</guilabel>에 있는 다수의 특정 위젯을 선택해서 프로젝트에 추가 할 수 있습니다.</para>
+                         </listitem> 
+                  </varlistentry> 
+                </variablelist> 
+                <variablelist> 
+                  <varlistentry> 
+                         <term>위젯 변경 모드</term> 
+                         <listitem> 
+                                <para>위젯 배치 모드를 사용하려면 <guilabel>팔레트</guilabel> 창에 있는 위젯을 선택하세요.  위젯을 선택하면 포인터는 십자모양 포인터로 변경됩니다. 이 상태에서 위젯을 컨테이너, 상위레벨 위젯등에 배치 할 수 있습니다. 위젯 배치를 마치고 나면 선택모드로 변경 됩니다.</para>
+                         </listitem> 
+                  </varlistentry> 
+                </variablelist> 
+                <variablelist> 
+                  <varlistentry> 
+                         <term>상위레벨 배치 모드</term> 
+                         <listitem> 
+                                <para>상위레벨 배치 모드를 사용하려면 <application>팔레트</application> 창에 있는 상위레벨 위젯을 선택하세요. <guilabel>팔레트</guilabel> 창에 있는 상위레벨 위젯을 선택하면 바탕 화면에 바로 나타납니다. 이 상태에서 위젯을 수정 할 수 있습니다. 상위레벨 위젯을 선택하고나면 선택모드로 변경 됩니다.</para>
+                         </listitem> 
+                  </varlistentry> 
+                </variablelist> 
+         </sect2>
+<sect2 id="organize-widgets">
+<title>프로젝트에서 위젯을 배치하기</title>
+<para>프로젝트 창에서 위젯을 배치하거나 조직화하려면 컨테이너 또는 박스를 사용 할 수 있습니다. <guilabel>팔레트</guilabel> 창에서 다음의 위젯 컨테이너를 선택 할 수 있습니다:</para>
+<itemizedlist>
+<listitem><para>가로 상자</para>
+</listitem><listitem><para>세로 상자</para></listitem>
+<listitem><para>테이블</para></listitem>
+<listitem><para>고정 위치</para></listitem>
+<listitem><para>가로 단추 상자</para></listitem>
+<listitem><para>세로 단추 상자</para></listitem>
+<listitem><para>가로 칸막이</para></listitem>
+<listitem><para>세로 칸막이</para></listitem>
+<listitem><para>노트북</para></listitem>
+<listitem><para>프레임</para></listitem>
+<listitem><para>스크롤 창</para></listitem>
+<listitem><para>뷰포트</para></listitem>
+</itemizedlist>
+<para>복잡한 레이아웃 구조를 만들 때 중첩된 박스를 사용 할 수 있습니다. 가로 또는 세로 박스를 만들 때 <application>글레이드</application>는 열과 행의 수를 물어 봅니다. 행과 열은 쉽게 추가하거나 삭제 할 수 있습니다.</para>
+<para>원하는 형태의 박스를 만들고나면 라벨, 단추 또는 더 복잡하게 생긴 위젯을 박스에 추가 할 수 있습니다. <application>글레이드</application>는 위젯을 레이아웃에 모아두는 방법을 사용하여 지루한 작업을 없애 준다는것에 주목하세요. 박스를 사용하면 지역화된 프로그램에서 각 언어에 맞게 라벨의 크기를 조정 할 수 있습니다.</para></sect2>
+         <sect2 id="place-widgets-clipboard"> 
+                <title>클립보드로 위젯을 옮기기</title> 
+                <para>상위 위젯에서 위젯을 제거하고 클립보드에 배치하려면 위젯을 선택하고 <menuchoice> <guimenu>편집</guimenu><guisubmenu>잘라내기</guisubmenu> </menuchoice>를 선택하세요.</para>
+         </sect2> 
+         <sect2 id="copy-widget-clipboard"> 
+                <title>클립보드로 위젯을 복사하기</title> 
+                <para>위젯을 클립보드로 복사하려면 위젯을 선택하고 <menuchoice> <guimenu>편집</guimenu> <guisubmenu>복사하기</guisubmenu> </menuchoice>를 선택하세요. 원본 위젯은 연결된 상위 위젯에 남습니다.</para>
+         </sect2> 
+         <sect2 id="paste-widget-clipboard"> 
+                <title>클립보드에 있는 위젯을 프로젝트에 붙여넣기</title> 
+                <para>클립보드에 있는 위젯을 프로젝트에 붙여넣기 하시려면 <menuchoice> <guimenu>편집</guimenu> <guisubmenu>붙여넣기</guisubmenu> </menuchoice>를 선택하세요.</para><para>모든 위젯은 <application>글레이드</application> 내에서 유일한 이름을 가져야 합니다. 만약 프로젝트에서 위젯을 잘라내고 붙여넣기를 한다면 위젯과 위젯의 하위 위젯은 원래 이름을 유지합니다. 만약 위젯을 복사하고 여러번 붙여넣기를 한다면  <application>글레이드</application>는 복사된 위젯의 새로운 이름을 생성합니다.</para>
+         </sect2> 
+         <sect2 id="delete-widget"> 
+                <title>위젯을 삭제하기</title> 
+                <para>상위 위젯에 있는 위젯을 클립보드로 이동시키지 않고 삭제하려면 <menuchoice> <guimenu>편집</guimenu> <guisubmenu>삭제</guisubmenu> </menuchoice>를 선택하세요.</para>
+                 
+         </sect2> 
+         
+         <sect2 id="edit-widget"> 
+                <title>위젯의 속성을 변경하기</title> 
+                <para>속성 편집기는 선택한 위젯의 속성을 편집 할 때 사용합니다. 위젯의 속성을 변경하려면 속성 창의 속성 필드에 적절한 값을 입력하세요.</para>
+                
+                
+         </sect2> 
+  </sect1>
+  
+<sect1 id="about"> 
+    <title>글레이드 관하여</title> 
+    <para>글레이드는 글레이드 개발자와 그놈 커뮤니티 자원봉사자의 노력으로 유지되고 있습니다. 글레이드에 관해서 더 많은 정보를 보시려면 <ulink url="http://glade.gnome.org" type="http">글레이드 웹 사이트</ulink>를 방문해 주세요.</para>
+    <para>버그를 보고 하거나 이 프로그램 또는 매뉴얼에 제안 할 것이 있다면 <ulink url="http://bugzilla.gnome.org/enter_bug.cgi?product=glade3" type="http">버그질라</ulink>에 제출하세요.</para>
+
+    <para>또 다른 최고의 정보원은 글레이드 <ulink url="http://lists.ximian.com/mailman/listinfo/glade-users" type="http">사용자</ulink> 그리고 <ulink url="http://lists.ximian.com/mailman/listinfo/glade-devel" type="http">개발자</ulink> 메일링 리스트 입니다. 메일링 리스트에 가입하는것 외에 같은 링크에 있는 메일링 리스트 아카이브를 검색 할 수도 있습니다.</para>
+
+    <para>This program is distributed under the terms of the GNU General Public license as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version. A copy of this license can be found at this <ulink url="help:gpl" type="help">link</ulink>, or in the file COPYING included with the source code of this program.</para>
+  </sect1> 
+
+</article>

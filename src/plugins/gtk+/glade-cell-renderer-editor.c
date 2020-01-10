@@ -54,7 +54,7 @@ typedef struct
 static GladeEditableIface *parent_editable_iface;
 
 G_DEFINE_TYPE_WITH_CODE (GladeCellRendererEditor, glade_cell_renderer_editor,
-                         GTK_TYPE_VBOX,
+                         GTK_TYPE_BOX,
                          G_IMPLEMENT_INTERFACE (GLADE_TYPE_EDITABLE,
                                                 glade_cell_renderer_editor_editable_init));
 
@@ -72,6 +72,8 @@ glade_cell_renderer_editor_class_init (GladeCellRendererEditorClass * klass)
 static void
 glade_cell_renderer_editor_init (GladeCellRendererEditor * self)
 {
+  gtk_orientable_set_orientation (GTK_ORIENTABLE (self),
+				  GTK_ORIENTATION_VERTICAL);
 }
 
 static void
@@ -320,8 +322,10 @@ glade_cell_renderer_editor_new (GladeWidgetAdaptor * adaptor,
 
       pclass = list->data;
 
-      if (glade_property_class_get_virtual (pclass))
-        continue;
+      /* "stock-size" is a normal property, but we virtualize it to use the GtkIconSize enumeration */
+      if (glade_property_class_get_virtual (pclass) &&
+	  strcmp (glade_property_class_id (pclass), "stock-size") != 0)
+	continue;
 
       attr_name = g_strdup_printf ("attr-%s", glade_property_class_id (pclass));
       use_attr_name = g_strdup_printf ("use-attr-%s", glade_property_class_id (pclass));
@@ -419,7 +423,8 @@ GLADE_MAKE_EPROP (GladeEPropCellAttribute, glade_eprop_cell_attribute)
 #define GLADE_IS_EPROP_CELL_ATTRIBUTE(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), GLADE_TYPE_EPROP_CELL_ATTRIBUTE))
 #define GLADE_IS_EPROP_CELL_ATTRIBUTE_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), GLADE_TYPE_EPROP_CELL_ATTRIBUTE))
 #define GLADE_EPROP_CELL_ATTRIBUTE_GET_CLASS(o)    (G_TYPE_INSTANCE_GET_CLASS ((o), GLADE_EPROP_CELL_ATTRIBUTE, GladeEPropCellAttributeClass))
-     static void glade_eprop_cell_attribute_finalize (GObject * object)
+static void
+glade_eprop_cell_attribute_finalize (GObject *object)
 {
   /* Chain up */
   GObjectClass *parent_class =
@@ -432,12 +437,22 @@ GLADE_MAKE_EPROP (GladeEPropCellAttribute, glade_eprop_cell_attribute)
 static GladeWidget *
 glade_cell_renderer_parent_get_model (GladeWidget *widget)
 {
-  GtkTreeModel *real_model = NULL;
+  GtkTreeModel *model = NULL;
   
-  glade_widget_property_get (widget, "model", &real_model);
-  
-  if (real_model)
-    return glade_widget_get_from_gobject (real_model);
+  glade_widget_property_get (widget, "model", &model);
+
+  do
+    {
+      if (GTK_IS_TREE_MODEL_SORT (model))
+        model = gtk_tree_model_sort_get_model (GTK_TREE_MODEL_SORT (model));
+      else if (GTK_IS_TREE_MODEL_FILTER (model))
+        model = gtk_tree_model_filter_get_model (GTK_TREE_MODEL_FILTER (model));
+      else
+        break;
+    } while (model);
+
+  if (model)
+    return glade_widget_get_from_gobject (model);
 
   return NULL;
 }

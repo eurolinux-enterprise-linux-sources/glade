@@ -56,6 +56,11 @@ struct _GladeWidgetClass
   void   (* glade_reserved8)   (void);
 };
 
+/* Nameless widgets in fact have a name, except
+ * that they are prefixed with this prefix
+ */
+#define GLADE_UNNAMED_PREFIX   "__glade_unnamed_"
+
 #define IS_GLADE_WIDGET_EVENT(event)		 \
 	((event) == GDK_BUTTON_PRESS ||		 \
 	 (event) == GDK_BUTTON_RELEASE ||	 \
@@ -216,7 +221,15 @@ gchar                  *glade_widget_generate_path_name     (GladeWidget      *w
 gboolean                glade_widget_is_ancestor            (GladeWidget      *widget,
 							     GladeWidget      *ancestor);
 
+G_DEPRECATED
+gboolean                glade_widget_depends                (GladeWidget      *widget,
+							     GladeWidget      *other);
+
 GdkDevice              *glade_widget_get_device_from_event  (GdkEvent *event);
+
+void                    glade_widget_ensure_name            (GladeWidget      *widget,
+							     GladeProject     *project,
+							     gboolean          use_command);
 
 /*******************************************************************************
                       Project, object property references
@@ -229,6 +242,7 @@ void                    glade_widget_remove_prop_ref        (GladeWidget      *w
 							     GladeProperty    *property);
 
 GList                  *glade_widget_list_prop_refs         (GladeWidget      *widget);
+gboolean                glade_widget_has_prop_refs          (GladeWidget      *widget);
 
 GladeProperty          *glade_widget_get_parentless_widget_ref (GladeWidget  *widget);
 
@@ -336,6 +350,13 @@ void                    glade_widget_set_name		    (GladeWidget      *widget,
 							     const gchar      *name);
  
 G_CONST_RETURN gchar   *glade_widget_get_name               (GladeWidget      *widget);
+G_CONST_RETURN gchar   *glade_widget_get_display_name       (GladeWidget      *widget);
+gboolean                glade_widget_has_name               (GladeWidget      *widget);
+
+void                    glade_widget_set_is_composite       (GladeWidget      *widget,
+							     gboolean          composite);
+
+gboolean                glade_widget_get_is_composite       (GladeWidget      *widget);
 
 void                    glade_widget_set_internal	    (GladeWidget      *widget,
 							     const gchar      *internal);
@@ -370,6 +391,7 @@ void                    glade_widget_push_superuser         (void);
  
 void                    glade_widget_pop_superuser          (void);
 
+void                    glade_widget_verify                 (GladeWidget      *widget);
 void                    glade_widget_set_support_warning    (GladeWidget      *widget,
 							     const gchar      *warning);
 G_CONST_RETURN gchar   *glade_widget_support_warning        (GladeWidget      *widget);

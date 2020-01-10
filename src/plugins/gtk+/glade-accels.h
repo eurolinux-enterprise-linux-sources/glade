@@ -15,9 +15,6 @@ G_BEGIN_DECLS
 #define GLADE_TAG_ACCEL_MODIFIERS   "modifiers"
 #define GLADE_TAG_ACCEL_SIGNAL      "signal"
 
-#define GLADE_TAG_ACCEL_GROUPS "accel-groups"
-#define GLADE_TAG_ACCEL_GROUP  "group"
-
 
 typedef struct _GladeKey                GladeKey;
 typedef struct _GladeAccelInfo          GladeAccelInfo;
@@ -53,6 +50,15 @@ GladeAccelInfo *glade_accel_read           (GladeXmlNode     *node,
 GladeXmlNode   *glade_accel_write          (GladeAccelInfo   *accel_info,
 					    GladeXmlContext  *context,
 					    gboolean          write_signal);
+
+
+void         glade_gtk_write_accels        (GladeWidget      *widget,
+					    GladeXmlContext  *context,
+					    GladeXmlNode     *node,
+					    gboolean          write_signal);
+void         glade_gtk_read_accels         (GladeWidget      *widget,
+					    GladeXmlNode     *node,
+					    gboolean          require_signal);
 
 G_END_DECLS
 

@@ -25,8 +25,10 @@
 #include <gladeui/glade-widget-adaptor.h>
 #include <gladeui/glade-widget.h>
 #include <gladeui/glade-property-class.h>
+#include <gladeui/glade-property-shell.h>
 #include <gladeui/glade-property.h>
 #include <gladeui/glade-signal-class.h>
+#include <gladeui/glade-signal-model.h>
 #include <gladeui/glade-signal.h>
 #include <gladeui/glade-project.h>
 #include <gladeui/glade-app.h>
@@ -34,6 +36,7 @@
 #include <gladeui/glade-command.h>
 #include <gladeui/glade-design-view.h>
 #include <gladeui/glade-editor.h>
+#include <gladeui/glade-editor-skeleton.h>
 #include <gladeui/glade-editor-property.h>
 #include <gladeui/glade-palette.h>
 #include <gladeui/glade-clipboard.h>
@@ -46,5 +49,6 @@
 #include <gladeui/glade-displayable-values.h>
 #include <gladeui/glade-cell-renderer-icon.h>
 #include <gladeui/glade-cursor.h>
+#include <gladeui/glade-debug.h>
 
 #endif /* __GLADE_H__ */

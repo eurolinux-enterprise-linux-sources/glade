@@ -66,7 +66,7 @@ struct _GladeCommandClass
 GType                 glade_command_get_type             (void);
 
 void                  glade_command_push_group           (const gchar       *fmt,
-							  ...);
+							  ...) G_GNUC_PRINTF (1, 2);
 void                  glade_command_pop_group            (void);
 gint                  glade_command_get_group_depth      (void);
 
@@ -79,16 +79,37 @@ gboolean              glade_command_unifies              (GladeCommand      *com
 void                  glade_command_collapse             (GladeCommand      *command,
 							  GladeCommand      *other);
 
+/************************ project ******************************/
+void           glade_command_set_project_target  (GladeProject *project,
+						  const gchar  *catalog,
+						  gint          major,
+						  gint          minor);
+
+void           glade_command_set_project_domain  (GladeProject *project,     
+					          const gchar  *domain);
+
+void           glade_command_set_project_template(GladeProject *project,     
+					          GladeWidget  *widget);
+
+void           glade_command_set_project_license (GladeProject *project,
+                                                  const gchar  *license);
+
+void           glade_command_set_project_resource_path (GladeProject *project,
+                                                        const gchar  *path);
+
 /************************** properties *********************************/
 
-void           glade_command_set_property        (GladeProperty *property,     
+void           glade_command_set_property_enabled(GladeProperty *property,
+					          gboolean       enabled);
+
+void           glade_command_set_property        (GladeProperty *property,
 					          ...);
 
-void           glade_command_set_property_value  (GladeProperty *property,     
+void           glade_command_set_property_value  (GladeProperty *property,
 						  const GValue  *value);
 
-void           glade_command_set_properties      (GladeProperty *property, 
-					          const GValue  *old_value, 
+void           glade_command_set_properties      (GladeProperty *property,
+					          const GValue  *old_value,
 					          const GValue  *new_value,
 						  ...);
 

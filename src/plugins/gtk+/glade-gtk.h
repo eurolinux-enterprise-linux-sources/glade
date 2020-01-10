@@ -27,12 +27,9 @@
 
 #include <glib/gi18n-lib.h>
 
-G_BEGIN_DECLS
+#include <gladeui/glade-widget-adaptor.h>
 
 /* --------------------------------- Constants ------------------------------ */
-
-#define FIXED_DEFAULT_CHILD_WIDTH  100
-#define FIXED_DEFAULT_CHILD_HEIGHT 60
 
 #define MNEMONIC_INSENSITIVE_MSG   _("This property does not apply unless Use Underline is set.")
 #define NOT_SELECTED_MSG           _("Property not selected")
@@ -41,6 +38,9 @@ G_BEGIN_DECLS
 
 #define ONLY_THIS_GOES_IN_THAT_MSG _("Only objects of type %s can be added to objects of type %s.")
 
-G_END_DECLS
+#define ACTION_ACCEL_INSENSITIVE_MSG _("The accelerator can only be set when inside an Action Group.")
+
+#define GLADE_TAG_ATTRIBUTES        "attributes"
+#define GLADE_TAG_ATTRIBUTE         "attribute"
 
 #endif /* __GLADE_GTK_H__ */

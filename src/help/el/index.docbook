@@ -118,7 +118,7 @@
     	<varlistentry>
     		<term>Γραμμή εντολών</term>
     		<listitem>
-    		<para>Για να εκκινήσετε το <application>Glade</application> από τη γραμμή εντολών, πληκτρολογήστε την ακόλουθη εντολή και στη συνέχεια πατήστε <keycap>Return</keycap>: <command>glade-3</command></para>	 
+			<para>Για να εκκινήσετε το <application>Glade</application> από τη γραμμή εντολών, πληκτρολογήστε την εντολή <command>glade</command> και στη συνέχεια πατήστε <keycap>Return</keycap>.</para>
     		</listitem>
     	</varlistentry>
     </variablelist>

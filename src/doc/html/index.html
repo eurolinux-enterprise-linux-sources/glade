@@ -2,12 +2,12 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Glade User Interface Designer Reference Manual</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
+<title>Glade User Interface Designer Reference Manual: Glade User Interface Designer Reference Manual</title>
+<meta name="generator" content="DocBook XSL Stylesheets V1.79.1">
 <meta name="description" content="This document attempts to describe how to use the Glade UI Designer core library to integrate Glade into your application and how to integrate your custom GTK+ derived widgets into the Glade UI Designer. You can always get the latest version of this document here and you should have received a copy with the glade-3 tarball.">
 <link rel="home" href="index.html" title="Glade User Interface Designer Reference Manual">
 <link rel="next" href="catalog.html" title="Part I. Adding your custom widgets">
-<meta name="generator" content="GTK-Doc V1.18 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.24 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -18,7 +18,7 @@
 <div><div class="authorgroup"><div class="author"><h3 class="author">
 <span class="firstname">Tristan</span> <span class="surname">Van Berkom</span>
 </h3></div></div></div>
-<div><p class="releaseinfo">for glade 3.15.0
+<div><p class="releaseinfo">for glade 3.20.0
 </p></div>
 <div><div class="abstract">
 <p class="title"><b>Abstract</b></p>
@@ -36,7 +36,7 @@ custom GTK+ derived widgets into the Glade UI Designer.
 </div>
 <hr>
 </div>
-<div class="toc"><dl>
+<div class="toc"><dl class="toc">
 <dt><span class="part"><a href="catalog.html">I. Adding your custom widgets</a></span></dt>
 <dd><dl>
 <dt>
@@ -51,7 +51,7 @@ Adding support for custom widgets
 </dt>
 <dt>
 <span class="refentrytitle"><a href="properties.html">Property Class Definitions</a></span><span class="refpurpose"> — 
-How to augment or define a <a class="link" href="gladeui-GladePropertyClass.html#GladePropertyClass" title="GladePropertyClass"><span class="type">GladePropertyClass</span></a>
+How to augment or define a <span class="type">GladePropertyClass</span>
     </span>
 </dt>
 <dt>
@@ -75,7 +75,7 @@ How to write and install a catalog for a python widget library
 <span class="refentrytitle"><a href="gladeui-GladeFixed.html">GladeFixed</a></span><span class="refpurpose"></span>
 </dt>
 <dt>
-<span class="refentrytitle"><a href="GladeProperty.html">GladeProperty</a></span><span class="refpurpose"> — An interface to properties on the <a class="link" href="GladeWidget.html" title="GladeWidget"><span class="type">GladeWidget</span></a>.</span>
+<span class="refentrytitle"><a href="GladeProperty.html">GladeProperty</a></span><span class="refpurpose"> — An interface to properties on the <span class="type">GladeWidget</span>.</span>
 </dt>
 <dt>
 <span class="refentrytitle"><a href="gladeui-glade-widget-adaptor.html">GladeWidgetAdaptor</a></span><span class="refpurpose"> — Adaptor base class to add runtime support for each widget class.</span>
@@ -90,7 +90,7 @@ How to write and install a catalog for a python widget library
 <span class="refentrytitle"><a href="gladeui-glade-command.html">GladeCommand</a></span><span class="refpurpose"> — An event filter to implement the Undo/Redo stack.</span>
 </dt>
 <dt>
-<span class="refentrytitle"><a href="GladeClipboard.html">GladeClipboard</a></span><span class="refpurpose"> — A list of <a class="link" href="GladeWidget.html" title="GladeWidget"><span class="type">GladeWidget</span></a> objects not in any <a class="link" href="GladeProject.html" title="GladeProject"><span class="type">GladeProject</span></a>.</span>
+<span class="refentrytitle"><a href="GladeClipboard.html">GladeClipboard</a></span><span class="refpurpose"> — A list of <span class="type">GladeWidget</span> objects not in any <span class="type">GladeProject</span>.</span>
 </dt>
 <dt>
 <span class="refentrytitle"><a href="GladeBaseEditor.html">GladeBaseEditor</a></span><span class="refpurpose"> — A customisable editor</span>
@@ -105,10 +105,10 @@ How to write and install a catalog for a python widget library
 <dt><span class="part"><a href="dockables.html">III. Dockable Glade UI Widgets</a></span></dt>
 <dd><dl>
 <dt>
-<span class="refentrytitle"><a href="gladeui-glade-editor.html">GladeEditor</a></span><span class="refpurpose"> — A Widget to edit a <a class="link" href="GladeWidget.html" title="GladeWidget"><span class="type">GladeWidget</span></a>.</span>
+<span class="refentrytitle"><a href="gladeui-glade-editor.html">GladeEditor</a></span><span class="refpurpose"> — A Widget to edit a <span class="type">GladeWidget</span>.</span>
 </dt>
 <dt>
-<span class="refentrytitle"><a href="GladeEditorProperty.html">GladeEditorProperty</a></span><span class="refpurpose"> — A generic widget to edit a <a class="link" href="GladeProperty.html" title="GladeProperty"><span class="type">GladeProperty</span></a>.</span>
+<span class="refentrytitle"><a href="GladeEditorProperty.html">GladeEditorProperty</a></span><span class="refpurpose"> — A generic widget to edit a <span class="type">GladeProperty</span>.</span>
 </dt>
 <dt>
 <span class="refentrytitle"><a href="GladePalette.html">GladePalette</a></span><span class="refpurpose"> — A widget to select a <span class="type">GladeWidgetClass</span> for addition.</span>
@@ -117,11 +117,10 @@ How to write and install a catalog for a python widget library
 <span class="refentrytitle"><a href="gladeui-GladeClipboardView.html">GladeClipboardView</a></span><span class="refpurpose"></span>
 </dt>
 <dt>
-<span class="refentrytitle"><a href="GladeInspector.html">GladeInspector</a></span><span class="refpurpose"> — A widget for inspecting objects in a <a class="link" href="GladeProject.html" title="GladeProject"><span class="type">GladeProject</span></a>.</span>
+<span class="refentrytitle"><a href="GladeInspector.html">GladeInspector</a></span><span class="refpurpose"> — A widget for inspecting objects in a <span class="type">GladeProject</span>.</span>
 </dt>
 <dt>
-<span class="refentrytitle"><a href="gladeui-GladeSignalEditor.html">GladeSignalEditor</a></span><span class="refpurpose"> — An interface to edit signals for a <a class="link" href="GladeWidget.html" title="GladeWidget"><span class="type">GladeWidget</span></a>.
-W</span>
+<span class="refentrytitle"><a href="gladeui-GladeSignalEditor.html">GladeSignalEditor</a></span><span class="refpurpose"> — An interface to edit signals for a <span class="type">GladeWidget</span>.</span>
 </dt>
 <dt>
 <span class="refentrytitle"><a href="GladeDesignView.html">GladeDesignView</a></span><span class="refpurpose"> — A widget to embed the workspace.</span>
@@ -140,7 +139,6 @@ W</span>
 </dl></div>
 </div>
 <div class="footer">
-<hr>
-          Generated by GTK-Doc V1.18</div>
+<hr>Generated by GTK-Doc V1.24</div>
 </body>
 </html>

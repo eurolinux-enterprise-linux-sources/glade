@@ -28,11 +28,13 @@ typedef enum
 gboolean          glade_util_ui_message           (GtkWidget *parent, 
 						   GladeUIMessageType type,
 						   GtkWidget *widget,
-						   const gchar *format, ...);
+						   const gchar *format,
+                                                   ...) G_GNUC_PRINTF (4, 5);
 
 void		  glade_util_flash_message	(GtkWidget *statusbar, 
 						 guint context_id,
-						 gchar *format, ...);
+						 gchar *format,
+                                                 ...) G_GNUC_PRINTF (3, 4);
 gboolean          glade_util_url_show              (const gchar *url);
 GtkWidget        *glade_util_file_dialog_new (const gchar *title,
 					      GladeProject *project,
@@ -122,6 +124,14 @@ GtkWidget        *glade_util_get_placeholder_from_pointer (GtkContainer *contain
 gboolean          glade_util_object_is_loading     (GObject *object);
 
 GdkPixbuf        *glade_utils_pointer_mode_render_icon (GladePointerMode mode, GtkIconSize size);
+
+void              glade_utils_get_pointer (GtkWidget *widget,
+					   GdkWindow *window,
+					   GdkDevice *device,
+					   gint      *x,
+					   gint      *y);
+
+
 G_END_DECLS
 
 #endif /* __GLADE_UTILS_H__ */

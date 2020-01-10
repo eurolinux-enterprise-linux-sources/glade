@@ -77,9 +77,6 @@ main (int argc, char *argv[])
   gboolean opened_project = FALSE;
   GTimer *timer = NULL;
 
-  if (!g_thread_supported ())
-    g_thread_init (NULL);
-
 #ifdef ENABLE_NLS
   setlocale (LC_ALL, "");
   bindtextdomain (GETTEXT_PACKAGE, glade_app_get_locale_dir ());
@@ -156,9 +153,6 @@ main (int argc, char *argv[])
 
   glade_setup_log_handlers ();
 
-  /* Load resources needed at initialization */
-  glade_resources_register_resource ();
-
   window = GLADE_WINDOW (glade_window_new ());
 
   if (without_devhelp == FALSE)
@@ -204,8 +198,7 @@ main (int argc, char *argv[])
   if (!opened_project)
     glade_window_new_project (window);
 
-  /* Free resources before entering the main loop */
-  glade_resources_unregister_resource ();
+  glade_window_registration_notify_user (window);
   
   gtk_main ();
 

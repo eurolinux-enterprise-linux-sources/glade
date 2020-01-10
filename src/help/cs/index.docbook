@@ -18,19 +18,9 @@
     <abstract role="description"><para>Glade je návrhář uživatelského rozhraní pro applikace GTK+.</para>
     </abstract>
 
-    <copyright lang="en"> 
-      <year>2006</year> 
-      <holder>Vincent Geddes</holder> 
-    </copyright>
-    <copyright lang="en"> 
-      <year>2004</year>
-      <year>2003</year>
-      <holder>Sun Microsystems</holder> 
-    </copyright> 
-    <copyright lang="en"> 
-      <year>2002</year><year>2000</year> 
-      <holder>Michael Vance</holder> 
-    </copyright> 
+    <copyright><year>2006</year> <holder>Vincent Geddes</holder></copyright>
+    <copyright><year>2004</year> <year>2003</year> <holder>Sun Microsystems</holder></copyright> 
+    <copyright><year>2002</year><year>2000</year> <holder>Michael Vance</holder></copyright> 
 
     <publisher> 
       <publishername>Dokumentační projekt GNOME</publishername> 
@@ -39,28 +29,9 @@
    <include xmlns="http://www.w3.org/2001/XInclude" href="legal.xml"/>
 
     <authorgroup> 
-      <author role="maintainer" lang="en"> 
-	<firstname>Vincent</firstname> 
-	<surname>Geddes</surname> 
-	<affiliation> 
-	  <orgname>GNOME Documentation Project</orgname>
-	  <address><email>vincent.geddes@gmail.com</email></address>
-	</affiliation>
-      </author> 
-      <author lang="en"> 
-        <firstname>Sun</firstname> 
-        <surname>GNOME Documentation Team</surname> 
-        <affiliation> 
-          <orgname>Sun Microsystems</orgname> 
-        </affiliation> 
-       </author> 
-       <author lang="en"> 
-         <firstname>Michael</firstname> 
-         <surname>Vance</surname> 
-         <affiliation> 
-           <orgname>GNOME Documentation Project</orgname> 
-           </affiliation> 
-       </author> 
+      <author role="maintainer"><firstname>Vincent</firstname> <surname>Geddes</surname> <affiliation> <orgname>Dokumentační projekt GNOME</orgname> <address><email>vincent.geddes@gmail.com</email></address> </affiliation></author> 
+      <author><firstname>Sun</firstname> <surname>Dokumentační tým GNOME</surname> <affiliation> <orgname>Sun Microsystems</orgname> </affiliation></author> 
+       <author><firstname>Michael</firstname> <surname>Vance</surname> <affiliation> <orgname>Dokumentační projekt GNOME</orgname> </affiliation></author> 
     </authorgroup>
 
 
@@ -78,68 +49,55 @@
 <!-- When the desktop release version changes to V3.x, the revision number of the manual changes -->
 <!-- to V3.0, and so on. -->  
     <revhistory>
-        <revision lang="en"> 
-		<revnumber>Glade Manual 3.0</revnumber> 
-		<date>5 December 2006</date>
-		<revdescription> 
-	  		<para role="author" lang="en">Vincent Geddes</para>
-	  		<para role="publisher" lang="en">GNOME Documentation Project</para>
-		</revdescription> 
-        </revision>
-        <revision lang="en"> 
-                <revnumber>Glade Manual 2.1;</revnumber> 
-                <date>17 June 2004</date> 
-                <revdescription> 
-                        <para role="author" lang="en">Sun GNOME Documentation Team</para>
-                        <para role="publisher" lang="en">GNOME Documentation Project</para>
-                </revdescription> 
-        </revision>
-        <revision lang="en"> 
-                <revnumber>Glade User Manual 2.0</revnumber> 
-                <date>25 February 2004</date> 
-                <revdescription> 
-                        <para role="author" lang="en">Sun GNOME Documentation Team</para>
-                        <para role="publisher" lang="en">GNOME Documentation Project</para>
-                </revdescription> 
-        </revision>             
-        <revision lang="en"> 
-                <revnumber>Glade User Manual 1.2</revnumber> 
-                <date>10 Feb 2004</date> 
-                <revdescription> 
-                        <para role="author" lang="en">Sun GNOME Documentation Team</para>
-                        <para role="publisher" lang="en">GNOME Documentation Project</para>
-                </revdescription> 
-        </revision>  
-        <revision lang="en"> 
-                <revnumber>Glade User Manual 1.1</revnumber> 
-                <date>30 Mar 2002</date> 
-                <revdescription> 
-                        <para role="author" lang="en"> Michael Vance</para>
-                        <para role="publisher" lang="en">GNOME Documentation Project</para>
-                </revdescription> 
-        </revision> 
-        <revision lang="en"> 
-                <revnumber>Glade User Manual 1.0</revnumber> 
-                <date>11 May 2000</date> 
-                <revdescription> 
-                        <para role="author" lang="en">Michael Vance</para>
-                        <para role="publisher" lang="en">GNOME Documentation Project</para>
-                </revdescription> 
-        </revision> 
+        <revision><revnumber>Příručka 3.0 k aplikaci Glade</revnumber> <date>5. prosince 2006</date> <revdescription> 
+	  		<para role="author">Vincent Geddes</para>
+	  		<para role="publisher">Dokumentační projekt GNOME</para>
+		</revdescription></revision>
+        <revision><revnumber>Příručka 2.1 k aplikaci Glade</revnumber> <date>17. června 2004</date> <revdescription> 
+                        <para role="author">Dokumentační tým GNOME firmy Sun</para>
+                        <para role="publisher">Dokumentační projekt GNOME</para>
+                </revdescription></revision>
+        <revision><revnumber>Příručka 2.0 k aplikaci Glade</revnumber> <date>25. února 2004</date> <revdescription> 
+                        <para role="author">Dokumentační tým GNOME firmy Sun</para>
+                        <para role="publisher">Dokumentační projekt GNOME</para>
+                </revdescription></revision>             
+        <revision><revnumber>Příručka 1.2 k aplikaci Glade</revnumber> <date>10. února 2004</date> <revdescription> 
+                        <para role="author">Dokumentační tým GNOME firmy Sun</para>
+                        <para role="publisher">Dokumentační projekt GNOME</para>
+                </revdescription></revision>  
+        <revision><revnumber>Příručka 1.1 k aplikaci Glade</revnumber> <date>30. března 2002</date> <revdescription> 
+                        <para role="author">Michael Vance</para>
+                        <para role="publisher">Dokumentační projekt GNOME</para>
+                </revdescription></revision> 
+        <revision><revnumber>Příručka 1.0 k aplikaci Glade</revnumber> <date>11. května 2000</date> <revdescription> 
+                        <para role="author">Michael Vance</para>
+                        <para role="publisher">Dokumentační projekt GNOME</para>
+                </revdescription></revision> 
     </revhistory> 
 
     <releaseinfo>Tato příručka popisuje aplikaci Glade ve verzi 3.1.0.</releaseinfo> 
     <legalnotice> 
       <title>Ohlasy</title> 
-      <para lang="en">To report a bug or make a suggestion regarding the Glade application or
-      this manual, follow the directions in the <ulink url="help:gnome-feedback" type="help">GNOME Feedback Page</ulink>.
-      </para>
+      <para>Pokud chcete oznámit chybu nebo navrhnout vylepšení vztahující se k aplikaci Glade nebo k této příručce, postupujte dle instrukcí na <ulink url="help:gnome-feedback" type="help">stránce s ohlasy ke GNOME</ulink>.</para>
 <!-- Translators may also add here feedback address for translations -->
     </legalnotice> 
+  
+    <othercredit class="translator">
+      <personname>
+        <firstname>Marek Černocký</firstname>
+      </personname>
+      <email>marek@manet.cz</email>
+    </othercredit>
+    <copyright>
+      
+        <year>2013</year>
+      
+      <holder>Marek Černocký</holder>
+    </copyright>
   </articleinfo> 
 
-    <indexterm lang="en"><primary>glade</primary></indexterm>
-    <indexterm lang="en"><primary>user interface designer</primary></indexterm>
+    <indexterm><primary>glade</primary></indexterm>
+    <indexterm><primary>návrhář uživatelského rozhraní</primary></indexterm>
 
 
 <!-- ============= Document Body ============================= -->
@@ -167,17 +125,13 @@
     	<varlistentry>
     		<term>Nabídka <guimenu>Aplikace</guimenu></term>
     		<listitem>
-    		<para lang="en">Choose 
-    		<menuchoice>
-    		<guisubmenu>Programming</guisubmenu>
-    		<guimenuitem>Glade Interface Designer</guimenuitem>
-    		</menuchoice>. </para>
+    		<para>Zvolte <menuchoice><guisubmenu>Programování</guisubmenu> <guimenuitem>Návrhář rozhraní Glade</guimenuitem></menuchoice>.</para>
     		</listitem>
     	</varlistentry>
     	<varlistentry>
     		<term>Příkazový řádek</term>
     		<listitem>
-    		<para>Pokud chcete aplikaci <application>Glade</application> spustit z příkazové řádky, zadejte následující příkaz a zmáčkněte <keycap>Return</keycap>: <command>glade-3</command></para>	 
+			<para>Pokud chcete aplikaci <application>Glade</application> spustit z příkazové řádky, zadejte <command>glade</command> a zmáčkněte <keycap>Enter</keycap></para>
     		</listitem>
     	</varlistentry>
     </variablelist>
@@ -190,10 +144,7 @@
         <figure id="main-window-fig"> 
           <title>Okno aplikace <application>Glade</application></title> 
             <screenshot> 
-              <mediaobject lang="en">
-                <imageobject><imagedata fileref="figures/main-window.png" format="PNG"/></imageobject>
-                <textobject><phrase>Shows the<application>Glade</application> window.</phrase></textobject> 
-              </mediaobject> 
+              <mediaobject><imageobject><imagedata fileref="figures/main-window.png" format="PNG"/></imageobject> <textobject><phrase>Ukazuje okno aplikace <application>Glade</application>.</phrase></textobject></mediaobject> 
             </screenshot> 
         </figure>
         
@@ -262,7 +213,7 @@
 		<itemizedlist> 
 		  <listitem><para>Jestliže chcete uložit změny do stávajícího souboru, zvolte <menuchoice><guimenu>Soubor</guimenu><guimenuitem>Uložit</guimenuitem></menuchoice>.</para>
 		  </listitem>
-		  <listitem><para lang="en">To save a new project file or to save an existing project file under a new filename, choose <menuchoice> <guimenu>File</guimenu> <guimenuitem>Save As</guimenuitem> </menuchoice>. Enter a name for the project file in the <guilabel>Save As</guilabel> dialog, then click <guibutton>Save</guibutton>. </para>
+		  <listitem><para>Jestliže chcete uložit nový projekt nebo uložit stávající projekt pod novým názvem, zvolte <menuchoice><guimenu>Soubor</guimenu> <guimenuitem>Uložit jako</guimenuitem></menuchoice>. V dialogovém okně <guilabel>Uložení jako</guilabel> zadejte název pro soubor s projektem a klikněte na <guibutton>Uložit</guibutton>.</para>
 		  </listitem>
 		</itemizedlist>
 	 </sect2>
@@ -321,50 +272,19 @@
 <para>Až máte vytvořené všechny boxy, které požadujete, můžete do nich přidávat konkrétní ovládací prvky jako popisy, tlačítka a další pokročilejší ovládací prvky. Poznamenejme, že aplikace <application>Glade</application> provede sbalení (pack) ovládacího prvku do rozvržení, čímž vám ušetří nudnou práci. Díky boxům mohou okna měnit velikost tak, aby vyhovovala velikosti popisů pro různé jazyky, do kterých je aplikace lokalizovaná.</para></sect2>
          <sect2 id="place-widgets-clipboard"> 
                 <title>Umístění ovládacího prvku do schárnky</title> 
-                <para lang="en">
-                  To remove a widget from a parent and place the widget on
-the clipboard,
-                  select the widget then choose 
-                  <menuchoice> 
-                         <guimenu>Edit</guimenu> 
-                         <guisubmenu>Cut</guisubmenu> 
-                  </menuchoice>. 
-                </para>
+                <para>Volbou <menuchoice><guimenu>Upravit</guimenu> <guisubmenu>Vyjmout</guisubmenu></menuchoice> vybraný ovládací prvek odeberete z rodičovského ovládacího prvku a umístíte jej do schránky.</para>
          </sect2> 
          <sect2 id="copy-widget-clipboard"> 
                 <title>Zkopírování ovládacího prvku do schárnky</title> 
-                <para lang="en">
-                  To copy a widget to the clipboard, select the widget then
-choose 
-                  <menuchoice> 
-                         <guimenu>Edit</guimenu> 
-                         <guisubmenu>Copy</guisubmenu> 
-                  </menuchoice>. The original widget remains attached to
-the parent. 
-                </para>
+                <para>Pokud chcete zkopírovat ovládací prvek do schránky, vyberte jej a zvolte <menuchoice><guimenu>Upravit</guimenu> <guisubmenu>Kopírovat</guisubmenu></menuchoice>. Originál zůstane vložený v rodičovském ovládacím prvku.</para>
          </sect2> 
          <sect2 id="paste-widget-clipboard"> 
                 <title>Vložení ovládacího prvku ze schránky do vašeho projektu</title> 
-                <para lang="en">
-                  To paste a widget that exists on the clipboard into your
-project,
-                  choose 
-                  <menuchoice> 
-                         <guimenu>Edit</guimenu> 
-                         <guisubmenu>Paste</guisubmenu> 
-                  </menuchoice>.</para><para>Všechny ovládací prvky musí mít v aplikaci <application>Glade</application> jedinečný název. V případě, že ovládací prvek vyjmete a opět ho do svého projektu vložíte, zachovají si dotyčný ovládací prvek a všichni jeho potomci původní název. Pokud jste jej ale do schránky nakopírovali nebo jej vložíte do svého projektu vícekrát, vygeneruje aplikace pro kopie ovládacího prvku nové názvy.</para>
+                <para>Vložit ovládací prvek, který je umístěný ve schránce, do vašeho projektu můžete zvolením <menuchoice><guimenu>Upravit</guimenu> <guisubmenu>Vložit</guisubmenu></menuchoice>.</para><para>Všechny ovládací prvky musí mít v aplikaci <application>Glade</application> jedinečný název. V případě, že ovládací prvek vyjmete a opět ho do svého projektu vložíte, zachovají si dotyčný ovládací prvek a všichni jeho potomci původní název. Pokud jste jej ale do schránky nakopírovali nebo jej vložíte do svého projektu vícekrát, vygeneruje aplikace pro kopie ovládacího prvku nové názvy.</para>
          </sect2> 
          <sect2 id="delete-widget"> 
                 <title>Smazání ovládacího prvku</title> 
-                <para lang="en">To delete a widget from the parent without
-                  moving the widget to the clipboard, 
-                                select the widget then 
-                                choose 
-                                <menuchoice> 
-                                  <guimenu>Edit</guimenu> 
-                                  <guisubmenu>Delete</guisubmenu> 
-                                </menuchoice>. 
-                         </para>
+                <para>Jestliže chcete ovládací prvek z rodičovského prvku odstranit (aniž byste jej vkládali do schránky), tak daný prvek vyberte a zvolte <menuchoice><guimenu>Upravit</guimenu> <guisubmenu>Smazat</guisubmenu></menuchoice>.</para>
                  
          </sect2> 
          
@@ -383,12 +303,7 @@ project,
 
     <para>Dalším vynikajícím zdrojem informací jsou poštovní konference <ulink url="http://lists.ximian.com/mailman/listinfo/glade-users" type="http">uživatelů</ulink> a <ulink url="http://lists.ximian.com/mailman/listinfo/glade-devel" type="http">vývojářů</ulink> Glade. Můžete se přihlásit k odběru těchto konferencí a nebo si jen procházet jejich archivy, které rovněž najdete pod uvedenými odkazy.</para>
 
-    <para lang="en"> This program is distributed under the terms of the GNU
-      General Public license as published by the Free Software
-      Foundation; either version 2 of the License, or (at your option)
-      any later version. A copy of this license can be found at this
-      <ulink url="help:gpl" type="help">link</ulink>, or in the file
-      COPYING included with the source code of this program. </para>
+    <para>Tento program je šířen podle ustanovení GNU General Public License, vydávaném Free Software Foundation; a to buď verze 2 této licence anebo (podle vlastního uvážení) kterékoliv pozdější verze. Kopii této licence naleznete pod tímto <ulink url="help:gpl" type="help">odkazem</ulink> nebo v souboru COPYING přiloženém ke zdrojovým kódům tohoto programu. </para>
   </sect1> 
 
 </article>

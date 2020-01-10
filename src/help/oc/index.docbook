@@ -186,8 +186,8 @@
     	<varlistentry>
     		<term>Linha de comanda</term>
     		<listitem>
-    		<para lang="en">To start <application>Glade</application> from a command line, type the following command, 
-    		then press <keycap>Return</keycap>: <command>glade-3</command></para>	 
+			<para lang="en">To start <application>Glade</application> from a command line, type <command>glade</command>
+			and then press <keycap>Return</keycap>.</para>
     		</listitem>
     	</varlistentry>
     </variablelist>

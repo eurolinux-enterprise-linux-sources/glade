@@ -176,6 +176,8 @@ struct _GladePropertyClass
 				 * in the project
 				 */
 
+  guint deprecated : 1; /* True if this property is deprecated */
+
   gdouble weight;	/* This will determine the position of this property in 
 			 * the editor.
 			 */
@@ -229,9 +231,10 @@ glade_property_class_new (GladeWidgetAdaptor *adaptor,
   property_class->weight = -1.0;
   property_class->parentless_widget = FALSE;
 
-  /* Initialize them to the base version */
+  /* Initialize property versions & deprecated to adaptor */
   property_class->version_since_major = GWA_VERSION_SINCE_MAJOR (adaptor);
   property_class->version_since_minor = GWA_VERSION_SINCE_MINOR (adaptor);
+  property_class->deprecated          = GWA_DEPRECATED (adaptor);
 
   return property_class;
 }
@@ -709,18 +712,8 @@ glade_property_class_make_object_from_string (GladePropertyClass *
 
       if ((pixbuf = gdk_pixbuf_new_from_file (fullpath, NULL)) == NULL)
         {
-          static GdkPixbuf *icon = NULL;
-
-          if (icon == NULL)
-            {
-              GtkWidget *widget = gtk_label_new ("");
-              icon = gtk_widget_render_icon (widget,
-                                             GTK_STOCK_MISSING_IMAGE,
-                                             GTK_ICON_SIZE_MENU, NULL);
-              gtk_widget_destroy (widget);
-            }
-
-          pixbuf = gdk_pixbuf_copy (icon);
+          pixbuf = gtk_icon_theme_load_icon (gtk_icon_theme_get_default (),
+                                             "image-missing", 22, 0, NULL);
         }
 
       if (pixbuf)
@@ -803,9 +796,14 @@ glade_property_class_make_gvalue_from_string (GladePropertyClass *property_class
     }
   else if (G_IS_PARAM_SPEC_VALUE_ARRAY (property_class->pspec))
     {
-      GValueArray *value_array = g_value_array_new (0);
+      GValueArray *value_array;
       GValue str_value = { 0, };
       gint i;
+
+      /* Require deprecated code */
+      G_GNUC_BEGIN_IGNORE_DEPRECATIONS;
+      value_array = g_value_array_new (0);
+      G_GNUC_END_IGNORE_DEPRECATIONS;
 
       g_value_init (&str_value, G_TYPE_STRING);
       strv = g_strsplit (string, "\n", 0);
@@ -813,7 +811,10 @@ glade_property_class_make_gvalue_from_string (GladePropertyClass *property_class
       for (i = 0; strv[i]; i++)
         {
           g_value_set_static_string (&str_value, strv[i]);
+
+	  G_GNUC_BEGIN_IGNORE_DEPRECATIONS;
           value_array = g_value_array_append (value_array, &str_value);
+	  G_GNUC_END_IGNORE_DEPRECATIONS;
         }
       g_value_take_boxed (value, value_array);
       g_strfreev (strv);
@@ -1478,6 +1479,13 @@ glade_property_class_since_minor (GladePropertyClass  *property_class)
   return property_class->version_since_minor;
 }
 
+gboolean
+glade_property_class_deprecated (GladePropertyClass  *property_class)
+{
+  g_return_val_if_fail (GLADE_IS_PROPERTY_CLASS (property_class), FALSE);
+
+  return property_class->deprecated;
+}
 
 G_CONST_RETURN gchar *
 glade_property_class_id (GladePropertyClass  *property_class)
@@ -2087,6 +2095,16 @@ glade_property_class_update_from_node (GladeXmlNode * node,
   klass->parentless_widget =
       glade_xml_get_property_boolean (node, GLADE_TAG_PARENTLESS_WIDGET,
                                       klass->parentless_widget);
+
+
+  glade_xml_get_property_version (node, GLADE_TAG_VERSION_SINCE,
+				  &klass->version_since_major, 
+				  &klass->version_since_minor);
+
+  klass->deprecated =
+    glade_xml_get_property_boolean (node,
+				    GLADE_TAG_DEPRECATED,
+				    klass->deprecated);
 
 
   if ((buf = glade_xml_get_property_string

@@ -3,7 +3,7 @@ dnl Process this file with autoconf to produce a configure script.
 AC_PREREQ(2.52)
 
 m4_define(glade_major_version, 3)
-m4_define(glade_minor_version, 15)
+m4_define(glade_minor_version, 20)
 m4_define(glade_micro_version, 0)
 m4_define(glade_version, glade_major_version.glade_minor_version.glade_micro_version)
 
@@ -44,6 +44,7 @@ LT_INIT([dlopen win32-dll disable-static])
 
 AC_PATH_PROG(GLIB_COMPILE_RESOURCES, glib-compile-resources)
 AC_PATH_PROG(GLIB_GENMARSHAL, glib-genmarshal)
+AC_PATH_PROG(GLIB_MKENUMS, glib-mkenums)
 AC_PATH_PROG(DLLTOOL, dlltool)
 
 # If the source code has changed at all, increment GLADE_REVISION
@@ -53,8 +54,8 @@ AC_PATH_PROG(DLLTOOL, dlltool)
 # Reference: http://www.gnu.org/software/libtool/manual/libtool.html#Versioning
 
 GLADE_REVISION=0
-GLADE_CURRENT=5
-GLADE_AGE=1
+GLADE_CURRENT=9
+GLADE_AGE=3
 GLADE_CURRENT_MINUS_AGE=`expr $GLADE_CURRENT - $GLADE_AGE`
 AC_SUBST(GLADE_REVISION)
 AC_SUBST(GLADE_CURRENT)
@@ -89,13 +90,28 @@ if test "x$GCC" = "xyes"; then
 fi
 AC_SUBST(PLUGINS_WARN_CFLAGS)
 
+
+dnl ================================================================
+dnl Collect some arguments.
+dnl ================================================================
+AC_ARG_ENABLE(debug,
+              [AC_HELP_STRING([--enable-debug],
+                              [enable debug build [default=no]])],,
+              [enable_debug="no"])
+
+AM_CONDITIONAL([GLADE_DEBUG],[test "x$enable_debug" = "xyes"])
+
+if test "x$enable_debug" = "xyes"; then
+   GLADE_DEBUG_FLAGS=-DGLADE_ENABLE_DEBUG
+else
+   GLADE_DEBUG_FLAGS=
+fi
+AC_SUBST(GLADE_DEBUG_FLAGS)
+
 dnl ================================================================
 dnl Gettext stuff.
 dnl ================================================================
 IT_PROG_INTLTOOL([0.41.0])
-
-AM_GNU_GETTEXT_VERSION([0.17])
-AM_GNU_GETTEXT([external])
 
 GETTEXT_PACKAGE=AC_PACKAGE_NAME
 AC_SUBST(GETTEXT_PACKAGE)
@@ -124,12 +140,12 @@ GTK_DOC_CHECK([1.13],[--flavour no-tmpl])
 dnl ================================================================
 dnl Check for introspection
 dnl ================================================================
-GOBJECT_INTROSPECTION_CHECK([0.10.1])
+GOBJECT_INTROSPECTION_CHECK([1.32.0])
 
 dnl ================================================================
 dnl Check for gtk+
 dnl ================================================================
-GTK_REQUIRED=3.6.0
+GTK_REQUIRED=3.20.0
 PKG_CHECK_MODULES([GTK],[
   gtk+-3.0 >= $GTK_REQUIRED
   gmodule-2.0
@@ -139,6 +155,8 @@ PKG_CHECK_MODULES([GTK],[
 PKG_CHECK_MODULES([GMODULE_EXPORT],[
   gmodule-export-2.0
 ])
+
+LT_LIB_M
 
 dnl ================================================================
 dnl Check for the unix print widgets in gtk+
@@ -150,10 +168,10 @@ AM_CONDITIONAL(HAVE_GTK_UNIX_PRINT, test x"$have_unix_print" = "xyes")
 dnl ================================================================
 dnl Python for optional python dev libs
 dnl ================================================================
-PYGOBJECT_REQS=2.90.4
-PYGOBJECT_REQUIRED_MAJOR=2
-PYGOBJECT_REQUIRED_MINOR=90
-PYGOBJECT_REQUIRED_MICRO=4
+PYGOBJECT_REQUIRED_MAJOR=3
+PYGOBJECT_REQUIRED_MINOR=8
+PYGOBJECT_REQUIRED_MICRO=0
+PYGOBJECT_REQS=$PYGOBJECT_REQUIRED_MAJOR.$PYGOBJECT_REQUIRED_MINOR.$PYGOBJECT_REQUIRED_MICRO
 
 AC_ARG_ENABLE(python,
     AS_HELP_STRING([--disable-python], [disable python catalog]),
@@ -162,7 +180,7 @@ AC_ARG_ENABLE(python,
 if test x"$check_python" = x"yes"; then
   have_python=yes
 
-  PKG_CHECK_MODULES([PYGOBJECT],[pygobject-3.0 >= ${PYGOBJECT_REQUIRED_MAJOR}.${PYGOBJECT_REQUIRED_MINOR}.${PYGOBJECT_REQUIRED_MICRO}],[have_pygobject=yes],[have_pygobject=no])
+  PKG_CHECK_MODULES([PYGOBJECT],[pygobject-3.0 >= $PYGOBJECT_REQS],[have_pygobject=yes],[have_pygobject=no])
 
   AM_CHECK_PYTHON_HEADERS(, [have_python_headers=no])
   AM_CHECK_PYTHON_LIBS(, [have_python_lib=no])
@@ -194,6 +212,22 @@ AM_CONDITIONAL(BUILD_PYTHON, test x"$have_python" = "xyes")
 # ==================================================================
 
 YELP_HELP_INIT
+
+# ==================================================================
+# Man pages (requires xsltproc)
+# ==================================================================
+
+AC_ARG_ENABLE(man-pages,
+              AC_HELP_STRING([--enable-man-pages],
+                             [build manual pages]),,
+              enable_man_pages=yes)
+if test x$enable_man_pages = xyes; then
+   AC_PATH_PROG([XSLTPROC], [xsltproc])
+   if test x$XSLTPROC = x; then
+      AC_MSG_ERROR([xsltproc is required to build manual pages])
+   fi
+fi
+AM_CONDITIONAL(BUILD_MAN_PAGES, test x$enable_man_pages = xyes)
 
 dnl ================================================================
 dnl Check for windows
@@ -231,7 +265,7 @@ dnl ================================================================
 _gdk_tgt=`$PKG_CONFIG --variable=targets gdk-3.0`
 AM_CONDITIONAL([GDK_TARGET_QUARTZ], [test x$_gdk_tgt = xquartz])
 if test "x$_gdk_tgt" = xquartz; then 
-   PKG_CHECK_MODULES(GTK_MAC, gtk-mac-integration)
+   PKG_CHECK_MODULES(GTK_MAC, gtk-mac-integration-gtk3)
 
    GTK_MAC_BUNDLE_FLAG=
 
@@ -251,13 +285,24 @@ if test "x$_gdk_tgt" = xquartz; then
 fi
 
 dnl ================================================================
-dnl Check for extra functions
+dnl Enable installation of Gladeui catalog
 dnl ================================================================
-AC_CHECK_FUNCS(gtk_builder_add_from_resource)
+AC_ARG_ENABLE([gladeui],
+	AS_HELP_STRING([--enable-gladeui],
+	[Enable installation of the Gladeui catalog]),
+	[enable_gladeui="$enableval"],[enable_gladeui="no"])
 
+AM_CONDITIONAL(BUILD_GLADEUI, test x"$enable_gladeui" = "xyes")
 
-AC_SUBST([GLADE_PREFIX])
-
+dnl ================================================================
+dnl Testing environment
+dnl ================================================================
+#
+# Do not redefine pixmap dir as it does not work if not inside a proper directory structure
+# GLADE_PIXMAP_DIR=$(top_srcdir)/data/icons
+#
+GLADE_TEST_ENVIRONMENT='GLADE_TESTING=1 GLADE_CATALOG_SEARCH_PATH=$(top_srcdir)/plugins/gtk+ GLADE_MODULE_SEARCH_PATH=$(top_builddir)/plugins/gtk+/.libs'
+AC_SUBST(GLADE_TEST_ENVIRONMENT)
 
 AC_SUBST([AM_CPPFLAGS])
 AC_SUBST([AM_CFLAGS])
@@ -283,6 +328,8 @@ data/icons/hicolor/48x48/Makefile
 data/icons/hicolor/48x48/apps/Makefile
 data/icons/hicolor/256x256/Makefile
 data/icons/hicolor/256x256/apps/Makefile
+data/icons/hicolor/scalable/Makefile
+data/icons/hicolor/scalable/apps/Makefile
 gladeui/Makefile
 gladeui/gladeui.rc
 gladeui/glade-previewer.rc
@@ -294,10 +341,13 @@ plugins/gtk+/icons/Makefile
 plugins/gtk+/icons/16x16/Makefile
 plugins/gtk+/icons/22x22/Makefile
 plugins/python/Makefile
+plugins/gladeui/Makefile
 po/Makefile.in
 doc/Makefile
 doc/version.xml
 help/Makefile
+man/Makefile
+tests/Makefile
 build/mingw-w64/glade.nsi
 ])
 
@@ -309,9 +359,12 @@ Configuration:
 
 	Source code location:	 ${srcdir}
 	Compiler:		 ${CC}
+	Debug Enabled:           ${enable_debug}
 	GTK+ UNIX Print Widgets: ${have_unix_print}
 	PYTHON Widgets support:	 ${have_python}
+	Gladeui Catalog:         ${enable_gladeui}
 	Introspection Data:      ${found_introspection}
 
 	Build Reference Manual:  ${enable_gtk_doc}
+	Build Manual Pages:      ${enable_man_pages}
 "

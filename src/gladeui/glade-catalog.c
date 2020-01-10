@@ -25,6 +25,8 @@
 #include "glade.h"
 #include "glade-catalog.h"
 #include "glade-widget-adaptor.h"
+#include "glade-private.h"
+#include "glade-tsort.h"
 
 #include <string.h>
 #include <sys/types.h>
@@ -85,8 +87,8 @@ static GList *catalog_paths = NULL;
 
 static gboolean
 catalog_get_function (GladeCatalog *catalog,
-                      const gchar *symbol_name,
-                      gpointer *symbol_ptr)
+                      const gchar  *symbol_name,
+                      gpointer     *symbol_ptr)
 {
   if (catalog->module == NULL)
     catalog->module = glade_util_load_library (catalog->library);
@@ -171,6 +173,7 @@ catalog_open (const gchar *filename)
   GladeXmlContext *context;
   GladeXmlDoc *doc;
   GladeXmlNode *root;
+  gchar *name;
 
   /* get the context & root node of the catalog file */
   context = glade_xml_context_new_from_path (filename,
@@ -192,17 +195,12 @@ catalog_open (const gchar *filename)
       return NULL;
     }
 
+  if (!(name = glade_xml_get_property_string_required (root, GLADE_TAG_NAME, NULL)))
+    return NULL;
+
   catalog = catalog_allocate ();
   catalog->context = context;
-  catalog->name = glade_xml_get_property_string (root, GLADE_TAG_NAME);
-
-  if (!catalog->name)
-    {
-      g_warning ("Couldn't find required property 'name' in catalog root node");
-      catalog_destroy (catalog);
-      return NULL;
-    }
-
+  catalog->name = name;
 
   glade_xml_get_property_version (root, GLADE_TAG_VERSION,
                                   &catalog->major_version,
@@ -426,54 +424,80 @@ catalog_load (GladeCatalog *catalog)
   return;
 }
 
-static gint
-catalog_find_by_name (GladeCatalog *catalog, const gchar *name)
+static GladeCatalog *
+catalog_find_by_name (GList *catalogs, const gchar *name)
 {
-  return strcmp (catalog->name, name);
+  if (name)
+    {
+      GList *l;
+      for (l = catalogs; l; l = g_list_next (l))
+        {
+          GladeCatalog *catalog = l->data;
+          if (g_strcmp0 (catalog->name, name) == 0)
+            return catalog;
+        }
+    }
+  
+  return NULL;
+}
+
+static gint
+catalog_name_cmp (gconstpointer a, gconstpointer b)
+{
+  return (a && b) ? g_strcmp0 (GLADE_CATALOG(a)->name, GLADE_CATALOG(b)->name) : 0;
 }
 
 static GList *
-catalog_sort (GList *catalogs)
+glade_catalog_tsort (GList *catalogs, gboolean loading)
 {
-  GList *l, *node, *sorted = NULL, *sort;
-  GladeCatalog *catalog, *cat;
+  GList *l, *sorted = NULL;
+  GList *deps = NULL;
 
-  /* Add all dependant catalogs to the sorted list first */
-  for (l = catalogs; l; l = l->next)
+  /* Sort alphabetically first */
+  catalogs = g_list_sort (catalogs, catalog_name_cmp);
+
+  /* Generate dependency graph edges */
+  for (l = catalogs; l; l = g_list_next (l))
     {
-      catalog = l->data;
-      sort = NULL;
+      GladeCatalog *catalog = l->data, *dep;
 
-      /* itterate ascending through dependancy hierarchy */
-      while (catalog->dep_catalog)
-        {
-          node = g_list_find_custom
-              (catalogs, catalog->dep_catalog,
-               (GCompareFunc) catalog_find_by_name);
+      if (!catalog->dep_catalog)
+        continue;
 
-          if (!node || (cat = node->data) == NULL)
-            {
-              g_critical ("Catalog %s depends on catalog %s, not found",
-                          catalog->name, catalog->dep_catalog);
-              break;
-            }
-
-          /* Prepend to sort list */
-          if (g_list_find (sort, cat) == NULL &&
-              g_list_find (sorted, cat) == NULL)
-            sort = g_list_prepend (sort, cat);
-
-          catalog = cat;
-        }
-      sorted = g_list_concat (sorted, sort);
+      if ((dep = catalog_find_by_name ((loading) ? catalogs : loaded_catalogs,
+                                       catalog->dep_catalog)))
+        deps = _node_edge_prepend (deps, dep, catalog);
+      else
+        g_critical ("Catalog %s depends on catalog %s, not found",
+                    catalog->name, catalog->dep_catalog);
     }
 
-  /* Append all independant catalogs after */
-  for (l = catalogs; l; l = l->next)
-    if (g_list_find (sorted, l->data) == NULL)
-      sorted = g_list_append (sorted, l->data);
+  sorted = _glade_tsort (&catalogs, &deps);
 
-  g_list_free (catalogs);
+  if (deps)
+    {
+      GList *l, *cycles = NULL;
+      
+      g_warning ("Circular dependency detected loading catalogs, they will be ignored");
+
+      for (l = deps; l; l = g_list_next (l))
+        {
+          _NodeEdge *edge = l->data;
+
+          g_message ("\t%s depends on %s",
+                     GLADE_CATALOG (edge->successor)->name,
+                     GLADE_CATALOG (edge->successor)->dep_catalog);
+          
+          if (loading && !g_list_find (cycles, edge->successor))
+            cycles = g_list_prepend (cycles, edge->successor);
+        }
+
+      if (cycles)
+        g_list_free_full (cycles, (GDestroyNotify) catalog_destroy);
+
+      _node_edge_list_free (deps);
+    }
+
   return sorted;
 }
 
@@ -485,6 +509,10 @@ catalogs_from_path (GList *catalogs, const gchar *path)
   GError *error = NULL;
   const gchar *filename;
 
+  /* Silent return if the directory didn't exist */
+  if (!g_file_test (path, G_FILE_TEST_IS_DIR))
+    return catalogs;
+
   if ((dir = g_dir_open (path, 0, &error)) != NULL)
     {
       while ((filename = g_dir_read_name (dir)))
@@ -494,6 +522,19 @@ catalogs_from_path (GList *catalogs, const gchar *path)
           if (!g_str_has_suffix (filename, ".xml"))
             continue;
 
+	  /* Special case, ignore gresource files (which are present
+	   * while running tests)
+	   */
+	  if (g_str_has_suffix (filename, ".gresource.xml"))
+	    continue;
+
+	  /* If we're running in the bundle, don't ever try to load
+	   * anything except the GTK+ catalog
+	   */
+	  if (g_getenv (GLADE_ENV_BUNDLED) != NULL &&
+	      strcmp (filename, "gtk+.xml") != 0)
+	    continue;
+
           catalog_filename = g_build_filename (path, filename, NULL);
           catalog = catalog_open (catalog_filename);
           g_free (catalog_filename);
@@ -502,11 +543,10 @@ catalogs_from_path (GList *catalogs, const gchar *path)
             {
               /* Verify that we are not loading the same catalog twice !
                */
-              if (!g_list_find_custom (catalogs, catalog->name,
-                                       (GCompareFunc) catalog_find_by_name))
-                catalogs = g_list_prepend (catalogs, catalog);
-              else
+              if (catalog_find_by_name (catalogs, catalog->name))
                 catalog_destroy (catalog);
+              else
+                catalogs = g_list_prepend (catalogs, catalog);
             }
           else
             g_warning ("Unable to open the catalog file %s.\n", filename);
@@ -561,6 +601,17 @@ glade_catalog_remove_path (const gchar *path)
 }
 
 /**
+ * glade_catalog_get_extra_paths:
+ *
+ * Returns a list paths added by glade_catalog_add_path()
+ */
+const GList *
+glade_catalog_get_extra_paths (void)
+{
+  return catalog_paths;
+}
+
+/**
  * glade_catalog_load_all:
  * 
  * Loads all available catalogs in the system.
@@ -598,7 +649,8 @@ glade_catalog_load_all (void)
     }
 
   /* ... Then load catalogs from standard install directory */
-  catalogs = catalogs_from_path (catalogs, glade_app_get_catalogs_dir ());
+  if (g_getenv (GLADE_ENV_TESTING) == NULL)
+    catalogs = catalogs_from_path (catalogs, glade_app_get_catalogs_dir ());
 
   /* And then load catalogs from extra paths */
   for (l = catalog_paths; l; l = g_list_next (l))
@@ -608,7 +660,7 @@ glade_catalog_load_all (void)
    * the gtk+ catalog, but some custom toolkits may depend
    * on the gnome catalog for instance.
    */
-  catalogs = catalog_sort (catalogs);
+  catalogs = glade_catalog_tsort (catalogs, TRUE);
 
   /* After sorting, execute init function and then load */
   for (l = catalogs; l; l = g_list_next (l))
@@ -631,20 +683,22 @@ glade_catalog_load_all (void)
     {
       GladeWidgetAdaptor *adaptor = l->data;
 
-      if (glade_widget_adaptor_get_missing_icon (adaptor))
+      /* Dont print missing icons in unit tests */
+      if (glade_widget_adaptor_get_missing_icon (adaptor) &&
+	  g_getenv (GLADE_ENV_TESTING) == NULL)
         {
           if (!icon_warning)
             icon_warning = g_string_new ("Glade needs artwork; "
                                          "a default icon will be used for "
                                          "the following classes:");
 
-          g_string_append_printf (icon_warning,
-                                  "\n\t%s\tneeds an icon named '%s'",
-                                  glade_widget_adaptor_get_name (adaptor), 
+	  g_string_append_printf (icon_warning,
+				  "\n\t%s\tneeds an icon named '%s'",
+				  glade_widget_adaptor_get_name (adaptor), 
 				  glade_widget_adaptor_get_missing_icon (adaptor));
         }
-
     }
+
   g_list_free (adaptors);
 
   if (icon_warning)
@@ -793,19 +847,9 @@ glade_catalog_get_adaptors (GladeCatalog *catalog)
 gboolean
 glade_catalog_is_loaded (const gchar *name)
 {
-  GList *l;
-
   g_return_val_if_fail (name != NULL, FALSE);
   g_assert (loaded_catalogs != NULL);
-
-  for (l = loaded_catalogs; l; l = l->next)
-    {
-      GladeCatalog *catalog = GLADE_CATALOG (l->data);
-      if (strcmp (catalog->name, name) == 0)
-        return TRUE;
-    }
-
-  return FALSE;
+  return catalog_find_by_name (loaded_catalogs, name) != NULL;
 }
 
 /**
@@ -888,4 +932,21 @@ glade_widget_group_get_adaptors (GladeWidgetGroup *group)
   g_return_val_if_fail (group != NULL, NULL);
 
   return group->adaptors;
+}
+
+/* Private API */
+
+GladeCatalog *
+_glade_catalog_get_catalog (const gchar *name)
+{
+  g_return_val_if_fail (name != NULL, NULL);
+  g_assert (loaded_catalogs != NULL);
+
+  return catalog_find_by_name (loaded_catalogs, name);
+}
+
+GList *
+_glade_catalog_tsort (GList *catalogs)
+{
+  return glade_catalog_tsort (catalogs, FALSE);
 }

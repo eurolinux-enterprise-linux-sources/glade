@@ -3,25 +3,24 @@
  *                 handle free-form child placement for containers such as 
  *                 GtkFixed and GtkLayout.
  *
- * Copyright (C) 2006 The GNOME Foundation.
+ * Copyright (C) 2006, 2013 Tristan Van Berkom.
  *
  * Author(s):
  *      Tristan Van Berkom <tvb@gnome.org>
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
+ * This library is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 2.1 of
+ * the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * This library is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307,
- * USA.
+ * You should have received a copy of the GNU Lesser General Public 
+ * License along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
 #ifdef HAVE_CONFIG_H
@@ -93,8 +92,9 @@ typedef struct
 #define GRAB_BORDER_WIDTH  7
 #define GRAB_CORNER_WIDTH  7
 
-static GObjectClass *parent_class;
 static guint glade_fixed_signals[FIXED_SIGNALS];
+
+G_DEFINE_TYPE (GladeFixed, glade_fixed, GLADE_TYPE_WIDGET);
 
 /* From gtkmain.c */
 static gboolean
@@ -116,6 +116,87 @@ glade_fixed_boolean_handled_accumulator (GSignalInvocationHint * ihint,
 /*******************************************************************************
                              Static helper routines
  *******************************************************************************/
+typedef enum {
+  HEXPAND_SET_FLAG = (1 << 0),
+  VEXPAND_SET_FLAG = (1 << 1),
+  HEXPAND_FLAG = (1 << 2),
+  VEXPAND_FLAG = (1 << 3),
+} ExpandData;
+
+static void
+save_expand_data (GtkWidget *widget)
+{
+  guint    flags;
+  gboolean h_expand;
+  gboolean v_expand;
+  gboolean h_expand_set;
+  gboolean v_expand_set;
+
+  g_object_get (G_OBJECT (widget),
+		"hexpand-set", &h_expand_set,
+		"vexpand-set", &v_expand_set,
+		"hexpand", &h_expand,
+		"vexpand", &v_expand,
+		NULL);
+
+  flags = 
+    (h_expand_set ? HEXPAND_SET_FLAG : 0) |
+    (v_expand_set ? VEXPAND_SET_FLAG : 0) |
+    (h_expand ? HEXPAND_FLAG : 0) |
+    (v_expand ? VEXPAND_FLAG : 0);
+
+  g_object_set_data (G_OBJECT (widget), "glade-gtk-box-child-expand", GUINT_TO_POINTER (flags));
+}
+
+static void
+restore_expand_data (GtkWidget *widget)
+{
+  guint    flags;
+
+  flags = GPOINTER_TO_UINT (g_object_get_data (G_OBJECT (widget), "glade-gtk-box-child-expand"));
+
+  g_object_set (G_OBJECT (widget),
+		"hexpand",     ((flags & HEXPAND_FLAG) != 0),
+		"vexpand",     ((flags & VEXPAND_FLAG) != 0),
+		"hexpand-set", ((flags & HEXPAND_SET_FLAG) != 0),
+		"vexpand-set", ((flags & VEXPAND_SET_FLAG) != 0),
+		NULL);
+}
+
+static void
+expand_all_children (GladeWidget *widget)
+{
+  GList *children, *l;
+
+  children = glade_widget_get_children (widget);
+
+  for (l = children; l; l = l->next)
+    {
+      GtkWidget *child = l->data;
+
+      save_expand_data (child);
+
+      gtk_widget_set_hexpand (child, TRUE);
+      gtk_widget_set_vexpand (child, TRUE);
+    }
+}
+
+static void
+restore_all_children (GladeWidget *widget)
+{
+  GList *children, *l;
+
+  children = glade_widget_get_children (widget);
+
+  for (l = children; l; l = l->next)
+    {
+      GtkWidget *child = l->data;
+
+      restore_expand_data (child);
+    }
+}
+
+
 static GladeCursorType
 glade_fixed_get_operation (GtkWidget *widget, gint x, gint y)
 {
@@ -178,11 +259,9 @@ glade_fixed_save_state (GladeFixed *fixed, GladeWidget *child, GdkDevice *device
   widget       = GTK_WIDGET (glade_widget_get_object (GLADE_WIDGET (fixed)));
   child_widget = GTK_WIDGET (glade_widget_get_object (child));
 
-
-  gdk_window_get_device_position (gtk_widget_get_window (widget), device,
-                                  &(GLADE_FIXED (fixed)->pointer_x_origin),
-                                  &(GLADE_FIXED (fixed)->pointer_y_origin),
-                                  NULL);
+  glade_utils_get_pointer (widget, gtk_widget_get_window (widget), device,
+			   &(GLADE_FIXED (fixed)->pointer_x_origin),
+			   &(GLADE_FIXED (fixed)->pointer_y_origin));
 
   gtk_widget_translate_coordinates (child_widget, widget, 0, 0,
                                     &(fixed->child_x_origin),
@@ -348,7 +427,7 @@ glade_fixed_configure_widget (GladeFixed *fixed,
 
   widget = GTK_WIDGET (glade_widget_get_object (gwidget));
 
-  gdk_window_get_device_position (gtk_widget_get_window (widget), device, &x, &y, NULL);
+  glade_utils_get_pointer (widget, gtk_widget_get_window (widget), device, &x, &y);
 
   right = GLADE_FIXED_CURSOR_RIGHT (fixed->operation);
   left = GLADE_FIXED_CURSOR_LEFT (fixed->operation);
@@ -483,7 +562,13 @@ glade_fixed_configure_child_impl (GladeFixed *fixed,
                                   GladeWidget *child,
                                   GdkRectangle *rect)
 {
-  /* Make sure we can modify these properties */
+  /* Make sure we can modify these properties
+   *
+   * FIXME: This is inappropriate how that enabled state of properties
+   * is undoable... instead there should be some adaptor hooks to allow
+   * adding commands to the command group which adds a child to
+   * the given widget... where we can undoably override this.
+   */
   glade_widget_pack_property_set_enabled (child, fixed->x_prop, TRUE);
   glade_widget_pack_property_set_enabled (child, fixed->y_prop, TRUE);
   glade_widget_property_set_enabled (child, fixed->width_prop, TRUE);
@@ -571,6 +656,8 @@ glade_fixed_cancel_operation (GladeFixed *fixed, GladeCursorType new_operation)
                  glade_fixed_signals[CONFIGURE_END],
                  0, fixed->configuring, &handled);
 
+  restore_all_children (GLADE_WIDGET (fixed));
+
   /* Leave the machine state intact untill after
    * the user handled signal. 
    */
@@ -590,26 +677,23 @@ glade_fixed_handle_child_event (GladeFixed *fixed,
   gboolean handled = FALSE, sig_handled;
   GladeProject *project = glade_widget_get_project (GLADE_WIDGET (fixed));
   GdkWindow *window = event->any.window;
+  GtkWidget *fixed_widget, *child_widget;
+
+  fixed_widget = GTK_WIDGET (glade_widget_get_object (GLADE_WIDGET (fixed)));
+  child_widget = GTK_WIDGET (glade_widget_get_object (child));
 
   pointer_mode = glade_project_get_pointer_mode (project);
 
   if (fixed->can_resize)
     {
       gint fixed_x, fixed_y, child_x, child_y;
-      GtkWidget *fixed_widget, *child_widget;
       GdkDevice *device;
 
-      fixed_widget = GTK_WIDGET (glade_widget_get_object (GLADE_WIDGET (fixed)));
-      child_widget = GTK_WIDGET (glade_widget_get_object (child));
-
-      device = glade_widget_get_device_from_event (event);
+      device = gdk_event_get_device (event);
       
-      /* when widget->window points to a parent window, these calculations
-       * would be wrong if we based them on the GTK_WIDGET (fixed)->window,
-       * so we must always consult the event widget's window
-       */
-      gdk_window_get_device_position (gtk_widget_get_window (fixed_widget),
-                                      device, &fixed_x, &fixed_y, NULL);
+      glade_utils_get_pointer (fixed_widget,
+			       window,
+			       device, &fixed_x, &fixed_y);
 
       /* Container widgets are trustable to have widget->window occupying
        * the entire widget allocation (gtk_widget_get_pointer broken on GtkEntry).
@@ -647,10 +731,9 @@ glade_fixed_handle_child_event (GladeFixed *fixed,
         else if (fixed->configuring)
           {
             /* Need to update mouse for configures. */
-            gdk_window_get_device_position (window,
-                                            event->motion.device,
-                                            &fixed->mouse_x, &fixed->mouse_y,
-                                            NULL);
+	    glade_utils_get_pointer (fixed_widget,
+				     window, gdk_event_get_device (event),
+				     &fixed->mouse_x, &fixed->mouse_y);
 
             glade_fixed_configure_widget (fixed, child, event->motion.device);
             glade_cursor_set (project, window, fixed->operation);
@@ -665,6 +748,20 @@ glade_fixed_handle_child_event (GladeFixed *fixed,
             ((event_state & GDK_SHIFT_MASK) ||
              pointer_mode == GLADE_POINTER_DRAG_RESIZE))
           {
+
+
+	    expand_all_children (GLADE_WIDGET (fixed));
+
+	    /* Spin the main loop so that the GladeFixed
+	     * widget gets reallocated before storing
+	     * the allocation sizes
+	     */
+	    while (gtk_events_pending ())
+	      gtk_main_iteration ();
+
+
+
+
             fixed->configuring = child;
             /* Save widget allocation and pointer pos */
             glade_fixed_save_state (fixed, child, event->button.device);
@@ -747,12 +844,21 @@ glade_fixed_add_child_impl (GladeWidget *gwidget_fixed,
   GtkAllocation allocation;
   GdkRectangle rect;
   gboolean handled;
+  GtkWidget *widget;
 
   g_return_if_fail (GLADE_IS_FIXED (fixed));
   g_return_if_fail (GLADE_IS_WIDGET (child));
 
+  /* Need to explicitly find the pointer location at drag_drop time (but check if the widget has
+   * a window already first, if not it's because we're loading and widget's arent realized yet)
+   */
+  widget = GTK_WIDGET (glade_widget_get_object (gwidget_fixed));
+  if (gtk_widget_get_window (widget))
+    glade_utils_get_pointer (widget, NULL, NULL,
+			     &fixed->mouse_x, &fixed->mouse_y);
+
   /* Chain up for the basic parenting */
-  GLADE_WIDGET_CLASS (parent_class)->add_child
+  GLADE_WIDGET_CLASS (glade_fixed_parent_class)->add_child
       (GLADE_WIDGET (fixed), child, at_mouse);
 
   /* We only operate on widgets here */
@@ -807,7 +913,7 @@ glade_fixed_remove_child_impl (GladeWidget *fixed, GladeWidget *child)
   glade_fixed_disconnect_child (GLADE_FIXED (fixed), child);
 
   /* Chain up for the basic unparenting */
-  GLADE_WIDGET_CLASS (parent_class)->remove_child (GLADE_WIDGET (fixed), child);
+  GLADE_WIDGET_CLASS (glade_fixed_parent_class)->remove_child (GLADE_WIDGET (fixed), child);
 }
 
 static void
@@ -822,7 +928,7 @@ glade_fixed_replace_child_impl (GladeWidget *fixed,
     glade_fixed_disconnect_child (GLADE_FIXED (fixed), gold_widget);
 
   /* Chain up for the basic reparenting */
-  GLADE_WIDGET_CLASS (parent_class)->replace_child
+  GLADE_WIDGET_CLASS (glade_fixed_parent_class)->replace_child
       (GLADE_WIDGET (fixed), old_object, new_object);
 
   if (gnew_widget)
@@ -847,14 +953,15 @@ glade_fixed_event (GladeWidget *gwidget_fixed, GdkEvent *event)
 
   /* If the GladeWidget used this event... let it slide.
    */
-  if (GLADE_WIDGET_CLASS (parent_class)->event (gwidget_fixed, event))
+  if (GLADE_WIDGET_CLASS (glade_fixed_parent_class)->event (gwidget_fixed, event))
     return TRUE;
 
-  if ((device = glade_widget_get_device_from_event (event)))
+  if ((device = gdk_event_get_device (event)))
     {
-      gdk_window_get_device_position (window, device,
-                                      &fixed->mouse_x, &fixed->mouse_y,
-                                      NULL);
+      /* Need to update mouse for configures. */
+      glade_utils_get_pointer (GTK_WIDGET (glade_widget_get_object (gwidget_fixed)),
+			       window, device, &fixed->mouse_x, &fixed->mouse_y);
+
       if (fixed->configuring)
         {
           return glade_fixed_handle_child_event
@@ -862,6 +969,10 @@ glade_fixed_event (GladeWidget *gwidget_fixed, GdkEvent *event)
         }
     }
 
+  /* If the container uses placeholder adding widget is already taken care of */
+  if (GWA_USE_PLACEHOLDERS (glade_widget_get_adaptor (gwidget_fixed)))
+    return FALSE;
+  
   switch (event->type)
     {
       case GDK_BUTTON_PRESS:   /* add widget */
@@ -919,7 +1030,7 @@ glade_fixed_finalize (GObject *object)
   g_free (fixed->width_prop);
   g_free (fixed->height_prop);
 
-  G_OBJECT_CLASS (parent_class)->finalize (object);
+  G_OBJECT_CLASS (glade_fixed_parent_class)->finalize (object);
 }
 
 static void
@@ -1004,8 +1115,6 @@ glade_fixed_class_init (GladeFixedClass *fixed_class)
 {
   GObjectClass *gobject_class = G_OBJECT_CLASS (fixed_class);
   GladeWidgetClass *gwidget_class = GLADE_WIDGET_CLASS (fixed_class);
-
-  parent_class = G_OBJECT_CLASS (g_type_class_peek_parent (gobject_class));
 
   gobject_class->finalize = glade_fixed_finalize;
   gobject_class->set_property = glade_fixed_set_property;
@@ -1124,27 +1233,12 @@ glade_fixed_class_init (GladeFixedClass *fixed_class)
                                       API
 *******************************************************************************/
 
-GType
-glade_fixed_get_type (void)
+/* This is called from the catalog for a few widgets */
+GladeWidget *
+glade_gtk_create_fixed_widget (GladeWidgetAdaptor * adaptor,
+                               const gchar * first_property_name,
+                               va_list var_args)
 {
-  static GType fixed_type = 0;
-
-  if (!fixed_type)
-    {
-      static const GTypeInfo fixed_info = {
-        sizeof (GladeFixedClass),
-        (GBaseInitFunc) NULL,
-        (GBaseFinalizeFunc) NULL,
-        (GClassInitFunc) glade_fixed_class_init,
-        (GClassFinalizeFunc) NULL,
-        NULL,                   /* class_data */
-        sizeof (GladeFixed),
-        0,                      /* n_preallocs */
-        (GInstanceInitFunc) glade_fixed_init,
-      };
-      fixed_type =
-          g_type_register_static (GLADE_TYPE_WIDGET,
-                                  "GladeFixed", &fixed_info, 0);
-    }
-  return fixed_type;
+  return (GladeWidget *) g_object_new_valist (GLADE_TYPE_FIXED,
+                                              first_property_name, var_args);
 }

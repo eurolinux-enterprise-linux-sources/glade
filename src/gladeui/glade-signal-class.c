@@ -38,6 +38,8 @@ struct _GladeSignalClass
   const gchar        *name;                /* Name of the signal, eg clicked */
   const gchar        *type;                /* Name of the object class that this signal 
 					    * belongs to eg GtkButton */
+
+  guint deprecated : 1;                    /* True if this signal is deprecated */
 };
 
 GladeSignalClass *
@@ -66,9 +68,10 @@ glade_signal_class_new  (GladeWidgetAdaptor *adaptor,
   class->name = (class->query.signal_name);
   class->type = g_type_name (for_type);
 
-  /* Initialize signal versions to adaptor version */
+  /* Initialize signal versions & deprecated to adaptor version */
   class->version_since_major = GWA_VERSION_SINCE_MAJOR (adaptor);
   class->version_since_minor = GWA_VERSION_SINCE_MINOR (adaptor);
+  class->deprecated          = GWA_DEPRECATED (adaptor);
 
   return class;
 }
@@ -80,9 +83,9 @@ glade_signal_class_free (GladeSignalClass *signal_class)
 }
 
 void
-glade_signal_class_update_from_node (GladeSignalClass   *signal_class,
-				     GladeXmlNode       *node,
-				     const gchar        *domain)
+glade_signal_class_update_from_node (GladeSignalClass *signal_class,
+				     GladeXmlNode     *node,
+				     const gchar      *domain)
 {
   g_return_if_fail (signal_class != NULL);
   g_return_if_fail (node != NULL);
@@ -90,6 +93,11 @@ glade_signal_class_update_from_node (GladeSignalClass   *signal_class,
   glade_xml_get_property_version (node, GLADE_TAG_VERSION_SINCE,
 				  &signal_class->version_since_major, 
 				  &signal_class->version_since_minor);
+
+  signal_class->deprecated =
+    glade_xml_get_property_boolean (node,
+				    GLADE_TAG_DEPRECATED,
+				    signal_class->deprecated);
 }
 
 GladeWidgetAdaptor *
@@ -101,7 +109,7 @@ glade_signal_class_get_adaptor (const GladeSignalClass *signal_class)
 }
 
 G_CONST_RETURN gchar *
-glade_signal_class_get_name (const GladeSignalClass  *signal_class)
+glade_signal_class_get_name (const GladeSignalClass *signal_class)
 {
   g_return_val_if_fail (signal_class != NULL, NULL);
 
@@ -109,7 +117,7 @@ glade_signal_class_get_name (const GladeSignalClass  *signal_class)
 }
 
 G_CONST_RETURN gchar *
-glade_signal_class_get_type (const GladeSignalClass  *signal_class)
+glade_signal_class_get_type (const GladeSignalClass *signal_class)
 {
   g_return_val_if_fail (signal_class != NULL, NULL);
 
@@ -125,9 +133,9 @@ glade_signal_class_get_flags (const GladeSignalClass *signal_class)
 }
 
 void
-glade_signal_class_set_since (GladeSignalClass   *signal_class,
-			      guint16             since_major,
-			      guint16             since_minor)
+glade_signal_class_set_since (GladeSignalClass *signal_class,
+			      guint16           since_major,
+			      guint16           since_minor)
 {
   g_return_if_fail (signal_class != NULL);
 
@@ -136,7 +144,7 @@ glade_signal_class_set_since (GladeSignalClass   *signal_class,
 }
 
 guint16
-glade_signal_class_since_major (GladeSignalClass   *signal_class)
+glade_signal_class_since_major (GladeSignalClass *signal_class)
 {
   g_return_val_if_fail (signal_class != NULL, 0);
 
@@ -144,10 +152,26 @@ glade_signal_class_since_major (GladeSignalClass   *signal_class)
 }
 
 guint16
-glade_signal_class_since_minor (GladeSignalClass   *signal_class)
+glade_signal_class_since_minor (GladeSignalClass *signal_class)
 {
   g_return_val_if_fail (signal_class != NULL, 0);
 
   return signal_class->version_since_minor;
 }
 
+void
+glade_signal_class_set_deprecated (GladeSignalClass *signal_class,
+				   gboolean          deprecated)
+{
+  g_return_if_fail (signal_class != NULL);
+
+  signal_class->deprecated = deprecated;
+}
+
+gboolean
+glade_signal_class_deprecated (GladeSignalClass *signal_class)
+{
+  g_return_val_if_fail (signal_class != NULL, FALSE);
+
+  return signal_class->deprecated;
+}

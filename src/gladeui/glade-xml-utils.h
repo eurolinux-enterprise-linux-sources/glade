@@ -29,13 +29,15 @@ typedef struct _GladeProject        GladeProject;
 #define GLADE_GTKBUILDER_VERSIONING_BASE_MAJOR    2
 #define GLADE_GTKBUILDER_VERSIONING_BASE_MINOR    14
 #define GLADE_GTKBUILDER_HAS_VERSIONING(maj, min) \
-	((maj) >= GLADE_GTKBUILDER_VERSIONING_BASE_MAJOR && \
-	 (min) >= GLADE_GTKBUILDER_VERSIONING_BASE_MINOR)
+	((maj) > GLADE_GTKBUILDER_VERSIONING_BASE_MAJOR || \
+	 ((maj) == GLADE_GTKBUILDER_VERSIONING_BASE_MAJOR && \
+	  (min) >= GLADE_GTKBUILDER_VERSIONING_BASE_MINOR))
 
 
 /* Used for catalog tags and attributes */
 #define GLADE_XML_TAG_PROJECT                     "interface"
 #define GLADE_XML_TAG_WIDGET                      "object"
+#define GLADE_XML_TAG_TEMPLATE                    "template"
 
 #define GLADE_XML_TAG_VERSION                     "version"
 #define GLADE_XML_TAG_REQUIRES                    "requires"
@@ -91,6 +93,7 @@ typedef struct _GladeProject        GladeProject;
 #define GLADE_TAG_REPLACE_CHILD_FUNCTION          "replace-child-function"
 #define GLADE_TAG_CREATE_WIDGET_FUNCTION          "create-widget-function"
 #define GLADE_TAG_CONSTRUCT_OBJECT_FUNCTION       "construct-object-function"
+#define GLADE_TAG_DESTROY_OBJECT_FUNCTION         "destroy-object-function"
 #define GLADE_TAG_DEEP_POST_CREATE_FUNCTION       "deep-post-create-function"
 #define GLADE_TAG_POST_CREATE_FUNCTION            "post-create-function"
 #define GLADE_TAG_GET_INTERNAL_CHILD_FUNCTION     "get-internal-child-function"
@@ -108,6 +111,7 @@ typedef struct _GladeProject        GladeProject;
 #define GLADE_TAG_DEPENDS_FUNCTION                "depends-function"
 #define GLADE_TAG_READ_WIDGET_FUNCTION            "read-widget-function"
 #define GLADE_TAG_WRITE_WIDGET_FUNCTION           "write-widget-function"
+#define GLADE_TAG_WRITE_WIDGET_AFTER_FUNCTION     "write-widget-after-function"
 #define GLADE_TAG_READ_CHILD_FUNCTION             "read-child-function"
 #define GLADE_TAG_WRITE_CHILD_FUNCTION            "write-child-function"
 #define GLADE_TAG_CREATE_EPROP_FUNCTION           "create-editor-property-function"
@@ -231,8 +235,10 @@ void           glade_xml_node_append_child (GladeXmlNode * node, GladeXmlNode * 
 void           glade_xml_node_remove (GladeXmlNode *node_in);
 gboolean       glade_xml_node_is_comment (GladeXmlNode *node_in);
 GladeXmlNode * glade_xml_node_next_with_comments (GladeXmlNode *node_in);
+GladeXmlNode * glade_xml_node_prev_with_comments (GladeXmlNode * node_in);
 GladeXmlNode * glade_xml_node_get_children_with_comments (GladeXmlNode *node);
-
+GladeXmlNode * glade_xml_node_add_prev_sibling (GladeXmlNode *node, GladeXmlNode *new_node);
+GladeXmlNode * glade_xml_node_add_next_sibling (GladeXmlNode *node, GladeXmlNode *new_node);
 
 /* Document Operatons */
 GladeXmlNode * glade_xml_doc_get_root (GladeXmlDoc *doc);
@@ -240,6 +246,7 @@ GladeXmlDoc *  glade_xml_doc_new (void);
 void           glade_xml_doc_set_root (GladeXmlDoc *doc, GladeXmlNode *node);
 void           glade_xml_doc_free (GladeXmlDoc *doc_in);
 gint           glade_xml_doc_save (GladeXmlDoc *doc_in, const gchar *full_path);
+GladeXmlNode * glade_xml_doc_new_comment (GladeXmlDoc *doc, const gchar *comment);
 
 /* Parse Context */
 GladeXmlContext * glade_xml_context_new     (GladeXmlDoc *doc, const gchar *name_space);

@@ -3,7 +3,7 @@
 
 Name:           glade
 Version:        3.15.0
-Release:        3%{?dist}
+Release:        5%{?dist}
 Summary:        User Interface Designer for GTK+
 
 # - /usr/bin/glade is GPLv2+
@@ -147,6 +147,12 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %doc %{_datadir}/gtk-doc/
 
 %changelog
+* Fri Jan 24 2014 Daniel Mach <dmach@redhat.com> - 3.15.0-5
+- Mass rebuild 2014-01-24
+
+* Fri Dec 27 2013 Daniel Mach <dmach@redhat.com> - 3.15.0-4
+- Mass rebuild 2013-12-27
+
 * Tue Jul 16 2013 Matthias Clasen <mclasen@redhat.com> - 3.15.0-3
 - Fix source url
 
